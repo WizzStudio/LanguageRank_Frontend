@@ -1,0 +1,24 @@
+{
+  "code": 0,
+  "msg": "请求成功",
+  "data": [
+    {
+      "languageName": "Java",
+      "companyName": "百度",
+      "companyOrdSalary": 18000,
+      "companyMaxSalary": 25000,
+      "companyMaxSalaryPost": "高级工程师",
+      "companyMinSalary": 8000,
+      "companyMinSalaryPost": "初级工程师"
+    },
+    {
+      "languageName": "Java",
+      "companyName": "腾讯",
+      "companyOrdSalary": 17000,
+      "companyMaxSalary": 24000,
+      "companyMaxSalaryPost": "高级工程师",
+      "companyMinSalary": 9000,
+      "companyMinSalaryPost": "初级工程师"
+    }
+  ]
+}

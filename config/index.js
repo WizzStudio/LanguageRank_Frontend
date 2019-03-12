@@ -1,6 +1,6 @@
 const config = {
-  projectName: 'languageRank',
-  date: '2019-2-1',
+  projectName: 'langRank',
+  date: '2019-3-9',
   designWidth: 750,
   deviceRatio: {
     '640': 2.34 / 2,
@@ -13,7 +13,9 @@ const config = {
     babel: {
       sourceMap: true,
       presets: [
-        'env'
+        ['env', {
+          modules: false
+        }]
       ],
       plugins: [
         'transform-decorators-legacy',

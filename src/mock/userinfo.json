@@ -1,0 +1,15 @@
+{
+  "code": 0,
+  "msg": "",
+  "data": {
+    "myLanguage": "Java",
+    "isStudyPlan": true,
+    "studyPlan": {
+      "accomplishedDay": 3,
+      "contentOne": "https://xxx.jpg",
+      "contentTwo": "https://xxx.jpg"
+    },
+    "joinedNumber": 1369,
+    "joinedToday": 120
+  }
+}

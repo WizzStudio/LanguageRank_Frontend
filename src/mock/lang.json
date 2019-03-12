@@ -1,0 +1,22 @@
+{
+  "code": 0,
+  "msg": "",
+  "data": {
+    "JoinedNumber": 1234,
+    "languageNumber": 4356,
+    "languageNumberIncreasing": 120,
+
+    "company": [
+      {
+        "companyName": "阿里巴巴",
+        "companyMaxSalary": 25000,
+        "companyMaxSalaryPost": "高级工程师"
+      },
+      {
+        "companyName": "腾讯",
+        "companyMaxSalary": 25000,
+        "companyMaxSalaryPost": "高级工程师"
+      }
+    ]
+  }
+}

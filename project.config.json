@@ -1,11 +1,11 @@
 {
   "miniprogramRoot": "./dist",
-  "projectname": "languageRank",
+  "projectname": "LanguageRank_Frontend",
   "description": "",
   "appid": "touristappid",
   "setting": {
     "urlCheck": true,
-    "es6": true,
+    "es6": false,
     "postcss": false,
     "minified": false
   },

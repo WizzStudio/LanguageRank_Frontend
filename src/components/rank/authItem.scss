@@ -1,0 +1,31 @@
+@import "~taro-ui/dist/style/index.scss";
+
+.authItem {
+  margin: 0px 40px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  .rank-num {
+    display: flex;
+    justify-content: center;
+  }
+  .heat-num {
+    font-size: 1.1em;
+    font-weight: bold;
+  }
+  .icon-wrap {
+    margin-right: 15px;
+  }
+  .langImg {
+    width: 60px;
+    height: 60px;
+  }
+  .lang-name {
+    font-size: 1.2em;
+  }
+}
+
+.oddbg {
+  background-color: #e6e6fa;
+}

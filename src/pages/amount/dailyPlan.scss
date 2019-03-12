@@ -1,0 +1,43 @@
+$color-brand: #4f5fc5;
+
+.plan-title {
+  color: $color-brand;
+  font-weight: bold;
+  font-size: 1.3em;
+  margin: 50px auto;
+  display: flex;
+  justify-content: center;
+}
+.plan-card {
+  height: 700px;
+  background-color: #dcdcdc;
+}
+.transfer-award {
+  height: 100px;
+  margin-top: 50px;
+  margin-bottom: 40px;
+}
+.action {
+  margin: 20px 50px;
+}
+.plan-item {
+  position: absolute;
+  width: 100%;
+  height: 560rpx;
+  z-index: 5;
+  opacity: 0.7;
+  top: 7%;
+  transform: scale(0.8);
+}
+.active {
+  opacity: 1;
+  z-index: 10;
+  height: 700rpx;
+  top: 0%;
+  transition: all 0.2s ease-in 0s;
+  transform: scale(1);
+}
+
+.swiper {
+  height: 800px;
+}

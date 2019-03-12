@@ -1,0 +1,42 @@
+{
+  "code": 0,
+  "msg": "请求成功",
+  "data": [
+    {
+      "languageSymbol": "../assets/img/language/C.png",
+      "languageName": "C",
+      "languageNumber": 234,
+      "languageTend": 0
+    },
+    {
+      "languageSymbol": "../assets/img/language/python.png",
+      "languageName": "Java",
+      "languageNumber": 232,
+      "languageTend": 0
+    },
+    {
+      "languageSymbol": "../assets/img/language/python.png",
+      "languageName": "Python",
+      "languageNumber": 131,
+      "languageTend": 0
+    },
+    {
+      "languageSymbol": "../assets/img/language/javascript.png",
+      "languageName": "Javascript",
+      "languageNumber": 643,
+      "languageTend": 0
+    },
+    {
+      "languageSymbol": "../assets/img/language/vb.png",
+      "languageName": "VB",
+      "languageNumber": 234,
+      "languageTend": 0
+    },
+    {
+      "languageSymbol": "../assets/img/language/php.png",
+      "languageName": "PHP",
+      "languageNumber": 133,
+      "languageTend": 0
+    }
+  ]
+}

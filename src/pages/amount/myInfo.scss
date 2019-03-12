@@ -1,0 +1,81 @@
+$color-brand: #4f5fc5;
+
+.my-button {
+  border-radius: 16px;
+}
+.top-bg {
+  background-color: $color-brand;
+  margin: 0;
+}
+.blank {
+  height: 20px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+.study-plan {
+  margin-top: 50px;
+  border: 2px solid white;
+  border-radius: 50px;
+  background-color: white;
+}
+.my-name {
+  font-size: 36px;
+}
+// .my-id {
+//   font-size: 40em;
+// }
+.plan-title-wrap {
+  font-size: 40px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.plan-title {
+  color: $color-brand;
+  font-weight: bold;
+}
+.isPlaned {
+  font-size: 32px;
+  font-weight: normal;
+}
+.plan-state {
+  margin: 80px auto;
+  display: flex;
+  justify-content: space-around;
+  font-size: 36px;
+  font-weight: bold;
+}
+.per-plan-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.plan-progress {
+  margin: 20px 50px;
+}
+.progress-intro {
+  font-size: 32px;
+  display: flex;
+  justify-content: center;
+}
+.plan-action {
+  margin: 20px 50px;
+}
+.my-award {
+  margin-top: 100px;
+  margin-bottom: 40px;
+}
+.login-out {
+  background-color: #ee4000;
+  border-color: #ee4000;
+  margin-top: 120px;
+}
