@@ -1,6 +1,103 @@
-@import "~taro-ui/dist/style/components/flex.scss";
-.lang-title {
-  font-size: 1.3em;
+$color-brand: #4f5fc5;
+.logo {
+  width: 120px;
+  height: 120px;
+}
+.wrap-content {
+  margin: 0 40px;
+}
+.wrap-title {
+  color: $color-brand;
+  font-size: 32px;
   font-weight: bold;
-  margin: 30px 10px;
+  margin-bottom: 30px;
+}
+
+.lang-title {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  .icon {
+    flex: 2;
+    margin-right: 20px;
+  }
+  .name {
+    flex: 5;
+    font-size: 48px;
+    font-weight: 700;
+  }
+  .badge {
+    margin-left: 15px;
+  }
+  .state {
+    flex: 5;
+    font-size: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.data-info {
+  display: flex;
+  justify-content: space-around;
+  .tend-title {
+    font-size: 32px;
+    font-weight: 600;
+  }
+  .tend-num {
+    font-size: 75px;
+    font-weight: 800;
+  }
+}
+.tend-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heat-company {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  .icon {
+    flex: 2;
+    margin-right: 30px;
+  }
+  .name {
+    flex: 4;
+    font-size: 36px;
+    font-weight: 600;
+  }
+  .detail {
+    flex: 5;
+    font-size: 32px;
+    font-weight: 600;
+    align-items: flex-end;
+  }
+}
+.history {
+  font-size: 24px;
+}
+.to-detail {
+  margin: 80px auto;
+  width: 50%;
+}
+.demand-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  font-weight: bolder;
+  height: 120px;
+  border-bottom: 1px solid #999;
+  margin-bottom: 50px;
+  .demand-logo {
+    width: 90px;
+    height: 90px;
+    margin-right: 5px;
+  }
+}
+.line-chart {
+  width: 100%;
+  height: 40vh;
 }

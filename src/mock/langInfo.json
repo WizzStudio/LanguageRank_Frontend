@@ -12,8 +12,8 @@
     "usages": ["移动应用开发", "web开发", "桌面应用开发"],
     "advantages": ["java开发者被大量需求", "平台在继续增加新功能"],
     "disadvantages": ["比c++更加消耗内存", "用java编写的安卓应用启动较慢"],
-    "apps": ["大数据", "云计算"],
-    "employers": ["阿里巴巴"]
+    "apps": ["区块链", "大数据", "云计算", "人工智能", "物联网"],
+    "employers": ["amazon", "intel", "Alibaba"]
   },
   "C": {
     "start": 1972,
@@ -26,8 +26,8 @@
     "usages": ["移动应用开发", "桌面应用开发", "嵌入式"],
     "advantages": ["c是高度可移动的，可在平台运行", "c完全基于变量，宏命令"],
     "disadvantages": ["没有运行检查机制", "不支持面向对象模型"],
-    "apps": ["大数据", "云计算"],
-    "employers": ["amazon", "intel"]
+    "apps": ["物联网"],
+    "employers": ["amazon", "intel", "Tencent"]
   },
   "Python": {
     "start": 1991,
@@ -37,10 +37,72 @@
       "2004年以后，python的使用率呈线性增长。2011年1月，它被TIOBE编程语言排行榜评为2010年度语言。",
       "由于Python语言的简洁性、易读性以及可扩展性，在国外用Python做科学计算的研究机构日益增多，一些知名大学已经采用Python来教授程序设计课程。"
     ],
-    "usages": ["桌面应用开发", "web开发", "嵌入式"],
+    "usages": ["移动应用开发", "桌面应用开发", "嵌入式"],
     "advantages": ["难度较低，容易学习", "具有丰富的库和函数"],
     "disadvantages": ["比编译类语言慢很多", "在移动计算方面很弱"],
     "apps": ["大数据", "机器学习"],
-    "employers": ["google", "baidu"]
+    "employers": ["DELL", "baidu", "amazon"]
+  },
+  "C++": {
+    "start": 1983,
+    "complexity": 4,
+    "history": [
+      "1979年，Bjame Sgoustrup到了Bell实验室，开始从事将C改良为带类的C（C with classes）的工作。1983年该语言被正式命名为C++。",
+      "在20世纪90年代早期，人们开始为C++建立一个标准，并成立了一个ANSI和ISO国际标准化组织的联合标准化委员会。1998年，C++的ANSI/IS0标准被投入使用。",
+      "这个版本的C++被认为是标准C++。所有的主流C++编译器都支持这个版本的C++，包括微软的Visual C++和Borland公司的C++Builder。"
+    ],
+    "usages": ["移动应用开发", "桌面应用开发", "嵌入式"],
+    "advantages": ["难度较低，容易学习", "具有丰富的库和函数"],
+    "disadvantages": ["比编译类语言慢很多", "在移动计算方面很弱"],
+    "apps": ["区块链", "云计算", "人工智能", "物联网"],
+    "employers": ["Microsoft", "baidu", "Tencent"]
+  },
+  "C#": {
+    "start": 2000,
+    "complexity": 3,
+    "history": [
+      "1998年12月，微软启动了一个全新的语言项目——COOL，这是一款专门为CLR设计的纯面向对象的语言，也正是本文的主角——C#的前身。",
+      " 2000年2月份，微软才正式将COOL语言更名为C#。据说起这个名字是因为在音乐当中“#”是升调记号，表达了微软希望它在C的基础上更上一层楼的美好愿望——当然这些都只是传说，无从考证。",
+      "又是历经了一系列的修改，微软终于在2000年7月发布了C#语言的第一个预览版。"
+    ],
+    "usages": ["移动应用开发", "web应用开发", "嵌入式"],
+    "advantages": [
+      "完整的.NET库，提供接入大量功能",
+      "可以转移到其他语言，如Java,PHP等"
+    ],
+    "disadvantages": ["不适合初学者", "没有跨平台能力"],
+    "apps": ["物联网"],
+    "employers": ["Microsoft", "Amazon"]
+  },
+  "Javascript": {
+    "start": 1995,
+    "complexity": 3,
+    "history": [
+      "Javacript最初由Netscape的Brendan Eich设计，它是甲骨文公司的注册商标。Netscape在最初将其脚本语言命名为LiveScript，后来Netscape在与Sun合作之后将其改名为JavaScript。",
+      "发展初期，JavaScript的标准并未确定，同期有Netscape的JavaScript，微软的JScript和CEnvi的ScriptEase三足鼎立。",
+      "1997年，在ECMA（欧洲计算机制造商协会）的协调下，由Netscape、Sun、微软、Borland组成的工作组确定统一标准：ECMA-262。"
+    ],
+    "usages": ["移动应用开发", "web应用开发"],
+    "advantages": ["作为客户端，JavaScript非常快。", "能和其他语言相处融洽"],
+    "disadvantages": [
+      "在某些情况下会被恶意利用。",
+      "有时会被不同的浏览器编译出不同的结果。"
+    ],
+    "apps": ["物联网", "区块链"],
+    "employers": ["Microsoft", "Google", "Alibaba"]
+  },
+  "PHP": {
+    "start": 1994,
+    "complexity": 2,
+    "history": [
+      "于1994年由Rasmus Lerdorf创建，刚刚开始是Rasmus Lerdorf为了要维护个人网页而制作的一个简单的用Perl语言编写的程序。",
+      "2008年PHP 5成为了PHP唯一的有在开发的PHP版本。2013年6月20日，PHP开发团队自豪地宣布推出PHP 5.5.0。",
+      "2014年10月16日，PHP开发团队宣布PHP 5.6.2可用。"
+    ],
+    "usages": ["web应用开发"],
+    "advantages": ["容易上手", "对数据库友好。"],
+    "disadvantages": ["有许多丑陋的代码。", "错误处理考虑得不周全。"],
+    "apps": ["物联网"],
+    "employers": ["IBM", "facebook", "baidu"]
   }
 }

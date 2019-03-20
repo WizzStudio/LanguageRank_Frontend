@@ -1,0 +1,26 @@
+.top-bg {
+  background-color: #4f5fc5;
+}
+.blank {
+  height: 20px;
+}
+.wrap {
+  border: 2px solid white;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+  background-color: white;
+}
+.tab-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 40px auto;
+  background-color: white;
+  .tab-seg {
+    height: 60px;
+    width: 600px;
+    // padding-top: 30px;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+  }
+}

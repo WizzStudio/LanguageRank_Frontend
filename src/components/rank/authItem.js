@@ -2,7 +2,7 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
 import "./authItem.scss";
 import "taro-ui/dist/style/index.scss";
-
+import javaLogo from "../../assets/img/language/java.png";
 export default class AuthItem extends Component {
   render() {
     const { langImg, langName, heatNum, tend, index } = this.props;
@@ -10,9 +10,11 @@ export default class AuthItem extends Component {
       <View className={["authItem", index % 2 ? "oddbg" : ""].join(" ")}>
         {/* <View className={`at-row ${index % 2 === 1 ? oddbg : ""}`}> */}
         <View className="at-row">
-          <View className="at-col at-col-2 rank-num">{index + 1}</View>
+          <View className="at-col at-col-2 rank-num">
+            {parseInt(index) + 1}
+          </View>
           <View className="at-col at-col-1 icon-wrap">
-            <Image src={langImg} className="langImg" />
+            <Image src={javaLogo} className="langImg" />
           </View>
           <View className="at-col at-col-3 lang-name">{langName}</View>
           <View className="at-col at-col-2" />

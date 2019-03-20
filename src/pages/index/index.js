@@ -2,7 +2,7 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Button, Text } from "@tarojs/components";
 import { connect } from "@tarojs/redux";
 
-import { AtTabs, AtTabsPane } from "taro-ui";
+import { AtSegmentedControl } from "taro-ui";
 import AuthRankList from "../rank/authRankList";
 import DemandRankList from "../rank/demandRankList";
 
@@ -52,30 +52,31 @@ class Index extends Component {
   componentDidHide() {}
 
   render() {
-    const tabList = [{ title: "权威榜" }, { title: "雇主需求榜" }];
     return (
-      <View>
-        <AtTabs
-          current={this.state.current}
-          tabList={tabList}
-          onClick={this.handleClick}>
-          <AtTabsPane current={this.state.current} index={0}>
-            <View>
+      <View className="top-bg">
+        <View className="blank" />
+        <View className="wrap">
+          <View className="tab-wrap">
+            <AtSegmentedControl
+              values={["语言热度榜", "雇主需求榜"]}
+              onClick={this.handleClick.bind(this)}
+              current={this.state.current}
+              className="tab-seg"
+            />
+          </View>
+          {this.state.current === 0 ? (
+            <View className="tab-content">
               <AuthRankList />
             </View>
-          </AtTabsPane>
-          <AtTabsPane current={this.state.current} index={1}>
-            <View>
+          ) : null}
+          {this.state.current === 1 ? (
+            <View className="tab-content">
               <DemandRankList />
             </View>
-          </AtTabsPane>
-        </AtTabs>
-        <View>
-          <View>
-            {/* <Button onClick={this.props.getAuth}>获取排行榜{this.props}</Button> */}
-          </View>
+          ) : null}
         </View>
-        <View className="index">
+
+        {/* <View className="index">
           <Button className="add_btn" onClick={this.props.add}>
             +
           </Button>
@@ -88,10 +89,7 @@ class Index extends Component {
           <View>
             <Text>{this.props.counter.num}</Text>
           </View>
-          <View>
-            <Text>Hello, World</Text>
-          </View>
-        </View>
+        </View> */}
       </View>
     );
   }

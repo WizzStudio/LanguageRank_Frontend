@@ -7,7 +7,6 @@ import configStore from "./store";
 
 import "./app.scss";
 import "./custom-variables.scss";
-
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
@@ -24,11 +23,14 @@ class App extends Component {
       // "pages/rank/demandRankList",
       "pages/amount/myInfo",
       "pages/amount/dailyPlan",
+      "pages/detail/demandHome",
+      "pages/detail/langHome",
       "pages/detail/langDetail"
     ],
     window: {
       backgroundTextStyle: "light",
-      navigationBarBackgroundColor: "#fff",
+      // backgroundColor: "#4f5fc5",
+      navigationBarBackgroundColor: "#4f5fc5",
       navigationBarTitleText: "WeChat",
       navigationBarTextStyle: "black"
     },
@@ -38,7 +40,7 @@ class App extends Component {
           pagePath: "pages/index/index",
           text: "排行榜",
           iconPath: "./assets/icon/rank2.png",
-          electedIconPath: "./assets/icon/rank.png"
+          selectedIconPath: "./assets/icon/rank.png"
         },
         {
           pagePath: "pages/amount/myInfo",
@@ -48,7 +50,7 @@ class App extends Component {
         }
       ],
       color: "#8a8a8a",
-      selectedColor: "#2d8cf0",
+      selectedColor: "#4f5fc5",
       backgroundColor: "#ffffff",
       borderStyle: "white"
     }

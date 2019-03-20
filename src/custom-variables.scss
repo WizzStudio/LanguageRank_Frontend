@@ -1,2 +1,9 @@
 $color-brand: #4f5fc5;
+
+.at-segmented-control__item {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 @import "~taro-ui/dist/style/index.scss";

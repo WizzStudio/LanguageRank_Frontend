@@ -2,8 +2,11 @@ module.exports = {
   env: {
     NODE_ENV: '"production"'
   },
-  defineConstants: {
+  defineConstants: {},
+  weapp: {
+    compile: {
+      exclude: ["src/components/ec-canvas/echarts.js"]
+    }
   },
-  weapp: {},
   h5: {}
-}
+};
