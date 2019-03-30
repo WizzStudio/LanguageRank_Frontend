@@ -9,4 +9,5 @@ export const GET_LANGHOME_SUCCESS = "GET_LANGHOME_SUCCESS";
 export const GET_DEMAND_RANK = "GET_DEMAND_RANK";
 export const GET_POSI = "GET_POSI";
 export const GET_SALARY = "GET_SALARY";
-export const GET_COMPANYRANK = "GET_COMPANYRANK";
+export const GET_DEMANDPOSI = "GET_DEMANDPOSI";
+export const GET_CITY = "GET_CITY";

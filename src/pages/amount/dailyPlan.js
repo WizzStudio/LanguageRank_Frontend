@@ -10,13 +10,14 @@ export default class DailyPlan extends Component {
     };
   }
   handleSwiper = e => {
-    console.log("e", e);
+    // console.log("e", e);
     this.setState({
       current: e.detail.current
     });
   };
   render() {
     const { current } = this.state;
+    const plan = ["con1", "con2", "con3", "con4", "con5"];
     return (
       <View>
         <View className="main-plan">
@@ -30,51 +31,21 @@ export default class DailyPlan extends Component {
               current="1"
               onChange={this.handleSwiper}
               indicatorDots>
-              <SwiperItem
-                index="0"
-                // className={`plan-item ${current === index ? active : ""}`}
-                className="plan-item">
-                <View className="plan-title">第一天</View>
-                <AtCard className="plan-card">
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能
-                </AtCard>
-              </SwiperItem>
-              <SwiperItem index="1" className="plan-item active">
-                <View className="plan-title">第二天</View>
-                <AtCard className="plan-card">
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能
-                </AtCard>
-              </SwiperItem>
-              <SwiperItem className="plan-item">
-                <View className="plan-title">第三天</View>
-                <AtCard className="plan-card">
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能 这也是内容区 可以随意定义功能
-                  这也是内容区 可以随意定义功能
-                </AtCard>
-              </SwiperItem>
-              <SwiperItem>
-                <View className="demo-text-3">3</View>
-              </SwiperItem>
-              <SwiperItem>
-                <View className="demo-text-3">3</View>
-              </SwiperItem>
-              <SwiperItem>
-                <View className="demo-text-3">3</View>
-              </SwiperItem>
-              <SwiperItem>
-                <View className="demo-text-3">3</View>
-              </SwiperItem>
+              {plan.map((item, index) => {
+                return (
+                  <SwiperItem
+                    index={index}
+                    key={index}
+                    // className={`plan-item ${current === index ? active : ""}`}
+                    className={[
+                      "plan-item",
+                      current === index ? "active" : ""
+                    ].join(" ")}>
+                    <View className="plan-title">第一天</View>
+                    <AtCard className="plan-card">{item}</AtCard>
+                  </SwiperItem>
+                );
+              })}
             </Swiper>
           </View>
         </View>

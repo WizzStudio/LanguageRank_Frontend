@@ -20,7 +20,16 @@ export default class MyInfo extends Component {
     Taro.login({
       success(res) {
         if (res.code) {
-          console.log("res", res);
+          console.log("res.code", res.code);
+          Taro.request({
+            url: "http://pgrk.wizzstudio.com/login",
+            method: "POST",
+            data: {
+              code: res.code
+            }
+          }).then(res => {
+            console.log("re的res", res);
+          });
         }
       }
     });

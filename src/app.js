@@ -21,8 +21,10 @@ class App extends Component {
       "pages/index/index",
       // "pages/rank/authRankList",
       // "pages/rank/demandRankList",
+
       "pages/amount/myInfo",
       "pages/amount/dailyPlan",
+      "pages/amount/test",
       "pages/detail/demandHome",
       "pages/detail/langHome",
       "pages/detail/langDetail"

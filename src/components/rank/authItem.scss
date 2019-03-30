@@ -29,3 +29,17 @@
 .oddbg {
   background-color: #e6e6fa;
 }
+.demandItem {
+  height: 90px;
+  margin: 50px 40px;
+  .langImg {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.share-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

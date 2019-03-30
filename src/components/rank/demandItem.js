@@ -1,6 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
-import "./demandItem.scss";
+import "./authItem.scss";
 
 export default class DemandItem extends Component {
   render() {

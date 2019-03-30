@@ -7,6 +7,8 @@ import "./langDetail.scss";
 
 import javaLogo from "../../assets/img/language/java.png";
 import aliLogo from "../../assets/img/company/alibaba.png";
+import share from "../../assets/icon/share.png";
+import saveimg from "../../assets/icon/saveimg.png";
 
 export default class LangHome extends Component {
   constructor() {
@@ -117,6 +119,19 @@ export default class LangHome extends Component {
             onClick={this.navigateToDetail.bind(this, langName)}>
             更多语言信息
           </AtButton>
+        </View>
+        <View className="footer-wrap">
+          <View className="fix-footer">
+            <View className="add-plan">加入学习计划</View>
+            <View className="share">
+              <Image src={share} className="img" />
+              <View className="share-title">分享</View>
+            </View>
+            <View className="ge-img">
+              <Image src={saveimg} className="img" />
+              <View className="save-title">生成图片</View>
+            </View>
+          </View>
         </View>
       </View>
     );

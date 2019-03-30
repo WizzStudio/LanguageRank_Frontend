@@ -1,37 +1,50 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View } from "@tarojs/components";
+import { View, Canvas } from "@tarojs/components";
 import { AtFloatLayout, AtButton } from "taro-ui";
+import html2canvas from "html2canvas";
 import "./authRankList.scss";
-
+import baidu from "../../assets/img/company/baidu.png";
 import AuthItem from "../../components/rank/authItem";
+import ShareCanvas from "../../components/rank/shareCanvas";
 
 import { connect } from "@tarojs/redux";
 import { getAuth } from "../../actions/rankList";
 import { asyncGetUser } from "../../actions/userlist";
 @connect(
-  ({ rankList, userlist }) => ({
-    rankList,
-    userlist
+  ({ rankList }) => ({
+    rankList
   }),
   dispatch => ({
     getAuth() {
       dispatch(getAuth());
-    },
-    asyncGetUser() {
-      dispatch(asyncGetUser());
     }
   })
 )
+// @connect(
+//   ({ rankList, userlist }) => ({
+//     rankList,
+//     userlist
+//   }),
+//   dispatch => ({
+//     getAuth() {
+//       dispatch(getAuth());
+//     },
+//     asyncGetUser() {
+//       dispatch(asyncGetUser());
+//     }
+//   })
+// )
 export default class AuthRankList extends Component {
   constructor() {
     super();
     this.state = {
-      isOpened: false
+      isOpened: false,
+      isShared: false
     };
   }
   componentWillMount() {
     this.props.getAuth();
-    this.props.asyncGetUser();
+    // this.props.asyncGetUser();
   }
   handleNavigate(name) {
     Taro.navigateTo({
@@ -48,9 +61,19 @@ export default class AuthRankList extends Component {
       isOpened: false
     });
   };
+  openCanvas = () => {
+    this.setState({
+      isShared: true
+    });
+  };
+  closeCanvas = () => {
+    this.setState({
+      isShared: false
+    });
+  };
   render() {
     const rankList = this.props.rankList;
-
+    const { isShared } = this.state;
     return (
       <View>
         {rankList.map((rank, index) => {
@@ -68,6 +91,19 @@ export default class AuthRankList extends Component {
             </View>
           );
         })}
+        <View className="share" onClick={this.openCanvas}>
+          分享
+        </View>
+        {isShared ? (
+          <View className="share-bg">
+            <View className="share-wrap">
+              <ShareCanvas rankContent="213" />
+              <AtButton onClick={this.closeCanvas}>关闭</AtButton>
+            </View>
+          </View>
+        ) : (
+          ""
+        )}
         <View className="rank-intro" onClick={this.openIntro.bind(this)}>
           榜单介绍
         </View>
@@ -75,7 +111,9 @@ export default class AuthRankList extends Component {
           isOpened={this.state.isOpened}
           onClose={this.closeIntro.bind(this)}>
           <View>
-            <View className="intro-title">榜单介绍</View>
+            <View className="intro-title" ref={this.refTest}>
+              榜单介绍
+            </View>
             <View className="intro-content">哈哈哈</View>
             <View className="intro-close">
               <AtButton type="primary" onClick={this.closeIntro.bind(this)}>

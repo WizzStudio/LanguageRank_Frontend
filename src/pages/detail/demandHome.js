@@ -4,10 +4,37 @@ import { AtDivider } from "taro-ui";
 import LineChart from "../../components/echarts/LineChart";
 import PieChart from "../../components/echarts/PieChart";
 import BarChart from "../../components/echarts/BarChart";
+import { connect } from "@tarojs/redux";
+import { ajaxGetDemandPosi } from "../../actions/rankList";
+import demandHome from "../../reducers/index";
 
 import "./langDetail.scss";
 import javaLogo from "../../assets/img/language/java.png";
+import share from "../../assets/icon/share.png";
+import saveimg from "../../assets/icon/saveimg.png";
+import rankList from "../../reducers/rankList";
 
+// @connect(
+//   ({ rankList }) => ({
+//     rankList
+//   }),
+//   dispatch => ({
+//     getAuth() {
+//       dispatch(getAuth());
+//     }
+//   })
+// )
+
+@connect(
+  ({ demandHome }) => ({
+    demandHome
+  }),
+  dispatch => ({
+    ajaxGetDemandPosi(lang) {
+      dispatch(ajaxGetDemandPosi(lang));
+    }
+  })
+)
 export default class DemandHome extends Component {
   constructor() {
     super();
@@ -22,6 +49,18 @@ export default class DemandHome extends Component {
     });
   }
   componentDidMount() {
+    this.props.ajaxGetDemandPosi(this.state.langName);
+  }
+  componentWillReceiveProps(nextprops) {
+    console.log("nextprops", nextprops);
+    const { demandHome } = nextprops;
+    console.log("demandHome", demandHome);
+    let barX = [],
+      barY = [];
+    demandHome.forEach(item => {
+      barX.push(item.companyName);
+      barY.push(item.companyPostNumber);
+    });
     //折线图
     const lineChartData = {
       dimensions: {
@@ -38,11 +77,13 @@ export default class DemandHome extends Component {
     //柱状图
     const barChartData = {
       dimensions: {
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        // data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        data: barX
       },
       measures: [
         {
-          data: [10, 52, 200, 334, 390, 330, 220]
+          // data: [10, 52, 200, 334, 390, 330, 220]
+          data: barY
         }
       ]
     };
@@ -58,7 +99,6 @@ export default class DemandHome extends Component {
     ];
     this.pieChart.refresh(pieChartData);
   }
-
   //选中dom
   refLineChart = node => (this.lineChart = node);
   refBarChart = node => (this.barChart = node);
@@ -98,6 +138,19 @@ export default class DemandHome extends Component {
           <View className="wrap-title">城市需求分析</View>
           <View className="line-chart">
             <PieChart ref={this.refPieChart} />
+          </View>
+        </View>
+        <View className="footer-wrap">
+          <View className="fix-footer">
+            <View className="add-plan">加入学习计划</View>
+            <View className="share">
+              <Image src={share} className="img" />
+              <View className="share-title">分享</View>
+            </View>
+            <View className="ge-img">
+              <Image src={saveimg} className="img" />
+              <View className="save-title">生成图片</View>
+            </View>
           </View>
         </View>
       </View>

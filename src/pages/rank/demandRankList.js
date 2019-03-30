@@ -1,17 +1,11 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtButton } from "taro-ui";
+import { AtButton, AtFloatLayout } from "taro-ui";
 import AuthItem from "../../components/rank/authItem";
-import "./demandRankList.scss";
+import "./authRankList.scss";
 import { connect } from "@tarojs/redux";
 
 //本地静态数据
-import lgIcon1 from "../../assets/img/language/C.png";
-import lgIcon2 from "../../assets/img/language/python.png";
-import lgIcon3 from "../../assets/img/language/php.png";
-import lgIcon4 from "../../assets/img/language/vb.png";
-import lgIcon5 from "../../assets/img/language/javascript.png";
-import lgIcon6 from "../../assets/img/language/sql.png";
 import { getDemand } from "../../actions/rankList";
 
 @connect(
@@ -25,6 +19,9 @@ import { getDemand } from "../../actions/rankList";
 export default class DemandRankList extends Component {
   constructor() {
     super();
+    this.state = {
+      isOpened: false
+    };
   }
   componentDidMount() {
     this.props.getDemand();
@@ -35,11 +32,16 @@ export default class DemandRankList extends Component {
       url: "/pages/detail/demandHome?langName=" + encodeURI(name)
     });
   }
-  // handleNavigate(name) {
-  //   Taro.navigateTo({
-  //     url: "/pages/detail/langHome?langName=" + encodeURI(name)
-  //   });
-  // }
+  openIntro = () => {
+    this.setState({
+      isOpened: true
+    });
+  };
+  closeIntro = () => {
+    this.setState({
+      isOpened: false
+    });
+  };
   render() {
     const { rankList } = this.props;
 
@@ -60,6 +62,22 @@ export default class DemandRankList extends Component {
             </View>
           );
         })}
+        <View className="rank-intro" onClick={this.openIntro.bind(this)}>
+          榜单介绍
+        </View>
+        <AtFloatLayout
+          isOpened={this.state.isOpened}
+          onClose={this.closeIntro.bind(this)}>
+          <View>
+            <View className="intro-title">榜单介绍</View>
+            <View className="intro-content">哈哈哈</View>
+            <View className="intro-close">
+              <AtButton type="primary" onClick={this.closeIntro.bind(this)}>
+                确定
+              </AtButton>
+            </View>
+          </View>
+        </AtFloatLayout>
       </View>
     );
   }

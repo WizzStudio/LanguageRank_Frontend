@@ -1,8 +1,12 @@
+import Taro from "@tarojs/taro";
 import {
   GET_AUTH_RANK,
   GET_DEMAND_RANK,
   GET_LANGHOME_SUCCESS,
-  GET_POSI
+  GET_POSI,
+  GET_SALARY,
+  GET_DEMANDPOSI,
+  GET_CITY
 } from "../constants/rank";
 import authRank from "../mock/authRank.json";
 import demandRank from "../mock/demandRank.json";
@@ -99,6 +103,28 @@ export const ajaxGetPosi = () => {
     const res = response.data;
     if (res.code === 0) {
       dispatch(getPosi(res.data));
+    } else {
+      dispatch(getRankFail(res.msg));
+    }
+  };
+};
+
+//同步---请求公司需求排行
+export const getDemandPosi = data => {
+  return {
+    type: GET_DEMANDPOSI,
+    payload: data
+  };
+};
+//异步---请求公司需求排行
+export const ajaxGetDemandPosi = lang => {
+  return async dispatch => {
+    const response = await Taro.request({
+      url: `http://pgrk.wizzstudio.com/${lang}/companypost`
+    });
+    const res = response.data;
+    if (res.code === 0) {
+      dispatch(getDemandPosi(res.data));
     } else {
       dispatch(getRankFail(res.msg));
     }
