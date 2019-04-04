@@ -2,11 +2,12 @@ import Taro from "@tarojs/taro";
 import {
   GET_AUTH_RANK,
   GET_DEMAND_RANK,
-  GET_LANGHOME_SUCCESS,
+  GET_LANGHOME,
   GET_POSI,
   GET_SALARY,
   GET_DEMANDPOSI,
-  GET_CITY
+  GET_CITY,
+  GET_RANK_FAIL
 } from "../constants/rank";
 import authRank from "../mock/authRank.json";
 import demandRank from "../mock/demandRank.json";
@@ -22,10 +23,10 @@ export const getRankFail = data => {
 };
 
 //同步---请求权威和需求榜单
-export const getAuth = () => {
+export const getAuth = data => {
   return {
     type: GET_AUTH_RANK,
-    payload: authData
+    payload: data
   };
 };
 
@@ -39,7 +40,7 @@ export const getDemand = () => {
 export const ajaxGetAuth = () => {
   return async dispatch => {
     const response = await Taro.request({
-      url: ""
+      url: "http://pgrk.wizzstudio.com/languagerank"
     });
     const res = response.data;
     if (res.code === 0) {
@@ -68,15 +69,15 @@ export const ajaxGetDemand = () => {
 //同步---请求语言主页
 export const getLangHome = data => {
   return {
-    type: GET_LANGHOME_SUCCESS,
+    type: GET_LANGHOME,
     payload: data
   };
 };
 //异步---请求语言主页
-export const ajaxGetLangHome = () => {
+export const ajaxGetLangHome = langName => {
   return async dispatch => {
     const response = await Taro.request({
-      url: ""
+      url: `http://pgrk.wizzstudio.com/languagerank/${langName}`
     });
     const res = response.data;
     if (res.code === 0) {

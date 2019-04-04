@@ -1,11 +1,9 @@
 import { combineReducers } from "redux";
-import counter from "./counter";
 import rankList from "./rankList";
-import userlist from "./userlist";
 import demandHome from "./demandHome";
+import userInfo from "./userInfo";
 export default combineReducers({
-  counter,
   rankList,
-  userlist,
-  demandHome
+  demandHome,
+  userInfo
 });

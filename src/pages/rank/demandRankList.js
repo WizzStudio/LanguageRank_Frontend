@@ -4,6 +4,7 @@ import { AtButton, AtFloatLayout } from "taro-ui";
 import AuthItem from "../../components/rank/authItem";
 import "./authRankList.scss";
 import { connect } from "@tarojs/redux";
+import ShareCanvas from "../../components/rank/shareCanvas";
 
 //本地静态数据
 import { getDemand } from "../../actions/rankList";
@@ -20,7 +21,8 @@ export default class DemandRankList extends Component {
   constructor() {
     super();
     this.state = {
-      isOpened: false
+      isOpened: false,
+      isShared: false
     };
   }
   componentDidMount() {
@@ -40,6 +42,16 @@ export default class DemandRankList extends Component {
   closeIntro = () => {
     this.setState({
       isOpened: false
+    });
+  };
+  openCanvas = () => {
+    this.setState({
+      isShared: true
+    });
+  };
+  closeCanvas = () => {
+    this.setState({
+      isShared: false
     });
   };
   render() {
@@ -62,6 +74,19 @@ export default class DemandRankList extends Component {
             </View>
           );
         })}
+        <View className="share" onClick={this.openCanvas}>
+          分享
+        </View>
+        {isShared ? (
+          <View className="share-bg">
+            <View className="share-wrap">
+              <ShareCanvas langImg="test" />
+              <AtButton onClick={this.closeCanvas}>关闭</AtButton>
+            </View>
+          </View>
+        ) : (
+          ""
+        )}
         <View className="rank-intro" onClick={this.openIntro.bind(this)}>
           榜单介绍
         </View>

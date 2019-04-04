@@ -2,7 +2,19 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Button, Image } from "@tarojs/components";
 import { TaroCanvasDrawer } from "taro-plugin-canvas"; // npm 引入方式
 
-import baidu from "../../assets/img/company/baidu.png";
+import canvasBg from "../../assets/img/canvas-bg.png";
+import { connect } from "@tarojs/redux";
+import { ajaxGetAuth } from "../../actions/rankList";
+@connect(
+  ({ rankList }) => ({
+    rankList
+  }),
+  dispatch => ({
+    ajaxGetAuth() {
+      dispatch(ajaxGetAuth());
+    }
+  })
+)
 export default class ShareCanvas extends Component {
   constructor(props) {
     super(props);
@@ -46,20 +58,20 @@ export default class ShareCanvas extends Component {
           }
         ],
         texts: [
-          {
-            x: 80,
-            y: 220,
-            text: "国产谍战 真人演出,《隐形守护者》凭什么成为Steam第一?",
-            fontSize: 32,
-            color: "#000",
-            opacity: 1,
-            baseLine: "middle",
-            lineHeight: 48,
-            lineNum: 2,
-            textAlign: "left",
-            width: 580,
-            zIndex: 999
-          },
+          // {
+          //   x: 80,
+          //   y: 220,
+          //   text: "国产谍战 真人演出,《隐形守护者》凭什么成为Steam第一?",
+          //   fontSize: 32,
+          //   color: "#000",
+          //   opacity: 1,
+          //   baseLine: "middle",
+          //   lineHeight: 48,
+          //   lineNum: 2,
+          //   textAlign: "left",
+          //   width: 580,
+          //   zIndex: 999
+          // },
           {
             x: 80,
             y: 590,
@@ -89,11 +101,11 @@ export default class ShareCanvas extends Component {
         ],
         images: [
           {
-            url: baidu,
+            url: canvasBg,
             width: 670,
-            height: 320,
-            y: 40,
-            x: 40,
+            height: 1500,
+            y: 0,
+            x: 0,
             borderRadius: 12,
             zIndex: 10
             // borderRadius: 150,
@@ -101,7 +113,7 @@ export default class ShareCanvas extends Component {
             // borderColor: 'red',
           },
           {
-            url: baidu,
+            url: canvasBg,
             width: 110,
             height: 110,
             y: 570,
@@ -124,29 +136,33 @@ export default class ShareCanvas extends Component {
       }
     };
   }
-  componentWillMount() {
-    console.log("this.props", this.props);
+  componentDidMount() {
+    this.props.ajaxGetAuth();
     this.canvasDrawFunc();
   }
 
   // 调用绘画 => canvasStatus 置为true、同时设置config
   canvasDrawFunc = (config = this.state.rssConfig) => {
-    console.log("this.props", this.props);
-    config.texts.push({
-      x: 80,
-      y: 1020,
-      text: "加的文字",
-      // text: ranklist.map((item, index) => item.toString()),
-      fontSize: 32,
-      color: "#000",
-      opacity: 1,
-      baseLine: "middle",
-      lineHeight: 48,
-      lineNum: 2,
-      textAlign: "left",
-      width: 580,
-      zIndex: 999
+    const test = "hhh";
+    const { authRank } = this.props.rankList;
+    authRank.forEach((rank, index) => {
+      config.texts.push({
+        x: 80,
+        y: 200 + index * 100,
+        text: rank.languageName,
+        // text: ranklist.map((item, index) => item.toString()),
+        fontSize: 32,
+        color: "#000",
+        opacity: 1,
+        baseLine: "middle",
+        lineHeight: 48,
+        lineNum: 2,
+        textAlign: "left",
+        width: 580,
+        zIndex: 999
+      });
     });
+
     this.setState({
       canvasStatus: true,
       config: config
@@ -155,7 +171,6 @@ export default class ShareCanvas extends Component {
       title: "绘制中..."
     });
   };
-
   // 绘制成功回调函数 （必须实现）=> 接收绘制结果、重置 TaroCanvasDrawer 状态
   onCreateSuccess = result => {
     const { tempFilePath, errMsg } = result;
@@ -209,7 +224,6 @@ export default class ShareCanvas extends Component {
   };
 
   render() {
-    console.log("this.props", this);
     return (
       <View>
         <View className="share-canvas">

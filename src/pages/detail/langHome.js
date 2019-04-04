@@ -9,7 +9,18 @@ import javaLogo from "../../assets/img/language/java.png";
 import aliLogo from "../../assets/img/company/alibaba.png";
 import share from "../../assets/icon/share.png";
 import saveimg from "../../assets/icon/saveimg.png";
-
+import { connect } from "@tarojs/redux";
+import { ajaxGetLangHome } from "../../actions/rankList";
+@connect(
+  ({ rankList }) => ({
+    rankList
+  }),
+  dispatch => ({
+    ajaxGetLangHome(langName) {
+      dispatch(ajaxGetLangHome(langName));
+    }
+  })
+)
 export default class LangHome extends Component {
   constructor() {
     super();
@@ -18,24 +29,25 @@ export default class LangHome extends Component {
       langName: ""
     };
   }
-  componentWillMount() {
+  componentWillMount() {}
+  componentDidMount() {
     const { langName } = this.$router.params;
+    this.props.ajaxGetLangHome(langName);
     this.setState({
       langName
     });
-  }
-  componentDidMount() {
-    const chartData = {
-      dimensions: {
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-      },
-      measures: [
-        {
-          data: [10, 52, 200, 334, 390, 330, 220]
-        }
-      ]
-    };
-    this.lineChart.refresh(chartData);
+    // const chartData = {
+    //   dimensions: {
+    //     data: ["Mon", "Tue", "Wed", "Thu", "Fri"]
+    //   },
+    //   measures: [
+    //     {
+    //       data: [10, 52, 200, 334, 390]
+    //       // data: this.props.rankList.langHome.exponentOfLastSevenDays
+    //     }
+    //   ]
+    // };
+    // this.lineChart.refresh(chartData);
   }
   refLineChart = node => (this.lineChart = node);
   navigateToDetail(name) {
@@ -43,11 +55,28 @@ export default class LangHome extends Component {
       url: "/pages/detail/langDetail?langName=" + encodeURI(name)
     });
   }
+  componentWillReceiveProps(nextprops) {
+    console.log("nextprops", nextprops);
+    const chartData = {
+      dimensions: {
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri"]
+      },
+      measures: [
+        {
+          // data: [10, 52, 200, 334, 390]
+          data: nextprops.rankList.langHome.exponentOfLastSevenDays
+        }
+      ]
+    };
+    this.lineChart.refresh(chartData);
+  }
   render() {
     const { langName } = this.state;
+    const { langHome } = this.props.rankList;
     const detailInfo = this.state.langInfo[langName];
-    console.log("detailInfo", detailInfo);
-    console.log("this.state", this.state);
+    console.log("langHome", langHome);
+    console.log("this.props", this.props);
+
     return (
       <View>
         <View className="wrap-content">
@@ -65,7 +94,7 @@ export default class LangHome extends Component {
               </View>
             </View>
             <View className="state">
-              <View>1000人</View>
+              <View>{langHome.joinedNumber}人</View>
               <View>已加入学习计划</View>
             </View>
           </View>
@@ -75,11 +104,13 @@ export default class LangHome extends Component {
           <View className="wrap-title">数据概况</View>
           <View className="data-info">
             <View className="tend-wrap">
-              <View className="tend-num">26</View>
+              <View className="tend-num">{langHome.fixedFinalExponent}</View>
               <View className="tend-title">猿指数</View>
             </View>
             <View className="tend-wrap">
-              <View className="tend-num">6</View>
+              <View className="tend-num">
+                {langHome.fixedFinalExponentIncreasing}
+              </View>
               <View className="tend-title">成长指数</View>
             </View>
           </View>

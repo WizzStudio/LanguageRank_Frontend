@@ -2,6 +2,18 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Swiper, MovableArea, MovableView } from "@tarojs/components";
 import { AtCard, AtButton } from "taro-ui";
 import "./dailyPlan.scss";
+import { connect } from "@tarojs/redux";
+import { ajaxGetUserPlan } from "../../actions/useInfo";
+@connect(
+  ({ userInfo }) => ({
+    userInfo
+  }),
+  dispatch => ({
+    ajaxGetUserPlan(data) {
+      dispatch(ajaxGetUserPlan(data));
+    }
+  })
+)
 export default class DailyPlan extends Component {
   constructor() {
     super();
@@ -9,15 +21,19 @@ export default class DailyPlan extends Component {
       current: 0
     };
   }
+  componentDidMount() {
+    this.props.ajaxGetUserPlan(1);
+  }
   handleSwiper = e => {
-    // console.log("e", e);
+    console.log("e", e);
     this.setState({
       current: e.detail.current
     });
   };
   render() {
+    const { userPlan } = this.props.userInfo;
     const { current } = this.state;
-    const plan = ["con1", "con2", "con3", "con4", "con5"];
+    console.log("userPlan", userPlan);
     return (
       <View>
         <View className="main-plan">
@@ -28,10 +44,10 @@ export default class DailyPlan extends Component {
               indicatorActiveColor="#333"
               previousMargin="50px"
               nextMargin="50px"
-              current="1"
+              current={userPlan.length - 1}
               onChange={this.handleSwiper}
               indicatorDots>
-              {plan.map((item, index) => {
+              {userPlan.map((item, index) => {
                 return (
                   <SwiperItem
                     index={index}
@@ -41,8 +57,12 @@ export default class DailyPlan extends Component {
                       "plan-item",
                       current === index ? "active" : ""
                     ].join(" ")}>
-                    <View className="plan-title">第一天</View>
-                    <AtCard className="plan-card">{item}</AtCard>
+                    <View className="plan-title">{item.studyPlanDay}</View>
+                    <AtCard className="plan-card">
+                      <Image className="full-plan" src={item.imageOne} />
+                    </AtCard>
+
+                    {/* <AtCard className="plan-card">{item}</AtCard> */}
                   </SwiperItem>
                 );
               })}

@@ -1,17 +1,31 @@
-import { GET_USERINFO_SUCCESS, GET_USERINFO_FAIL } from "../constants/userInfo";
+import {
+  GET_USER_ALLINFO,
+  GET_USER_FAIL,
+  GET_USER_PLAN
+} from "../constants/userInfo";
 
 export default function userInfo(state = {}, action) {
   switch (action.type) {
-    case GET_USERINFO_SUCCESS:
+    case GET_USER_ALLINFO:
       return {
         ...state,
-        ...action.data
+        allInfo: {
+          ...action.payload
+        }
       };
-    case GET_USERINFO_FAIL:
+    case GET_USER_PLAN:
       return {
         ...state,
-        ...action.data
+        userPlan: [...action.payload]
       };
+    case GET_USER_FAIL:
+      return {
+        ...state,
+        getFail: {
+          ...action.payload
+        }
+      };
+
     default:
       return state;
   }

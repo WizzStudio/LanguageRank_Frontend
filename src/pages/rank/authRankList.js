@@ -1,39 +1,22 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Canvas } from "@tarojs/components";
 import { AtFloatLayout, AtButton } from "taro-ui";
-import html2canvas from "html2canvas";
 import "./authRankList.scss";
-import baidu from "../../assets/img/company/baidu.png";
 import AuthItem from "../../components/rank/authItem";
 import ShareCanvas from "../../components/rank/shareCanvas";
 
 import { connect } from "@tarojs/redux";
-import { getAuth } from "../../actions/rankList";
-import { asyncGetUser } from "../../actions/userlist";
+import { ajaxGetAuth } from "../../actions/rankList";
 @connect(
   ({ rankList }) => ({
     rankList
   }),
   dispatch => ({
-    getAuth() {
-      dispatch(getAuth());
+    ajaxGetAuth() {
+      dispatch(ajaxGetAuth());
     }
   })
 )
-// @connect(
-//   ({ rankList, userlist }) => ({
-//     rankList,
-//     userlist
-//   }),
-//   dispatch => ({
-//     getAuth() {
-//       dispatch(getAuth());
-//     },
-//     asyncGetUser() {
-//       dispatch(asyncGetUser());
-//     }
-//   })
-// )
 export default class AuthRankList extends Component {
   constructor() {
     super();
@@ -43,7 +26,7 @@ export default class AuthRankList extends Component {
     };
   }
   componentWillMount() {
-    this.props.getAuth();
+    this.props.ajaxGetAuth();
     // this.props.asyncGetUser();
   }
   handleNavigate(name) {
@@ -72,7 +55,7 @@ export default class AuthRankList extends Component {
     });
   };
   render() {
-    const rankList = this.props.rankList;
+    const rankList = this.props.rankList.authRank;
     const { isShared } = this.state;
     return (
       <View>
@@ -82,9 +65,9 @@ export default class AuthRankList extends Component {
               key={index}
               onClick={this.handleNavigate.bind(this, rank.languageName)}>
               <AuthItem
-                langImg="logo"
+                langImg={rank.languageSymbol}
                 langName={rank.languageName}
-                heatNum={rank.languageNumber}
+                heatNum={rank.fixedFinalExponent}
                 tend={rank.languageTend}
                 index={index}
               />
