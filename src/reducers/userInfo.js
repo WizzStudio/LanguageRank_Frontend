@@ -1,10 +1,12 @@
 import {
   GET_USER_ALLINFO,
   GET_USER_FAIL,
-  GET_USER_PLAN
+  GET_USER_PLAN,
+  ADD_USER_PLAN,
+  GET_USER_AWARD
 } from "../constants/userInfo";
 
-export default function userInfo(state = {}, action) {
+export default function userInfo(state = [], action) {
   switch (action.type) {
     case GET_USER_ALLINFO:
       return {
@@ -25,7 +27,16 @@ export default function userInfo(state = {}, action) {
           ...action.payload
         }
       };
-
+    case ADD_USER_PLAN:
+      return {
+        ...state,
+        addPlan: action.payload
+      };
+    case GET_USER_AWARD:
+      return {
+        ...state,
+        userAward: { ...action.payload }
+      };
     default:
       return state;
   }

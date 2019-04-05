@@ -24,6 +24,7 @@ class App extends Component {
 
       "pages/amount/myInfo",
       "pages/amount/dailyPlan",
+      "pages/amount/myAward",
       "pages/detail/demandHome",
       "pages/detail/langHome",
       "pages/detail/langDetail"

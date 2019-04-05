@@ -1,7 +1,6 @@
 import {
   GET_AUTH_RANK,
   GET_DEMAND_RANK,
-  GET_DEMANDPOSI,
   GET_LANGHOME
 } from "../constants/rank";
 
@@ -25,8 +24,6 @@ export default function rankList(state = INIT_STATE, action) {
           ...action.payload
         }
       };
-    case GET_DEMANDPOSI:
-      return action.payload;
     default:
       return state;
   }

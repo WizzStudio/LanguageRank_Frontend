@@ -1,30 +1,12 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Button, Text } from "@tarojs/components";
-import { connect } from "@tarojs/redux";
 
 import { AtSegmentedControl } from "taro-ui";
 import AuthRankList from "../rank/authRankList";
 import DemandRankList from "../rank/demandRankList";
 
-import { add, minus, asyncAdd } from "../../actions/counter";
-import { getAuth } from "../../actions/rankList";
-
 import "./index.scss";
 
-@connect(
-  ({ counter, rankList }) => ({
-    counter,
-    rankList
-  }),
-  dispatch => ({
-    add() {
-      dispatch(add());
-    },
-    getAuth() {
-      dispatch(getAuth());
-    }
-  })
-)
 class Index extends Component {
   config = {
     navigationBarTitleText: "首页"
@@ -35,6 +17,11 @@ class Index extends Component {
       current: 0
     };
   }
+  componentDidMount() {
+    if (!Taro.getStorageSync("login")) {
+      this.handleLogin();
+    }
+  }
   handleClick(value) {
     this.setState({
       current: value
@@ -44,13 +31,37 @@ class Index extends Component {
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps);
   }
-
   componentWillUnmount() {}
 
   componentDidShow() {}
 
   componentDidHide() {}
-
+  handleLogin = () => {
+    Taro.login({
+      success(res) {
+        if (res.code) {
+          console.log("res.code", res.code);
+          Taro.request({
+            url: "https://pgrk.wizzstudio.com/login",
+            method: "POST",
+            data: {
+              code: res.code
+            }
+          }).then(res => {
+            console.log("re的res", res);
+            if (res.data.code === 0) {
+              const data = res.data.data;
+              Taro.setStorageSync("login", {
+                userid: data.userId,
+                openId: data.openId,
+                session_key: data.session_key
+              });
+            }
+          });
+        }
+      }
+    });
+  };
   render() {
     return (
       <View className="top-bg">
@@ -75,21 +86,6 @@ class Index extends Component {
             </View>
           ) : null}
         </View>
-
-        {/* <View className="index">
-          <Button className="add_btn" onClick={this.props.add}>
-            +
-          </Button>
-          <Button className="dec_btn" onClick={this.props.dec}>
-            -
-          </Button>
-          <Button className="dec_btn" onClick={this.props.asyncAdd}>
-            async
-          </Button>
-          <View>
-            <Text>{this.props.counter.num}</Text>
-          </View>
-        </View> */}
       </View>
     );
   }

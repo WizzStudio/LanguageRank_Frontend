@@ -5,25 +5,24 @@ import langInfo from "../../mock/langInfo.json";
 import "./langDetail.scss";
 
 import javaLogo from "../../assets/img/language/java.png";
-import share from "../../assets/icon/share.png";
-import saveimg from "../../assets/icon/saveimg.png";
 import ai from "../../assets/icon/ai.png";
 import cloud from "../../assets/icon/cloud.png";
+import AddPlan from "../../components/rank/addPlan";
 export default class LangDetail extends Component {
   constructor() {
     super();
     this.state = {
-      langInfo,
+      langInfo: {},
       langName: ""
     };
   }
-  componentWillMount() {
+  componentWillMount() {}
+  componentDidMount() {
     const { langName } = this.$router.params;
     this.setState({
       langName
     });
   }
-  componentDidMount() {}
   render() {
     const { langName } = this.state;
     const detailInfo = this.state.langInfo[langName];
@@ -51,7 +50,7 @@ export default class LangDetail extends Component {
         <AtDivider />
         <View class="wrap-content">
           <View className="wrap-title">语言简史</View>
-          <View className="history">{detailInfo.history.join("\n")}</View>
+          <View className="history">简史</View>
         </View>
         <AtDivider />
         <View className="wrap-content">
@@ -107,19 +106,7 @@ export default class LangDetail extends Component {
           <View className="wrap-title">{langName}的顶级雇主</View>
           <View>移动开发。。。</View>
         </View>
-        <View className="footer-wrap">
-          <View className="fix-footer">
-            <View className="add-plan">加入学习计划</View>
-            <View className="share">
-              <Image src={share} className="img" />
-              <View className="share-title">分享</View>
-            </View>
-            <View className="ge-img">
-              <Image src={saveimg} className="img" />
-              <View className="save-title">生成图片</View>
-            </View>
-          </View>
-        </View>
+        <AddPlan langName={langName} />
       </View>
     );
   }

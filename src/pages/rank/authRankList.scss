@@ -8,7 +8,7 @@
   margin: auto 10px;
 }
 .rank-intro {
-  margin: 20px auto;
+  margin: 42px auto;
   width: 180px;
   color: #999999;
   font-size: 32px;
@@ -19,21 +19,33 @@
   font-weight: bold;
   font-size: 36px;
   text-align: center;
-  margin: 80px auto;
+  margin: 44px auto;
+}
+.pre-intro-content {
+  padding: 0 70px 20px 70px;
 }
 .intro-close {
   width: 80%;
-  margin: 60px auto;
+  margin: 20px auto;
+}
+.share-canvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .share {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid #999999;
-  background: yellowgreen;
-  height: 80px;
-  width: 80px;
+  background: #4f5fc5;
+  height: 120px;
+  width: 120px;
   position: fixed;
-  right: 40px;
-  bottom: 100px;
+  right: 48px;
+  bottom: 48px;
   border-radius: 50%;
+  box-shadow: 6px 6px 10px #c8c8c8;
 }
 .share-bg {
   position: fixed;
@@ -52,6 +64,6 @@
     align-items: center;
     margin: auto auto;
     width: 100%;
-    height: 60%;
+    height: 100%;
   }
 }

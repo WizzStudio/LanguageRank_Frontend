@@ -1,37 +1,31 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
 import { AtDivider } from "taro-ui";
-import LineChart from "../../components/echarts/LineChart";
 import PieChart from "../../components/echarts/PieChart";
 import BarChart from "../../components/echarts/BarChart";
+import KChart from "../../components/echarts/KChart";
+import AddPlan from "../../components/rank/addPlan";
 import { connect } from "@tarojs/redux";
-import { ajaxGetDemandPosi } from "../../actions/rankList";
+import {
+  ajaxGetDemandPosi,
+  ajaxGetPosi,
+  ajaxGetCity,
+  ajaxGetSalary
+} from "../../actions/rankList";
 import demandHome from "../../reducers/index";
-
 import "./langDetail.scss";
-import javaLogo from "../../assets/img/language/java.png";
-import share from "../../assets/icon/share.png";
-import saveimg from "../../assets/icon/saveimg.png";
-import rankList from "../../reducers/rankList";
-
-// @connect(
-//   ({ rankList }) => ({
-//     rankList
-//   }),
-//   dispatch => ({
-//     getAuth() {
-//       dispatch(getAuth());
-//     }
-//   })
-// )
+import { PropTypes } from "nervjs";
 
 @connect(
   ({ demandHome }) => ({
     demandHome
   }),
   dispatch => ({
-    ajaxGetDemandPosi(lang) {
+    getDemandHome(lang) {
       dispatch(ajaxGetDemandPosi(lang));
+      dispatch(ajaxGetPosi(lang));
+      dispatch(ajaxGetCity(lang));
+      dispatch(ajaxGetSalary(lang));
     }
   })
 )
@@ -42,88 +36,116 @@ export default class DemandHome extends Component {
       langName: ""
     };
   }
-  componentWillMount() {
+  // static defaultProps = {
+  //   demandHome: {
+  //     salary: [],
+  //     demandPosi: [],
+  //     city: [],
+  //     posi: []
+  //   }
+  // };
+  componentWillMount() {}
+  componentDidMount() {
     const { langName } = this.$router.params;
     this.setState({
       langName
     });
-  }
-  componentDidMount() {
-    this.props.ajaxGetDemandPosi(this.state.langName);
+    this.props.getDemandHome(langName);
   }
   componentWillReceiveProps(nextprops) {
-    console.log("nextprops", nextprops);
-    const { demandHome } = nextprops;
-    console.log("demandHome", demandHome);
-    let barX = [],
-      barY = [];
-    demandHome.forEach(item => {
-      barX.push(item.companyName);
-      barY.push(item.companyPostNumber);
-    });
-    //折线图
-    const lineChartData = {
-      dimensions: {
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-      },
-      measures: [
-        {
-          data: [10, 52, 200, 334, 390, 330, 220]
-        }
-      ]
-    };
-    this.lineChart.refresh(lineChartData);
-
-    //柱状图
-    const barChartData = {
-      dimensions: {
-        // data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-        data: barX
-      },
-      measures: [
-        {
-          // data: [10, 52, 200, 334, 390, 330, 220]
-          data: barY
-        }
-      ]
-    };
-    this.barChart.refresh(barChartData);
-
-    //饼状图
-    const pieChartData = [
-      { value: 335, name: "直接访问" },
-      { value: 310, name: "邮件营销" },
-      { value: 234, name: "联盟广告" },
-      { value: 135, name: "视频广告" },
-      { value: 1548, name: "搜索引擎" }
-    ];
-    this.pieChart.refresh(pieChartData);
+    console.log("需求nextprops", nextprops);
+    if (nextprops.demandHome.salary) {
+      const { salary } = nextprops.demandHome;
+      //K线图
+      let salaryX = [],
+        salaryY = [];
+      salary.map(item => {
+        salaryX.push(item.companyName);
+        salaryY.push([
+          item.companyOrdSalary - 1,
+          item.companyOrdSalary + 1,
+          item.companyMinSalary,
+          item.companyMaxSalary
+        ]);
+      });
+      const kChartData = {
+        dimensions: {
+          data: salaryX
+        },
+        measures: [
+          {
+            data: salaryY
+          }
+        ]
+      };
+      this.kChart.refresh(kChartData);
+    }
+    if (nextprops.demandHome.demandPosi) {
+      const { demandPosi } = nextprops.demandHome;
+      //柱状图
+      let demandPosiX = [],
+        demandPosiY = [];
+      demandPosi.map(item => {
+        demandPosiX.push(item.companyName);
+        demandPosiY.push(item.companyPostNumber);
+      });
+      const barChartData = {
+        dimensions: {
+          data: demandPosiX
+        },
+        measures: [
+          {
+            data: demandPosiY
+          }
+        ]
+      };
+      this.barChart.refresh(barChartData);
+    }
+    if (nextprops.demandHome.city) {
+      const { city } = nextprops.demandHome;
+      //饼状图
+      let cityPie = [];
+      city.map(item => {
+        cityPie.push({
+          value: item.cityPostNumber,
+          name: item.languageCity
+        });
+      });
+      const pieChartData = cityPie;
+      this.pieChart.refresh(pieChartData);
+    }
   }
   //选中dom
-  refLineChart = node => (this.lineChart = node);
+  refKChart = node => (this.kChart = node);
   refBarChart = node => (this.barChart = node);
   refPieChart = node => (this.pieChart = node);
 
   render() {
     const { langName } = this.state;
-    console.log("this.state", this.state);
+    const { posi, logo } = this.props.demandHome;
     return (
       <View>
         <View className="demand-title">
-          <Image src={javaLogo} className="demand-logo" />
-          Java相关岗位
+          <Image src={logo} className="demand-logo" />
+          {langName}相关岗位
         </View>
-        {/* <AtDivider /> */}
         <View className="wrap-content">
           <View className="wrap-title">热门岗位</View>
-          <View>列表</View>
+          <View>
+            {posi.map((item, index) => (
+              <View key={index} className="demand-posi-wrap">
+                <View className="demand-posi-name">{item.languagePost}</View>
+                <View className="demand-posi-salary">{item.postSalary}</View>
+              </View>
+            ))}
+          </View>
         </View>
 
         <AtDivider />
         <View className="wrap-content">
           <View className="wrap-title">公司薪资排行</View>
           <View className="line-chart">
-            <LineChart ref={this.refLineChart} />
+            <KChart ref={this.refKChart} />
           </View>
         </View>
         <AtDivider />
@@ -140,19 +162,7 @@ export default class DemandHome extends Component {
             <PieChart ref={this.refPieChart} />
           </View>
         </View>
-        <View className="footer-wrap">
-          <View className="fix-footer">
-            <View className="add-plan">加入学习计划</View>
-            <View className="share">
-              <Image src={share} className="img" />
-              <View className="share-title">分享</View>
-            </View>
-            <View className="ge-img">
-              <Image src={saveimg} className="img" />
-              <View className="save-title">生成图片</View>
-            </View>
-          </View>
-        </View>
+        <AddPlan langName={langName} />
       </View>
     );
   }

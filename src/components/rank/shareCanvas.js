@@ -32,78 +32,64 @@ export default class ShareCanvas extends Component {
         backgroundColor: "#fff",
         debug: false,
         blocks: [
-          {
-            x: 0,
-            y: 0,
-            width: 750,
-            height: 750,
-            paddingLeft: 0,
-            paddingRight: 0,
-            borderWidth: 0,
-            // borderColor: '#ccc',
-            backgroundColor: "#EFF3F5",
-            borderRadius: 0
-          },
-          {
-            x: 40,
-            y: 40,
-            width: 670,
-            height: 670,
-            paddingLeft: 0,
-            paddingRight: 0,
-            borderWidth: 0,
-            // borderColor: '#ccc',
-            backgroundColor: "#fff",
-            borderRadius: 12
-          }
+          // {
+          //   x: 0,
+          //   y: 0,
+          //   width: 750,
+          //   height: 800,
+          //   paddingLeft: 0,
+          //   paddingRight: 0,
+          //   borderWidth: 0,
+          //   // borderColor: '#ccc',
+          //   // backgroundColor: "#ccc",
+          //   borderRadius: 0
+          // }
+          // {
+          //   x: 40,
+          //   y: 40,
+          //   width: 670,
+          //   height: 670,
+          //   paddingLeft: 0,
+          //   paddingRight: 0,
+          //   borderWidth: 0,
+          //   // borderColor: '#ccc',
+          //   backgroundColor: "blue",
+          //   borderRadius: 12
+          // }
         ],
         texts: [
           // {
           //   x: 80,
-          //   y: 220,
-          //   text: "国产谍战 真人演出,《隐形守护者》凭什么成为Steam第一?",
-          //   fontSize: 32,
-          //   color: "#000",
+          //   y: 590,
+          //   text: "长按扫描二维码阅读完整内容",
+          //   fontSize: 24,
+          //   color: "#666",
           //   opacity: 1,
           //   baseLine: "middle",
-          //   lineHeight: 48,
-          //   lineNum: 2,
           //   textAlign: "left",
-          //   width: 580,
+          //   lineHeight: 36,
+          //   lineNum: 1,
           //   zIndex: 999
           // },
-          {
-            x: 80,
-            y: 590,
-            text: "长按扫描二维码阅读完整内容",
-            fontSize: 24,
-            color: "#666",
-            opacity: 1,
-            baseLine: "middle",
-            textAlign: "left",
-            lineHeight: 36,
-            lineNum: 1,
-            zIndex: 999
-          },
-          {
-            x: 80,
-            y: 640,
-            text: "分享来自 「 RssFeed 」",
-            fontSize: 24,
-            color: "#666",
-            opacity: 1,
-            baseLine: "middle",
-            textAlign: "left",
-            lineHeight: 36,
-            lineNum: 1,
-            zIndex: 999
-          }
+          // {
+          //   x: 80,
+          //   y: 640,
+          //   text: "分享来自 「 RssFeed 」",
+          //   fontSize: 24,
+          //   color: "#666",
+          //   opacity: 1,
+          //   baseLine: "middle",
+          //   textAlign: "left",
+          //   lineHeight: 36,
+          //   lineNum: 1,
+          //   zIndex: 999
+          // }
         ],
         images: [
           {
             url: canvasBg,
-            width: 670,
-            height: 1500,
+            width: 750,
+            height: 800,
             y: 0,
             x: 0,
             borderRadius: 12,
@@ -111,17 +97,17 @@ export default class ShareCanvas extends Component {
             // borderRadius: 150,
             // borderWidth: 10,
             // borderColor: 'red',
-          },
-          {
-            url: canvasBg,
-            width: 110,
-            height: 110,
-            y: 570,
-            x: 560,
-            borderRadius: 100,
-            borderWidth: 0,
-            zIndex: 10
           }
+          // {
+          //   url: canvasBg,
+          //   width: 110,
+          //   height: 110,
+          //   y: 570,
+          //   x: 560,
+          //   borderRadius: 100,
+          //   borderWidth: 0,
+          //   zIndex: 10
+          // }
         ],
         lines: [
           {
@@ -145,7 +131,7 @@ export default class ShareCanvas extends Component {
   canvasDrawFunc = (config = this.state.rssConfig) => {
     const test = "hhh";
     const { authRank } = this.props.rankList;
-    authRank.forEach((rank, index) => {
+    authRank.map((rank, index) => {
       config.texts.push({
         x: 80,
         y: 200 + index * 100,

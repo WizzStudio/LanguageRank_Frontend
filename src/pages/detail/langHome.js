@@ -1,23 +1,25 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View, Image } from "@tarojs/components";
-import { AtDivider, AtRate, AtButton, AtBadge } from "taro-ui";
+import { View, Image, CoverView } from "@tarojs/components";
+import { AtDivider, AtRate, AtButton, AtBadge, AtModal } from "taro-ui";
 import LineChart from "../../components/echarts/LineChart";
 import langInfo from "../../mock/langInfo.json";
 import "./langDetail.scss";
-
-import javaLogo from "../../assets/img/language/java.png";
+import AddPlan from "../../components/rank/addPlan";
 import aliLogo from "../../assets/img/company/alibaba.png";
-import share from "../../assets/icon/share.png";
-import saveimg from "../../assets/icon/saveimg.png";
 import { connect } from "@tarojs/redux";
 import { ajaxGetLangHome } from "../../actions/rankList";
+import { ajaxGetUserAllInfo } from "../../actions/useInfo";
 @connect(
-  ({ rankList }) => ({
-    rankList
+  ({ rankList, userInfo }) => ({
+    rankList,
+    userInfo
   }),
   dispatch => ({
     ajaxGetLangHome(langName) {
       dispatch(ajaxGetLangHome(langName));
+    },
+    ajaxGetUserAllInfo(data) {
+      dispatch(ajaxGetUserAllInfo(data));
     }
   })
 )
@@ -26,30 +28,21 @@ export default class LangHome extends Component {
     super();
     this.state = {
       langInfo,
-      langName: ""
+      langName: "",
+      isModalOpen: false
     };
   }
   componentWillMount() {}
   componentDidMount() {
+    const loginInfo = Taro.getStorageSync("login");
+    this.props.ajaxGetUserAllInfo(loginInfo.userid);
     const { langName } = this.$router.params;
     this.props.ajaxGetLangHome(langName);
     this.setState({
       langName
     });
-    // const chartData = {
-    //   dimensions: {
-    //     data: ["Mon", "Tue", "Wed", "Thu", "Fri"]
-    //   },
-    //   measures: [
-    //     {
-    //       data: [10, 52, 200, 334, 390]
-    //       // data: this.props.rankList.langHome.exponentOfLastSevenDays
-    //     }
-    //   ]
-    // };
-    // this.lineChart.refresh(chartData);
   }
-  refLineChart = node => (this.lineChart = node);
+
   navigateToDetail(name) {
     Taro.navigateTo({
       url: "/pages/detail/langDetail?langName=" + encodeURI(name)
@@ -57,32 +50,34 @@ export default class LangHome extends Component {
   }
   componentWillReceiveProps(nextprops) {
     console.log("nextprops", nextprops);
-    const chartData = {
-      dimensions: {
-        data: ["Mon", "Tue", "Wed", "Thu", "Fri"]
-      },
-      measures: [
-        {
-          // data: [10, 52, 200, 334, 390]
-          data: nextprops.rankList.langHome.exponentOfLastSevenDays
-        }
-      ]
-    };
-    this.lineChart.refresh(chartData);
+    if (nextprops.rankList.langHome) {
+      const chartData = {
+        dimensions: {
+          data: ["第一天", "第二天", "Wed", "Thu", "Fri", "六", "七"]
+        },
+        measures: [
+          {
+            // data: [10, 52, 200, 334, 390]
+            data: nextprops.rankList.langHome.exponentOfLastSevenDays
+          }
+        ]
+      };
+      this.lineChart.refresh(chartData);
+    }
   }
+
+  refLineChart = node => (this.lineChart = node);
   render() {
     const { langName } = this.state;
     const { langHome } = this.props.rankList;
     const detailInfo = this.state.langInfo[langName];
-    console.log("langHome", langHome);
-    console.log("this.props", this.props);
 
     return (
       <View>
         <View className="wrap-content">
           <View className="lang-title">
             <View className="icon">
-              <Image src={javaLogo} className="logo" />
+              <Image src={langHome.languageSymbol} className="logo" />
             </View>
             <View className="name">
               <View>
@@ -90,7 +85,7 @@ export default class LangHome extends Component {
                 <AtBadge value="HOT" className="badge" />
               </View>
               <View>
-                <AtRate value={detailInfo.complexity} />
+                <AtRate value={langHome.languageDifficultyIndex} />
               </View>
             </View>
             <View className="state">
@@ -127,21 +122,23 @@ export default class LangHome extends Component {
         <AtDivider />
         <View className="wrap-content">
           <View className="wrap-title">热门公司</View>
-          <View className="heat-company">
-            <View className="icon">
-              <Image src={aliLogo} className="logo" />
+          {langHome.company.map((item, index) => (
+            <View className="heat-company" key={index}>
+              <View className="icon">
+                <Image src={aliLogo} className="logo" />
+              </View>
+              <View className="name">{item.companyName}</View>
+              <View className="detail">
+                <View>{item.companyMaxSalaryPost}</View>
+                <View>最高月薪：{item.companyMaxSalary}k</View>
+              </View>
             </View>
-            <View className="name">阿里巴巴</View>
-            <View className="detail">
-              <View>热招岗位：xxx个</View>
-              <View>最高月薪：xxx元</View>
-            </View>
-          </View>
+          ))}
         </View>
         <AtDivider />
         <View className="wrap-content">
           <View className="wrap-title">语言简史</View>
-          <View className="history">{detailInfo.history.join("\n")}</View>
+          <View className="history">{langHome.languageDevelopmentHistory}</View>
         </View>
         <View className="wrap-content">
           <AtButton
@@ -151,19 +148,7 @@ export default class LangHome extends Component {
             更多语言信息
           </AtButton>
         </View>
-        <View className="footer-wrap">
-          <View className="fix-footer">
-            <View className="add-plan">加入学习计划</View>
-            <View className="share">
-              <Image src={share} className="img" />
-              <View className="share-title">分享</View>
-            </View>
-            <View className="ge-img">
-              <Image src={saveimg} className="img" />
-              <View className="save-title">生成图片</View>
-            </View>
-          </View>
-        </View>
+        <AddPlan langName={langName} />
       </View>
     );
   }

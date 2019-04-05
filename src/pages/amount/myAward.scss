@@ -1,0 +1,19 @@
+.my-award {
+  .award-title {
+    color: #4f5fc5;
+    font-size: 36px;
+    margin: 50px auto 50px 20px;
+    font-weight: 700;
+  }
+  .award-wrap {
+    display: flex;
+    justify-content: space-around;
+  }
+  .per-award {
+    font-size: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}

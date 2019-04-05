@@ -64,12 +64,15 @@ $color-brand: #4f5fc5;
     margin-right: 30px;
   }
   .name {
-    flex: 4;
+    flex: 3;
     font-size: 36px;
     font-weight: 600;
   }
   .detail {
-    flex: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    flex: 7;
     font-size: 32px;
     font-weight: 600;
     align-items: flex-end;
@@ -102,6 +105,21 @@ $color-brand: #4f5fc5;
   height: 40vh;
 }
 //语言细节页单独的css
+.demand-posi-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #a6a6a6;
+  font-size: 32px;
+  .demand-posi-name {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .demand-posi-salary {
+    display: flex;
+    justify-content: flex-start;
+  }
+}
 .lang-detail {
   .ad-disad {
     font-size: 30px;
@@ -138,54 +156,5 @@ $color-brand: #4f5fc5;
     .little-title {
       font-size: 24px;
     }
-  }
-}
-
-.footer-wrap {
-  height: 150px;
-  z-index: 100;
-}
-.fix-footer {
-  background: white;
-  height: 130px;
-  width: 100%;
-  // overflow-y: auto;
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  bottom: 0;
-  .add-plan {
-    flex: 3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: $color-brand;
-    font-size: 36px;
-    font-weight: bold;
-    color: white;
-  }
-  .share {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    .img {
-      width: 60px;
-      height: 60px;
-    }
-    font-size: 24px;
-  }
-  .ge-img {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    .img {
-      width: 60px;
-      height: 60px;
-    }
-    font-size: 24px;
   }
 }

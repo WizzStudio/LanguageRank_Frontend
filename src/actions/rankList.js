@@ -30,17 +30,17 @@ export const getAuth = data => {
   };
 };
 
-export const getDemand = () => {
+export const getDemand = data => {
   return {
     type: GET_DEMAND_RANK,
-    payload: demandData
+    payload: data
   };
 };
 //异步---请求权威和需求榜单
 export const ajaxGetAuth = () => {
   return async dispatch => {
     const response = await Taro.request({
-      url: "http://pgrk.wizzstudio.com/languagerank"
+      url: "https://pgrk.wizzstudio.com/languagerank"
     });
     const res = response.data;
     if (res.code === 0) {
@@ -54,7 +54,7 @@ export const ajaxGetAuth = () => {
 export const ajaxGetDemand = () => {
   return async dispatch => {
     const response = await Taro.request({
-      url: ""
+      url: "https://pgrk.wizzstudio.com/employerdemandrank"
     });
     const res = response.data;
     if (res.code === 0) {
@@ -66,18 +66,17 @@ export const ajaxGetDemand = () => {
   };
 };
 
-//同步---请求语言主页
+//请求语言主页
 export const getLangHome = data => {
   return {
     type: GET_LANGHOME,
     payload: data
   };
 };
-//异步---请求语言主页
 export const ajaxGetLangHome = langName => {
   return async dispatch => {
     const response = await Taro.request({
-      url: `http://pgrk.wizzstudio.com/languagerank/${langName}`
+      url: `https://pgrk.wizzstudio.com/languagerank/${langName}`
     });
     const res = response.data;
     if (res.code === 0) {
@@ -88,18 +87,17 @@ export const ajaxGetLangHome = langName => {
   };
 };
 
-//同步---请求热门岗位
+//请求热门岗位
 export const getPosi = data => {
   return {
     type: GET_POSI,
     payload: data
   };
 };
-//异步---请求热门岗位
-export const ajaxGetPosi = () => {
+export const ajaxGetPosi = lang => {
   return async dispatch => {
     const response = await Taro.request({
-      url: ""
+      url: `https://pgrk.wizzstudio.com/${lang}/post`
     });
     const res = response.data;
     if (res.code === 0) {
@@ -110,22 +108,63 @@ export const ajaxGetPosi = () => {
   };
 };
 
-//同步---请求公司需求排行
+//请求薪资排行
+export const getSalary = data => {
+  return {
+    type: GET_SALARY,
+    payload: data
+  };
+};
+export const ajaxGetSalary = lang => {
+  return async dispatch => {
+    const response = await Taro.request({
+      url: `https://pgrk.wizzstudio.com/${lang}/salary`
+    });
+    const res = response.data;
+    if (res.code === 0) {
+      dispatch(getSalary(res.data));
+    } else {
+      dispatch(getRankFail(res.msg));
+    }
+  };
+};
+
+//请求公司需求排行
 export const getDemandPosi = data => {
   return {
     type: GET_DEMANDPOSI,
     payload: data
   };
 };
-//异步---请求公司需求排行
 export const ajaxGetDemandPosi = lang => {
   return async dispatch => {
     const response = await Taro.request({
-      url: `http://pgrk.wizzstudio.com/${lang}/companypost`
+      url: `https://pgrk.wizzstudio.com/${lang}/companypost`
     });
     const res = response.data;
     if (res.code === 0) {
       dispatch(getDemandPosi(res.data));
+    } else {
+      dispatch(getRankFail(res.msg));
+    }
+  };
+};
+
+//请求城市需求
+export const getCity = data => {
+  return {
+    type: GET_CITY,
+    payload: data
+  };
+};
+export const ajaxGetCity = lang => {
+  return async dispatch => {
+    const response = await Taro.request({
+      url: `https://pgrk.wizzstudio.com/${lang}/languagecity`
+    });
+    const res = response.data;
+    if (res.code === 0) {
+      dispatch(getCity(res.data));
     } else {
       dispatch(getRankFail(res.msg));
     }

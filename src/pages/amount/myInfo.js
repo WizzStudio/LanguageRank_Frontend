@@ -15,6 +15,14 @@ import { ajaxGetUserAllInfo } from "../../actions/useInfo";
   })
 )
 export default class MyInfo extends Component {
+  // propTypes = {
+  //   userInfo: PropTypes.object.isRequired,
+  //   ajaxGetUserAllInfo: PropTypes.function.isRequired
+  // };
+
+  // defaultProps = {
+  //   userInfo: {}
+  // };
   constructor() {
     super();
     this.state = {
@@ -23,11 +31,27 @@ export default class MyInfo extends Component {
         avatar: "",
         nickName: ""
       },
-      noPlan: false
+      noPlan: false,
+      allInfo: {}
     };
   }
+  static defaultProps = {
+    userInfo: {
+      allInfo: {
+        studyPlanDay: 0
+      }
+    }
+  };
+
   componentDidMount() {
     this.checkLogin();
+  }
+  componentWillReceiveProps(nextprops) {
+    if (nextprops.userInfo.allInfo) {
+      this.setState({
+        allInfo: nextprops.userInfo.allInfo
+      });
+    }
   }
   checkLogin = () => {
     if (Taro.getStorageSync("login")) {
@@ -43,13 +67,13 @@ export default class MyInfo extends Component {
         });
       } else {
         //这个else可以不要？？
-        this.bindGetUserInfo();
-        if (Taro.getStorageSync("basicInfo")) {
-          const basicInfo = Taro.getStorageSync("basicInfo");
-          this.setState({
-            basicInfo: basicInfo
-          });
-        }
+        // this.bindGetUserInfo();
+        // if (Taro.getStorageSync("basicInfo")) {
+        //   const basicInfo = Taro.getStorageSync("basicInfo");
+        //   this.setState({
+        //     basicInfo: basicInfo
+        //   });
+        // }
       }
     } else {
       this.handleLogin();
@@ -61,7 +85,7 @@ export default class MyInfo extends Component {
         if (res.code) {
           console.log("res.code", res.code);
           Taro.request({
-            url: "http://pgrk.wizzstudio.com/login",
+            url: "https://pgrk.wizzstudio.com/login",
             method: "POST",
             data: {
               code: res.code
@@ -129,7 +153,7 @@ export default class MyInfo extends Component {
     //   }
     // });
   };
-  handleNavigate = () => {
+  toDailyPlan = () => {
     const { isLogin } = this.state;
     if (isLogin) {
       Taro.navigateTo({
@@ -141,9 +165,34 @@ export default class MyInfo extends Component {
       });
     }
   };
+  toAward = () => {
+    const { allInfo } = this.state;
+    if (allInfo.studyPlanDay === 7) {
+      Taro.navigateTo({
+        url: "/pages/amount/myAward"
+      });
+    } else {
+      Taro.showModal({
+        title: "提示",
+        content: "需要完成七日计划才可领取奖励哦~",
+        showCancel: false,
+        confirmText: "继续学习",
+        confirmColor: "#4f5fc5",
+        success(res) {
+          if (res.confirm) {
+            console.log("用户点击确定");
+          } else if (res.cancel) {
+            console.log("用户点击取消");
+          }
+        }
+      });
+    }
+  };
   render() {
     const { isLogin, basicInfo, noPlan } = this.state;
-    const { allInfo } = this.props.userInfo;
+    // const { allInfo } = this.props.userInfo;
+    const { allInfo } = this.state;
+    console.log("allInfo", allInfo);
     console.log("this.state", this.state);
     return (
       <View className="top-bg">
@@ -180,7 +229,7 @@ export default class MyInfo extends Component {
         <View className="study-plan">
           <View className="blank" />
 
-          <View className="plan-title-wrap" onClick={this.handleNavigate}>
+          <View className="plan-title-wrap" onClick={this.toDailyPlan}>
             <View className="plan-title">我的学习计划</View>
             {allInfo.myLanguage ? (
               <View className="isPlaned">{allInfo.myLanguage}</View>
@@ -207,7 +256,7 @@ export default class MyInfo extends Component {
               <View>已加入学习计划 </View>
             </View>
             <View className="per-plan-state">
-              {allInfo.joinedToday ? (
+              {allInfo.joinedToday + 1 ? (
                 <View>{allInfo.joinedToday}</View>
               ) : (
                 <View>?</View>
@@ -217,40 +266,32 @@ export default class MyInfo extends Component {
             </View>
           </View>
           <View className="plan-progress">
-            <AtProgress percent={10} strokeWidth={10} status="progress" />
+            {allInfo.studyPlanDay ? (
+              <AtProgress
+                percent={Math.round((allInfo.studyPlanDay / 7) * 100)}
+                strokeWidth={10}
+                status="progress"
+              />
+            ) : (
+              <AtProgress percent={0} strokeWidth={10} status="progress" />
+            )}
+            {/* <AtProgress percent={0} strokeWidth={10} status="progress" /> */}
             <View className="progress-intro">完成计划可获得相应奖励</View>
           </View>
           <View className="plan-action">
             <View>
-              <AtButton type="secondary" className="my-award my-button">
+              <AtButton
+                type="primary"
+                className="my-award my-button"
+                onClick={this.toAward}>
                 我的奖励
               </AtButton>
-              <AtButton type="secondary" className="my-question my-button">
-                问题反馈
-              </AtButton>
-            </View>
-            <View>
               <AtButton type="primary" className="login-out my-button">
                 退出登录
               </AtButton>
             </View>
+            <View className="add-question">问题反馈</View>
           </View>
-
-          {/* <View className="kinds">
-            <View className="kinds-title">编程语言种类</View>
-            <View className="kinds-img">语言图片</View>
-          </View>
-          <View className="plan-graph">学习路线图</View>
-          <View className="books">
-            <View className="per-book">
-              <View>java推荐书籍</View>
-              <Image />
-            </View>
-            <View className="per-book">
-              <View>java推荐书籍</View>
-              <Image />
-            </View>
-          </View> */}
         </View>
       </View>
     );
