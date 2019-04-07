@@ -1,7 +1,8 @@
 import {
   GET_AUTH_RANK,
   GET_DEMAND_RANK,
-  GET_LANGHOME
+  GET_LANGHOME,
+  GET_LANG_MORE
 } from "../constants/rank";
 
 const INIT_STATE = [];
@@ -21,6 +22,13 @@ export default function rankList(state = INIT_STATE, action) {
       return {
         ...state,
         langHome: {
+          ...action.payload
+        }
+      };
+    case GET_LANG_MORE:
+      return {
+        ...state,
+        langMore: {
           ...action.payload
         }
       };

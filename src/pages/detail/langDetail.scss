@@ -81,9 +81,20 @@ $color-brand: #4f5fc5;
 .history {
   font-size: 24px;
 }
+.to-detail-wrap {
+  display: flex;
+  justify-content: flex-end;
+}
 .to-detail {
-  margin: 80px auto;
-  width: 50%;
+  display: flex;
+  justify-content: center;
+  // margin-right: 20px;
+  color: $color-brand;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  font-size: 32px;
+  width: 150px;
+  border-bottom: 2px solid $color-brand;
 }
 .demand-title {
   display: flex;
@@ -157,4 +168,13 @@ $color-brand: #4f5fc5;
       font-size: 24px;
     }
   }
+}
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.blank {
+  height: 50px;
 }

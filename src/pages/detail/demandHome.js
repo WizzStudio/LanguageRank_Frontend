@@ -1,6 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
-import { AtDivider } from "taro-ui";
+import { AtDivider, AtActivityIndicator } from "taro-ui";
 import PieChart from "../../components/echarts/PieChart";
 import BarChart from "../../components/echarts/BarChart";
 import KChart from "../../components/echarts/KChart";
@@ -33,7 +33,12 @@ export default class DemandHome extends Component {
   constructor() {
     super();
     this.state = {
-      langName: ""
+      langName: "",
+      isLoading: {
+        salary: false,
+        demandPosi: false,
+        city: false
+      }
     };
   }
   // static defaultProps = {
@@ -56,6 +61,11 @@ export default class DemandHome extends Component {
     console.log("需求nextprops", nextprops);
     if (nextprops.demandHome.salary) {
       const { salary } = nextprops.demandHome;
+      this.setState({
+        isLoading: {
+          salary: false
+        }
+      });
       //K线图
       let salaryX = [],
         salaryY = [];
@@ -82,6 +92,11 @@ export default class DemandHome extends Component {
     }
     if (nextprops.demandHome.demandPosi) {
       const { demandPosi } = nextprops.demandHome;
+      this.setState({
+        isLoading: {
+          demandPosi: false
+        }
+      });
       //柱状图
       let demandPosiX = [],
         demandPosiY = [];
@@ -103,6 +118,11 @@ export default class DemandHome extends Component {
     }
     if (nextprops.demandHome.city) {
       const { city } = nextprops.demandHome;
+      this.setState({
+        isLoading: {
+          city: false
+        }
+      });
       //饼状图
       let cityPie = [];
       city.map(item => {
@@ -121,7 +141,7 @@ export default class DemandHome extends Component {
   refPieChart = node => (this.pieChart = node);
 
   render() {
-    const { langName } = this.state;
+    const { langName, isLoading } = this.state;
     const { posi, logo } = this.props.demandHome;
     return (
       <View>
@@ -145,21 +165,39 @@ export default class DemandHome extends Component {
         <View className="wrap-content">
           <View className="wrap-title">公司薪资排行</View>
           <View className="line-chart">
-            <KChart ref={this.refKChart} />
+            {isLoading.salary ? (
+              <View className="loading-wrap">
+                <AtActivityIndicator content="加载中..." size={60} />
+              </View>
+            ) : (
+              <KChart ref={this.refKChart} />
+            )}
           </View>
         </View>
         <AtDivider />
         <View className="wrap-content">
           <View className="wrap-title">公司需求量排行</View>
           <View className="line-chart">
-            <BarChart ref={this.refBarChart} />
+            {isLoading.salary ? (
+              <View className="loading-wrap">
+                <AtActivityIndicator content="加载中..." size={60} />
+              </View>
+            ) : (
+              <BarChart ref={this.refBarChart} />
+            )}
           </View>
         </View>
         <AtDivider />
         <View className="wrap-content">
           <View className="wrap-title">城市需求分析</View>
           <View className="line-chart">
-            <PieChart ref={this.refPieChart} />
+            {isLoading.salary ? (
+              <View className="loading-wrap">
+                <AtActivityIndicator content="加载中..." size={60} />
+              </View>
+            ) : (
+              <PieChart ref={this.refPieChart} />
+            )}
           </View>
         </View>
         <AddPlan langName={langName} />

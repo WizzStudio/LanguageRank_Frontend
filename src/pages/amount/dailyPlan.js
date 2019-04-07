@@ -1,6 +1,6 @@
 import Taro, { Component, getStorageSync } from "@tarojs/taro";
 import { View, Swiper } from "@tarojs/components";
-import { AtCard, AtButton } from "taro-ui";
+import { AtCard, AtButton, AtActivityIndicator } from "taro-ui";
 import "./dailyPlan.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserPlan } from "../../actions/useInfo";
@@ -24,7 +24,8 @@ export default class DailyPlan extends Component {
       current: 0,
       userInfo: {
         userPlan: []
-      }
+      },
+      isLoading: true
     };
   }
   // static defaultProps = {
@@ -39,7 +40,8 @@ export default class DailyPlan extends Component {
   componentWillReceiveProps(nextprops) {
     if (nextprops.userInfo) {
       this.setState({
-        userInfo: nextprops.userInfo
+        userInfo: nextprops.userInfo,
+        isLoading: false
       });
     }
   }
@@ -92,8 +94,19 @@ export default class DailyPlan extends Component {
     }
   };
   onShareAppMessage = res => {
+    console.log("res", res);
     if ((res.from = "button")) {
       console.log("用户点击了分享");
+      console.log("this.state.current", this.state.current);
+      const loginInfo = getStorageSync("login");
+      // Taro.request({
+      //   url:'https://pgrk.wizzstudio.com/updatetranspond',
+      //   method:'POST',
+      //   data:{
+      //     userId:loginInfo.userid,
+      //     studyPlanDay:
+      //   }
+      // })
     }
     return {
       title: "转发标题"
@@ -101,44 +114,52 @@ export default class DailyPlan extends Component {
     };
   };
   render() {
-    const { userPlan } = this.state.userInfo;
-    const { current } = this.state;
-    console.log("userPlan", userPlan);
+    const { studyPlan } = this.state.userInfo.userPlan;
+    const { current, isLoading } = this.state;
     return (
       <View>
         <View className="main-plan">
           <View className="plan-content">
-            <Swiper
-              className="swiper"
-              indicatorColor="#999"
-              indicatorActiveColor="#333"
-              previousMargin="50px"
-              nextMargin="50px"
-              current={userPlan.length - 1}
-              onChange={this.handleSwiper}
-              indicatorDots>
-              {userPlan.map((item, index) => {
-                return (
-                  <SwiperItem
-                    index={index}
-                    key={index}
-                    // className={`plan-item ${current === index ? active : ""}`}
-                    className={[
-                      "plan-item",
-                      current === index ? "active" : ""
-                    ].join(" ")}>
-                    <View className="plan-title">
-                      {this.showPlanDay(item.studyPlanDay)}
-                    </View>
-                    <AtCard className="plan-card">
-                      <Image className="full-plan" src={item.imageOne} />
-                    </AtCard>
+            {isLoading ? (
+              <View className="loading-wrap">
+                <AtActivityIndicator
+                  content="正在为你加载学习内容..."
+                  size={40}
+                />
+              </View>
+            ) : (
+              <Swiper
+                className="swiper"
+                indicatorColor="#999"
+                indicatorActiveColor="#333"
+                previousMargin="50px"
+                nextMargin="50px"
+                current={studyPlan.length - 1}
+                onChange={this.handleSwiper}
+                indicatorDots>
+                {studyPlan.map((item, index) => {
+                  return (
+                    <SwiperItem
+                      index={index}
+                      key={index}
+                      // className={`plan-item ${current === index ? active : ""}`}
+                      className={[
+                        "plan-item",
+                        current === index ? "active" : ""
+                      ].join(" ")}>
+                      <View className="plan-title">
+                        {this.showPlanDay(item.studyPlanDay)}
+                      </View>
+                      <AtCard className="plan-card">
+                        <Image className="full-plan" src={item.imageOne} />
+                      </AtCard>
 
-                    {/* <AtCard className="plan-card">{item}</AtCard> */}
-                  </SwiperItem>
-                );
-              })}
-            </Swiper>
+                      {/* <AtCard className="plan-card">{item}</AtCard> */}
+                    </SwiperItem>
+                  );
+                })}
+              </Swiper>
+            )}
           </View>
         </View>
 

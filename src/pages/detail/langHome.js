@@ -2,10 +2,8 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Image, CoverView } from "@tarojs/components";
 import { AtDivider, AtRate, AtButton, AtBadge, AtModal } from "taro-ui";
 import LineChart from "../../components/echarts/LineChart";
-import langInfo from "../../mock/langInfo.json";
 import "./langDetail.scss";
 import AddPlan from "../../components/rank/addPlan";
-import aliLogo from "../../assets/img/company/alibaba.png";
 import { connect } from "@tarojs/redux";
 import { ajaxGetLangHome } from "../../actions/rankList";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
@@ -27,7 +25,6 @@ export default class LangHome extends Component {
   constructor() {
     super();
     this.state = {
-      langInfo,
       langName: "",
       isModalOpen: false
     };
@@ -70,7 +67,6 @@ export default class LangHome extends Component {
   render() {
     const { langName } = this.state;
     const { langHome } = this.props.rankList;
-    const detailInfo = this.state.langInfo[langName];
 
     return (
       <View>
@@ -125,7 +121,7 @@ export default class LangHome extends Component {
           {langHome.company.map((item, index) => (
             <View className="heat-company" key={index}>
               <View className="icon">
-                <Image src={aliLogo} className="logo" />
+                <Image src={item.companySymbol} className="logo" />
               </View>
               <View className="name">{item.companyName}</View>
               <View className="detail">
@@ -140,13 +136,13 @@ export default class LangHome extends Component {
           <View className="wrap-title">语言简史</View>
           <View className="history">{langHome.languageDevelopmentHistory}</View>
         </View>
-        <View className="wrap-content">
-          <AtButton
+        <View className="wrap-content to-detail-wrap">
+          <View
             type="primary"
             className="to-detail"
             onClick={this.navigateToDetail.bind(this, langName)}>
-            更多语言信息
-          </AtButton>
+            更多信息
+          </View>
         </View>
         <AddPlan langName={langName} />
       </View>

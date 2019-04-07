@@ -18,7 +18,9 @@ export default function userInfo(state = [], action) {
     case GET_USER_PLAN:
       return {
         ...state,
-        userPlan: [...action.payload]
+        userPlan: {
+          ...action.payload
+        }
       };
     case GET_USER_FAIL:
       return {

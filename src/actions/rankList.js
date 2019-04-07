@@ -7,12 +7,9 @@ import {
   GET_SALARY,
   GET_DEMANDPOSI,
   GET_CITY,
-  GET_RANK_FAIL
+  GET_RANK_FAIL,
+  GET_LANG_MORE
 } from "../constants/rank";
-import authRank from "../mock/authRank.json";
-import demandRank from "../mock/demandRank.json";
-const authData = authRank.data;
-const demandData = demandRank.data;
 
 //请求失败的action
 export const getRankFail = data => {
@@ -81,6 +78,26 @@ export const ajaxGetLangHome = langName => {
     const res = response.data;
     if (res.code === 0) {
       dispatch(getLangHome(res.data));
+    } else {
+      dispatch(getRankFail(res.msg));
+    }
+  };
+};
+//请求语言更多页面
+export const getLangMore = data => {
+  return {
+    type: GET_LANG_MORE,
+    payload: data
+  };
+};
+export const ajaxGetLangMore = langName => {
+  return async dispatch => {
+    const response = await Taro.request({
+      url: `https://pgrk.wizzstudio.com/languagerank/${langName}/more`
+    });
+    const res = response.data;
+    if (res.code === 0) {
+      dispatch(getLangMore(res.data));
     } else {
       dispatch(getRankFail(res.msg));
     }

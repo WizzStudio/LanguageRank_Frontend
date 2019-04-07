@@ -3,8 +3,10 @@ import { View, CoverView, CoverImage } from "@tarojs/components";
 import "./addPlan.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
-import share from "../../assets/icon/share.png";
+import shareimg from "../../assets/icon/share.png";
 import saveimg from "../../assets/icon/saveimg.png";
+import ShareCanvasAuth from "../../components/rank/shareCanvasAuth";
+
 @connect(
   ({ userInfo }) => ({
     userInfo
@@ -19,7 +21,8 @@ export default class AuthItem extends Component {
   constructor() {
     super();
     this.state = {
-      lang: ""
+      lang: "",
+      isShared: false
     };
   }
   componentDidMount() {
@@ -74,28 +77,59 @@ export default class AuthItem extends Component {
     });
   };
   cancelPlan = () => {};
+  showCanvas = () => {
+    this.setState({
+      isShared: true
+    });
+  };
+  closeCanvas = () => {
+    this.setState({
+      isShared: false
+    });
+  };
   render() {
+    const { isShared } = this.state;
     return (
       <View>
-        <CoverView>
-          <CoverView className="footer-wrap">
-            <CoverView className="fix-footer">
-              <CoverView className="add-plan" onClick={this.tryAddPlan}>
+        {isShared ? (
+          <View className="share-canvas-wrap">
+            <View className="share-bg">
+              <View className="share-wrap">
+                <ShareCanvasAuth
+                  rankContent="213"
+                  handleClose={this.closeCanvas}
+                />
+                <AtButton onClick={this.closeCanvas}>关闭</AtButton>
+              </View>
+            </View>
+          </View>
+        ) : (
+          ""
+        )}
+        <View>
+          <View className="footer-wrap">
+            <View className="fix-footer">
+              <View className="add-plan" onClick={this.tryAddPlan}>
                 加入学习计划
-              </CoverView>
-              <CoverView className="share">
-                <button open-type="share" className="share">
-                  <CoverImage src={share} className="img" />
-                  <CoverView className="share-title">分享</CoverView>
+              </View>
+              <View className="cl-share">
+                <button open-type="share" className="share-button">
+                  <View className="share-button-next">
+                    <Image src={shareimg} className="img" />
+                    <View className="share-title">分享</View>
+                  </View>
                 </button>
-              </CoverView>
-              <CoverView className="ge-img">
-                <CoverImage src={saveimg} className="img" />
-                <CoverView className="save-title">生成图片</CoverView>
-              </CoverView>
-            </CoverView>
-          </CoverView>
-        </CoverView>
+              </View>
+
+              <View className="ge-img">
+                <Image src={saveimg} className="img" />
+                <View className="save-title" onClick={this.showCanvas}>
+                  生成图片
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
       </View>
     );
   }

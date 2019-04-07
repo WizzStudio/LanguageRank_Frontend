@@ -3,7 +3,7 @@ import { View } from "@tarojs/components";
 import { AtButton, AtFloatLayout, AtIcon } from "taro-ui";
 import AuthItem from "../../components/rank/authItem";
 import "./authRankList.scss";
-import ShareCanvas from "../../components/rank/shareCanvas";
+import ShareCanvasAuth from "../../components/rank/shareCanvasAuth";
 
 import { connect } from "@tarojs/redux";
 import { ajaxGetDemand } from "../../actions/rankList";
@@ -80,7 +80,7 @@ export default class DemandRankList extends Component {
         {isShared ? (
           <View className="share-bg">
             <View className="share-wrap">
-              <ShareCanvas langImg="test" />
+              <ShareCanvasAuth langImg="test" />
               <AtButton onClick={this.closeCanvas}>关闭</AtButton>
             </View>
           </View>
@@ -97,13 +97,13 @@ export default class DemandRankList extends Component {
             <View className="intro-title">榜单介绍</View>
             <View className="intro-content">
               <View className="pre-intro-content">
-                1、语言热度榜（世界编程语言排行榜）是根据互联网上有经验的程序员、课程和第三方厂商的数量，并使用搜索引擎（如Google、Bing、Yahoo!）以及Wikipedia、Amazon、YouTube统计出排名数据，只是反映某个编程语言的热门程度，并不能说明一门编程语言好不好，或者一门语言所编写的代码数量多少。\n
+                1、雇主需求榜是根据国内各大互联网公司相关技术岗位的招聘需求统计出排名数据，反应某个编程语言在行业中需求的热门程度。\n
               </View>
               <View className="pre-intro-content">
-                2、语言热度排行榜每日更新一次，依据的指数是基于世界范围内的资深软件工程师和第三方供应商提供，其结果作为当前业内程序开发语言的流行使用程度的有效指标。\n
+                2、雇主需求榜每周更新一次，依据的指数是基于该编程语言在行业内的岗位需求数量、薪资待遇、热门城市、发展趋势，其结果可为开发者的就业选择提供依据。\n
               </View>
               <View className="pre-intro-content">
-                3、该指数可以用来检阅开发者的编程技能能否跟上趋势，或是否有必要作出战略改变，以及什么编程语言是应该及时掌握的。
+                3、该指数可以用来检阅开发者的编程技能是否是雇主需要的，或是否有必要作出战略改变，以及什么编程语言是应该及时掌握的。
               </View>
             </View>
             <View className="intro-close">

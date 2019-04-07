@@ -3,7 +3,7 @@ import { View, Canvas, Text } from "@tarojs/components";
 import { AtFloatLayout, AtButton, AtIcon } from "taro-ui";
 import "./authRankList.scss";
 import AuthItem from "../../components/rank/authItem";
-import ShareCanvas from "../../components/rank/shareCanvas";
+import ShareCanvasAuth from "../../components/rank/shareCanvasAuth";
 import { connect } from "@tarojs/redux";
 import { ajaxGetAuth } from "../../actions/rankList";
 
@@ -86,7 +86,7 @@ class AuthRankList extends Component {
         {isShared ? (
           <View className="share-bg">
             <View className="share-wrap">
-              <ShareCanvas rankContent="213" />
+              <ShareCanvasAuth rankContent="213" />
               <AtButton onClick={this.closeCanvas}>关闭</AtButton>
             </View>
           </View>
