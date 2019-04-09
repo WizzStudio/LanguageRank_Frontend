@@ -2,7 +2,8 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Button, Image } from "@tarojs/components";
 import { TaroCanvasDrawer } from "taro-plugin-canvas"; // npm 引入方式
 
-import canvasBg from "../../assets/img/canvas-bg1.png";
+import canvasBg from "../../assets/img/canvas-bg2.png";
+import test from "../../assets/img/test.png";
 import { connect } from "@tarojs/redux";
 import { ajaxGetAuth } from "../../actions/rankList";
 @connect(
@@ -27,7 +28,7 @@ export default class ShareCanvasDemand extends Component {
       // TaroCanvasDrawer 组件状态
       canvasStatus: false,
       rssConfig: {
-        width: 750,
+        width: 375 * 1.5,
         height: 400,
         backgroundColor: "red",
         debug: true,
@@ -35,7 +36,7 @@ export default class ShareCanvasDemand extends Component {
           {
             x: 0,
             y: 0,
-            width: 750,
+            width: 375 * 1.5,
             height: 400,
             paddingLeft: 0,
             paddingRight: 0,
@@ -44,52 +45,13 @@ export default class ShareCanvasDemand extends Component {
             // backgroundColor: "#ccc",
             borderRadius: 0
           }
-          // {
-          //   x: 40,
-          //   y: 40,
-          //   width: 670,
-          //   height: 670,
-          //   paddingLeft: 0,
-          //   paddingRight: 0,
-          //   borderWidth: 0,
-          //   // borderColor: '#ccc',
-          //   backgroundColor: "blue",
-          //   borderRadius: 12
-          // }
         ],
-        texts: [
-          // {
-          //   x: 80,
-          //   y: 590,
-          //   text: "长按扫描二维码阅读完整内容",
-          //   fontSize: 24,
-          //   color: "#666",
-          //   opacity: 1,
-          //   baseLine: "middle",
-          //   textAlign: "left",
-          //   lineHeight: 36,
-          //   lineNum: 1,
-          //   zIndex: 999
-          // },
-          // {
-          //   x: 80,
-          //   y: 640,
-          //   text: "分享来自 「 RssFeed 」",
-          //   fontSize: 24,
-          //   color: "#666",
-          //   opacity: 1,
-          //   baseLine: "middle",
-          //   textAlign: "left",
-          //   lineHeight: 36,
-          //   lineNum: 1,
-          //   zIndex: 999
-          // }
-        ],
+        texts: [],
         images: [
           {
             url: canvasBg,
-            width: 375 * 0.7,
-            height: 1092 * 0.7,
+            width: 375 * 1.5,
+            height: 555 * 1.5,
             y: 0,
             x: 0,
             borderRadius: 12,
@@ -98,16 +60,6 @@ export default class ShareCanvasDemand extends Component {
             // borderWidth: 10,
             // borderColor: 'red',
           }
-          // {
-          //   url: canvasBg,
-          //   width: 110,
-          //   height: 110,
-          //   y: 570,
-          //   x: 560,
-          //   borderRadius: 100,
-          //   borderWidth: 0,
-          //   zIndex: 10
-          // }
         ],
         lines: [
           {
@@ -129,25 +81,38 @@ export default class ShareCanvasDemand extends Component {
 
   // 调用绘画 => canvasStatus 置为true、同时设置config
   canvasDrawFunc = (config = this.state.rssConfig) => {
-    const test = "hhh";
-    const { authRank } = this.props.rankList;
-    // authRank.map((rank, index) => {
-    //   config.texts.push({
-    //     x: 80,
-    //     y: 200 + index * 100,
-    //     text: rank.languageName,
-    //     // text: ranklist.map((item, index) => item.toString()),
-    //     fontSize: 32,
-    //     color: "#000",
-    //     opacity: 1,
-    //     baseLine: "middle",
-    //     lineHeight: 48,
-    //     lineNum: 2,
-    //     textAlign: "left",
-    //     width: 580,
-    //     zIndex: 999
-    //   });
-    // });
+    const { langHome } = this.props.rankList;
+    const company = langHome.company;
+    company.map((company, index) => {
+      config.texts.push({
+        x: 80,
+        y: 200 + index * 100,
+        text: company.companyName,
+        // text: ranklist.map((item, index) => item.toString()),
+        fontSize: 32,
+        color: "#000",
+        opacity: 1,
+        baseLine: "middle",
+        lineHeight: 48,
+        lineNum: 2,
+        textAlign: "left",
+        width: 580,
+        zIndex: 999
+      });
+      // config.images.push({
+      //   // url: company.companySymbol,
+      //   url: test,
+      //   width: 80,
+      //   height: 80,
+      //   y: 0,
+      //   x: 0,
+      //   borderRadius: 12,
+      //   zIndex: 1
+      //   // borderRadius: 150
+      //   // borderWidth: 10,
+      //   // borderColor: 'red',
+      // });
+    });
 
     this.setState({
       canvasStatus: true,
@@ -231,9 +196,6 @@ export default class ShareCanvasDemand extends Component {
         <View>
           <View>
             <Button onClick={this.saveToAlbum}>保存到相册</Button>
-          </View>
-          <View>
-            <Button onClick={this.closeCanvas}>保存到相册</Button>
           </View>
         </View>
       </View>

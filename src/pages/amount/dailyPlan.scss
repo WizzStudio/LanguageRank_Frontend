@@ -4,7 +4,7 @@ $color-brand: #4f5fc5;
   color: $color-brand;
   font-weight: bold;
   font-size: 1.3em;
-  margin: 30px auto;
+  margin: 0px auto 10px auto;
   display: flex;
   justify-content: center;
 }
@@ -22,10 +22,26 @@ $color-brand: #4f5fc5;
     padding: 0;
   }
 }
+.cover {
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .no-plan-note {
+    font-size: 40px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
 .transfer-award {
   height: 100px;
   margin-top: 50px;
   margin-bottom: 40px;
+}
+.get-award {
+  margin-bottom: 60px;
 }
 .action {
   margin: 20px 50px;

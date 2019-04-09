@@ -87,7 +87,9 @@ class AuthRankList extends Component {
           <View className="share-bg">
             <View className="share-wrap">
               <ShareCanvasAuth rankContent="213" />
-              <AtButton onClick={this.closeCanvas}>关闭</AtButton>
+              <AtButton onClick={this.closeCanvas} className="close-canvas">
+                关闭
+              </AtButton>
             </View>
           </View>
         ) : (

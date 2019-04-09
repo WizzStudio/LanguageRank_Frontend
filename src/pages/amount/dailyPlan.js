@@ -1,6 +1,10 @@
-import Taro, { Component, getStorageSync } from "@tarojs/taro";
+import Taro, {
+  Component,
+  getStorageSync,
+  closeBLEConnection
+} from "@tarojs/taro";
 import { View, Swiper } from "@tarojs/components";
-import { AtCard, AtButton, AtActivityIndicator } from "taro-ui";
+import { AtCard, AtButton, AtActivityIndicator, AtIcon } from "taro-ui";
 import "./dailyPlan.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserPlan } from "../../actions/useInfo";
@@ -16,7 +20,7 @@ import { ajaxGetUserPlan } from "../../actions/useInfo";
 )
 export default class DailyPlan extends Component {
   config = {
-    navigationBarTitleText: "七日学习计划"
+    navigationBarTitleText: "累计七天领取奖励"
   };
   constructor() {
     super();
@@ -25,7 +29,8 @@ export default class DailyPlan extends Component {
       userInfo: {
         userPlan: []
       },
-      isLoading: true
+      isLoading: true,
+      allPlan: []
     };
   }
   // static defaultProps = {
@@ -38,40 +43,38 @@ export default class DailyPlan extends Component {
     this.props.ajaxGetUserPlan(loginInfo.userid);
   }
   componentWillReceiveProps(nextprops) {
+    let allPlan = [];
     if (nextprops.userInfo) {
+      const isShow = nextprops.userInfo.userPlan.isTranspondedList;
+      let initCurrent = (nextprops.userInfo.userPlan.studyPlan.length - 1) * 2;
+      console.log("ini", initCurrent);
+      nextprops.userInfo.userPlan.studyPlan.map((item, index) => {
+        allPlan.push({
+          studyPlanDay: item.studyPlanDay,
+          image: item.imageOne,
+          show: true,
+          number: 0
+        });
+        allPlan.push({
+          studyPlanDay: item.studyPlanDay,
+          image: item.imageTwo,
+          show: isShow[index],
+          number: 1
+        });
+      });
       this.setState({
         userInfo: nextprops.userInfo,
-        isLoading: false
+        isLoading: false,
+        allPlan: allPlan,
+        current: initCurrent
       });
     }
   }
-  handleSwiper = e => {
-    this.setState({
-      current: e.detail.current
-    });
-  };
+
   toAward = () => {
-    const { userPlan } = this.state.userInfo;
-    if (userPlan.length === 7) {
-      Taro.navigateTo({
-        url: "/pages/amount/myAward"
-      });
-    } else {
-      Taro.showModal({
-        title: "提示",
-        content: "需要完成七日计划才可领取奖励哦~",
-        showCancel: false,
-        confirmText: "继续学习",
-        confirmColor: "#4f5fc5",
-        success(res) {
-          if (res.confirm) {
-            console.log("用户点击确定");
-          } else if (res.cancel) {
-            console.log("用户点击取消");
-          }
-        }
-      });
-    }
+    Taro.navigateTo({
+      url: "/pages/amount/myAward"
+    });
   };
   showPlanDay = str => {
     switch (str) {
@@ -87,35 +90,44 @@ export default class DailyPlan extends Component {
         return "第五天";
       case "SIXTH_DAY":
         return "第六天";
-      case "SEVEN_DAY":
+      case "ACCOMPLISHED":
         return "第七天";
       default:
         break;
     }
   };
+  handleSwiper = e => {
+    this.setState({
+      current: e.detail.current
+    });
+  };
   onShareAppMessage = res => {
-    console.log("res", res);
-    if ((res.from = "button")) {
-      console.log("用户点击了分享");
-      console.log("this.state.current", this.state.current);
-      const loginInfo = getStorageSync("login");
-      // Taro.request({
-      //   url:'https://pgrk.wizzstudio.com/updatetranspond',
-      //   method:'POST',
-      //   data:{
-      //     userId:loginInfo.userid,
-      //     studyPlanDay:
-      //   }
-      // })
-    }
+    const { current } = this.state;
+    // current === 0 ? this.state.current - 1 : current;
+    const loginInfo = getStorageSync("login");
+    Taro.request({
+      url: "https://pgrk.wizzstudio.com/updatetranspond",
+      method: "POST",
+      data: {
+        userId: loginInfo.userid,
+        studyPlanDay: parseInt(current / 2) + 1
+      }
+    }).then(response => {
+      const res = response.data;
+      console.log("res", res);
+      if (res.code === 0) {
+        //用户转发成功后向后台更新用户每日转发状态
+        //这一步触发dispatch请求成功之后如何及时更新到页面上
+        this.props.ajaxGetUserPlan(loginInfo.userid);
+      }
+    });
     return {
-      title: "转发标题"
-      // path: '/page/user?id=123'
+      title: "HelloWorld Rank"
     };
   };
   render() {
-    const { studyPlan } = this.state.userInfo.userPlan;
-    const { current, isLoading } = this.state;
+    // const { studyPlan } = this.state.userInfo.userPlan;
+    const { current, isLoading, allPlan } = this.state;
     return (
       <View>
         <View className="main-plan">
@@ -134,10 +146,10 @@ export default class DailyPlan extends Component {
                 indicatorActiveColor="#333"
                 previousMargin="50px"
                 nextMargin="50px"
-                current={studyPlan.length - 1}
+                current={current}
                 onChange={this.handleSwiper}
                 indicatorDots>
-                {studyPlan.map((item, index) => {
+                {allPlan.map((item, index) => {
                   return (
                     <SwiperItem
                       index={index}
@@ -148,11 +160,26 @@ export default class DailyPlan extends Component {
                         current === index ? "active" : ""
                       ].join(" ")}>
                       <View className="plan-title">
-                        {this.showPlanDay(item.studyPlanDay)}
+                        {item.number
+                          ? this.showPlanDay(item.studyPlanDay) + "(二)"
+                          : this.showPlanDay(item.studyPlanDay) + "（一）"}
                       </View>
-                      <AtCard className="plan-card">
-                        <Image className="full-plan" src={item.imageOne} />
-                      </AtCard>
+
+                      {item.show ? (
+                        <AtCard className="plan-card">
+                          <Image className="full-plan" src={item.image} />
+                        </AtCard>
+                      ) : (
+                        <AtCard className="plan-card cover">
+                          <View className="no-plan-note">点击下方按钮</View>
+                          <View className="no-plan-note">
+                            可领取第二份资料~
+                          </View>
+                          <View className="no-plan-note">
+                            <AtIcon value="arrow-down" size="49" color="#fff" />
+                          </View>
+                        </AtCard>
+                      )}
 
                       {/* <AtCard className="plan-card">{item}</AtCard> */}
                     </SwiperItem>
@@ -164,13 +191,13 @@ export default class DailyPlan extends Component {
         </View>
 
         <View className="action">
+          <AtButton type="primary" className="transfer-award" open-type="share">
+            转发领取当天第二份资料
+          </AtButton>
           <AtButton
             type="secondary"
-            className="transfer-award"
-            open-type="share">
-            转发可领取当天第二份资料
-          </AtButton>
-          <AtButton type="primary" className="get-award" onClick={this.toAward}>
+            className="get-award"
+            onClick={this.toAward}>
             领取奖励
           </AtButton>
         </View>

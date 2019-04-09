@@ -36,9 +36,13 @@ export const getDemand = data => {
 //异步---请求权威和需求榜单
 export const ajaxGetAuth = () => {
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: "https://pgrk.wizzstudio.com/languagerank"
     });
+    Taro.hideLoading();
     const res = response.data;
     if (res.code === 0) {
       dispatch(getAuth(res.data));
@@ -50,9 +54,13 @@ export const ajaxGetAuth = () => {
 };
 export const ajaxGetDemand = () => {
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: "https://pgrk.wizzstudio.com/employerdemandrank"
     });
+    Taro.hideLoading();
     const res = response.data;
     if (res.code === 0) {
       dispatch(getDemand(res.data));
@@ -71,10 +79,17 @@ export const getLangHome = data => {
   };
 };
 export const ajaxGetLangHome = langName => {
+  if (langName === "C#") {
+    langName = "C%23";
+  }
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: `https://pgrk.wizzstudio.com/languagerank/${langName}`
     });
+    Taro.hideLoading();
     const res = response.data;
     if (res.code === 0) {
       dispatch(getLangHome(res.data));
@@ -91,10 +106,17 @@ export const getLangMore = data => {
   };
 };
 export const ajaxGetLangMore = langName => {
+  if (langName === "C#") {
+    langName = "C%23";
+  }
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: `https://pgrk.wizzstudio.com/languagerank/${langName}/more`
     });
+    Taro.hideLoading();
     const res = response.data;
     if (res.code === 0) {
       dispatch(getLangMore(res.data));
@@ -112,10 +134,17 @@ export const getPosi = data => {
   };
 };
 export const ajaxGetPosi = lang => {
+  if (lang === "C#") {
+    lang = "C%23";
+  }
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: `https://pgrk.wizzstudio.com/${lang}/post`
     });
+    Taro.hideLoading();
     const res = response.data;
     if (res.code === 0) {
       dispatch(getPosi(res.data));
@@ -133,10 +162,17 @@ export const getSalary = data => {
   };
 };
 export const ajaxGetSalary = lang => {
+  if (lang === "C#") {
+    lang = "C%23";
+  }
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: `https://pgrk.wizzstudio.com/${lang}/salary`
     });
+    Taro.hideLoading();
     const res = response.data;
     if (res.code === 0) {
       dispatch(getSalary(res.data));
@@ -154,10 +190,17 @@ export const getDemandPosi = data => {
   };
 };
 export const ajaxGetDemandPosi = lang => {
+  if (lang === "C#") {
+    lang = "C%23";
+  }
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: `https://pgrk.wizzstudio.com/${lang}/companypost`
     });
+    Taro.hideLoading();
     const res = response.data;
     if (res.code === 0) {
       dispatch(getDemandPosi(res.data));
@@ -175,10 +218,17 @@ export const getCity = data => {
   };
 };
 export const ajaxGetCity = lang => {
+  if (lang === "C#") {
+    lang = "C%23";
+  }
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: `https://pgrk.wizzstudio.com/${lang}/languagecity`
     });
+    Taro.hideLoading();
     const res = response.data;
     if (res.code === 0) {
       dispatch(getCity(res.data));

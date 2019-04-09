@@ -3,6 +3,10 @@ import * as echarts from "../ec-canvas/echarts";
 
 function setChartData(chart, data) {
   let option = {
+    tooltip: {
+      trigger: "item",
+      formatter: "{b}:{d}%" //模板变量有 {a}、{b}、{c}、{d}，分别表示系列名，数据名，数据值，百分比。
+    },
     series: [
       {
         name: "访问来源",

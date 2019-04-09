@@ -25,6 +25,9 @@ $color-brand: #4f5fc5;
     flex: 5;
     font-size: 48px;
     font-weight: 700;
+    .new-intro {
+      font-size: 24px;
+    }
   }
   .badge {
     margin-left: 15px;
@@ -152,8 +155,8 @@ $color-brand: #4f5fc5;
     align-items: center;
     width: 25%;
     .wrap-img {
-      width: 160px;
-      height: 160px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       background-color: #f0f0f0;
       display: flex;
@@ -161,8 +164,8 @@ $color-brand: #4f5fc5;
       align-items: center;
     }
     .img {
-      width: 100px;
-      height: 100px;
+      width: 80px;
+      height: 80px;
     }
     .little-title {
       font-size: 24px;

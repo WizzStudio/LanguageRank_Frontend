@@ -58,6 +58,12 @@ $color-brand: #4f5fc5;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  .num {
+    font-size: 60px;
+  }
+  .text {
+    font-size: 28px;
+  }
 }
 
 .plan-progress {
@@ -71,8 +77,12 @@ $color-brand: #4f5fc5;
 .plan-action {
   margin: 20px 50px;
 }
-.my-award {
+.my-plan {
   margin-top: 100px;
+  margin-bottom: 40px;
+}
+.my-question {
+  margin-top: 80px;
   margin-bottom: 40px;
 }
 .login-out {
@@ -81,8 +91,9 @@ $color-brand: #4f5fc5;
   margin-top: 50px;
 }
 .add-question {
+  width: 150px;
   margin: 40px auto;
   text-align: center;
-  font-size: 28px;
+  font-size: 24px;
   color: #999999;
 }

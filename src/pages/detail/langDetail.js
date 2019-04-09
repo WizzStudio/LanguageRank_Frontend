@@ -21,6 +21,9 @@ import { ajaxGetUserAllInfo } from "../../actions/useInfo";
   })
 )
 export default class LangDetail extends Component {
+  config = {
+    navigationBarTitleText: "语言介绍"
+  };
   constructor() {
     super();
     this.state = {
@@ -50,10 +53,9 @@ export default class LangDetail extends Component {
               <View>
                 <AtRate value={langMore.language.languageDifficultyIndex} />
               </View>
-            </View>
-            <View className="state">
-              <View>建立于</View>
-              <View>{langMore.language.languageBeginTime}</View>
+              <View className="new-intro">
+                始于{langMore.language.languageBeginTime}
+              </View>
             </View>
           </View>
         </View>
@@ -68,8 +70,8 @@ export default class LangDetail extends Component {
         <View className="wrap-content">
           <View className="wrap-title">{langName}可以用来做</View>
           <View className="app">
-            {Object.keys(langMore.languageUse).map(key => (
-              <View className="wrap-item">
+            {Object.keys(langMore.languageUse).map((key, index) => (
+              <View className="wrap-item" key={index}>
                 <View className="wrap-img">
                   <Image src={langMore.languageUse[key]} className="img" />
                 </View>
@@ -100,17 +102,19 @@ export default class LangDetail extends Component {
         <View className="wrap-content">
           <View className="wrap-title">{langName}应用领域</View>
           <View className="app">
-            {Object.keys(langMore.languageApplicationFields).map(key => (
-              <View className="wrap-item">
-                <View className="wrap-img">
-                  <Image
-                    src={langMore.languageApplicationFields[key]}
-                    className="img"
-                  />
+            {Object.keys(langMore.languageApplicationFields).map(
+              (key, index) => (
+                <View className="wrap-item" key={index}>
+                  <View className="wrap-img">
+                    <Image
+                      src={langMore.languageApplicationFields[key]}
+                      className="img"
+                    />
+                  </View>
+                  <View className="little-title">{key}</View>
                 </View>
-                <View className="little-title">{key}</View>
-              </View>
-            ))}
+              )
+            )}
           </View>
         </View>
         <AtDivider />

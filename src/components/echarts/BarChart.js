@@ -3,20 +3,32 @@ import * as echarts from "../ec-canvas/echarts";
 
 function setChartData(chart, data) {
   let option = {
-    tooltip: {},
-    color: ["#3398DB"],
+    tooltip: {
+      formatter: function(params) {
+        let res = params.value + "k";
+        return res;
+      }
+    },
+    color: ["#4f5fc5"],
     xAxis: [
       {
         type: "category",
         data: [],
         axisTick: {
           alignWithLabel: true
+        },
+        axisLabel: {
+          interval: 0,
+          rotate: 320
         }
       }
     ],
     yAxis: [
       {
-        type: "value"
+        type: "value",
+        axisLabel: {
+          formatter: "{value}k"
+        }
       }
     ],
     series: []

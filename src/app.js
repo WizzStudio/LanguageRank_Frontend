@@ -19,9 +19,6 @@ class App extends Component {
   config = {
     pages: [
       "pages/index/index",
-      // "pages/rank/authRankList",
-      // "pages/rank/demandRankList",
-
       "pages/amount/myInfo",
       "pages/amount/dailyPlan",
       "pages/amount/myAward",
@@ -31,10 +28,9 @@ class App extends Component {
     ],
     window: {
       backgroundTextStyle: "light",
-      // backgroundColor: "#4f5fc5",
       navigationBarBackgroundColor: "#4f5fc5",
       navigationBarTitleText: "WeChat",
-      navigationBarTextStyle: "black"
+      navigationBarTextStyle: "white"
     },
     tabBar: {
       list: [
@@ -53,8 +49,8 @@ class App extends Component {
       ],
       color: "#8a8a8a",
       selectedColor: "#4f5fc5",
-      backgroundColor: "#ffffff",
-      borderStyle: "white"
+      backgroundColor: "#fefefe",
+      borderStyle: "black"
     }
   };
 

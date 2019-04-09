@@ -11,12 +11,18 @@ function setChartData(chart, data) {
         data: [],
         axisTick: {
           alignWithLabel: true
+        },
+        axisLabel: {
+          interval: 0,
+          rotate: 320
         }
       }
     ],
     yAxis: [
       {
-        type: "value"
+        type: "value",
+        max: 100,
+        min: 0
       }
     ],
     series: []

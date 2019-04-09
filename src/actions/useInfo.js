@@ -23,6 +23,9 @@ export const getUserAllInfo = data => {
 };
 export const ajaxGetUserAllInfo = userId => {
   return async dispatch => {
+    // Taro.showLoading({
+    //   title: "加载中..."
+    // });
     const response = await Taro.request({
       url: "https://pgrk.wizzstudio.com/userinfo",
       method: "POST",
@@ -30,8 +33,8 @@ export const ajaxGetUserAllInfo = userId => {
         userId: userId
       }
     });
+    // Taro.hideLoading();
     const res = response.data;
-    console.log("res", res);
     if (res.code === 0) {
       dispatch(getUserAllInfo(res.data));
     } else {
@@ -49,6 +52,9 @@ export const getUserPlan = data => {
 };
 export const ajaxGetUserPlan = userId => {
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: "https://pgrk.wizzstudio.com/studyplan",
       method: "POST",
@@ -56,8 +62,8 @@ export const ajaxGetUserPlan = userId => {
         userId: userId
       }
     });
+    Taro.hideLoading();
     const res = response.data;
-    console.log("res", res);
     if (res.code === 0) {
       dispatch(getUserPlan(res.data));
     } else {
@@ -74,7 +80,13 @@ export const addUserPlan = data => {
   };
 };
 export const ajaxAddUserPlan = (lang, id) => {
+  if (lang === "C#") {
+    lang = "C%23";
+  }
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: "https://pgrk.wizzstudio.com/updatelanguage",
       method: "POST",
@@ -83,8 +95,8 @@ export const ajaxAddUserPlan = (lang, id) => {
         userId: id
       }
     });
+    Taro.hideLoading();
     const res = response.data;
-    console.log("学习计划返回的数据", res);
     if (res.code === 0) {
       dispatch(addUserPlan(res.code));
     } else {
@@ -102,6 +114,9 @@ export const getUserAward = data => {
 };
 export const ajaxGetUserAward = id => {
   return async dispatch => {
+    Taro.showLoading({
+      title: "加载中..."
+    });
     const response = await Taro.request({
       url: "https://pgrk.wizzstudio.com/myaward",
       method: "POST",
@@ -109,8 +124,8 @@ export const ajaxGetUserAward = id => {
         userId: id
       }
     });
+    Taro.hideLoading();
     const res = response.data;
-    console.log("个人奖励", res);
     if (res.code === 0) {
       dispatch(getUserAward(res.data));
     } else {

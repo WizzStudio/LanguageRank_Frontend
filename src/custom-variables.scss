@@ -10,4 +10,7 @@ $color-brand: #4f5fc5;
 .at-card__content {
   padding: 10px;
 }
+.at-card__header {
+  display: none !important;
+}
 @import "~taro-ui/dist/style/index.scss";

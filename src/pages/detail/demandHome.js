@@ -14,7 +14,6 @@ import {
 } from "../../actions/rankList";
 import demandHome from "../../reducers/index";
 import "./langDetail.scss";
-import { PropTypes } from "nervjs";
 
 @connect(
   ({ demandHome }) => ({
@@ -30,6 +29,9 @@ import { PropTypes } from "nervjs";
   })
 )
 export default class DemandHome extends Component {
+  config = {
+    navigationBarTitleText: "雇主需求详情"
+  };
   constructor() {
     super();
     this.state = {
@@ -82,6 +84,13 @@ export default class DemandHome extends Component {
         dimensions: {
           data: salaryX
         },
+        xAxis: {
+          axisLabel: {
+            interval: 0,
+            rotate: 40
+          }
+        },
+
         measures: [
           {
             data: salaryY
@@ -102,7 +111,7 @@ export default class DemandHome extends Component {
         demandPosiY = [];
       demandPosi.map(item => {
         demandPosiX.push(item.companyName);
-        demandPosiY.push(item.companyPostNumber);
+        demandPosiY.push((item.companyPostNumber * 0.001).toFixed(3));
       });
       const barChartData = {
         dimensions: {
@@ -154,7 +163,9 @@ export default class DemandHome extends Component {
           <View>
             {posi.map((item, index) => (
               <View key={index} className="demand-posi-wrap">
-                <View className="demand-posi-name">{item.languagePost}</View>
+                <View className="demand-posi-name">
+                  {item.companyName}|{item.languagePost}
+                </View>
                 <View className="demand-posi-salary">{item.postSalary}</View>
               </View>
             ))}

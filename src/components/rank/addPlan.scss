@@ -3,7 +3,7 @@
   z-index: 100;
 }
 .fix-footer {
-  background: white;
+  background: #fff;
   height: 130px;
   width: 100%;
   display: flex;
@@ -20,12 +20,18 @@
     font-weight: bold;
     color: white;
   }
+  .no-add-plan {
+    background-color: #dcdcdc;
+  }
   .cl-share {
     // display: flex;
     // flex-direction: column;
     // // justify-content: space-between;
     // align-items: center;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     .share-button-next {
       display: flex;
       flex-direction: column;
@@ -39,6 +45,7 @@
     font-size: 24px;
     .share-title {
       font-size: 24px;
+      line-height: 24px;
     }
   }
   .ge-img {
@@ -60,6 +67,7 @@ button::after {
 button {
   margin: 0;
   padding: 0;
+  background: #fff;
 }
 
 .share-canvas-wrap {
@@ -81,6 +89,9 @@ button {
       margin: auto auto;
       width: 100%;
       height: 100%;
+      .close-canvas {
+        background-color: #dcdcdc;
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View, Image, CoverView } from "@tarojs/components";
-import { AtDivider, AtRate, AtButton, AtBadge, AtModal } from "taro-ui";
+import { View, Image } from "@tarojs/components";
+import { AtDivider, AtRate, AtBadge } from "taro-ui";
 import LineChart from "../../components/echarts/LineChart";
 import "./langDetail.scss";
 import AddPlan from "../../components/rank/addPlan";
@@ -8,20 +8,19 @@ import { connect } from "@tarojs/redux";
 import { ajaxGetLangHome } from "../../actions/rankList";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
 @connect(
-  ({ rankList, userInfo }) => ({
-    rankList,
-    userInfo
+  ({ rankList }) => ({
+    rankList
   }),
   dispatch => ({
     ajaxGetLangHome(langName) {
       dispatch(ajaxGetLangHome(langName));
-    },
-    ajaxGetUserAllInfo(data) {
-      dispatch(ajaxGetUserAllInfo(data));
     }
   })
 )
 export default class LangHome extends Component {
+  config = {
+    navigationBarTitleText: "语言热度详情"
+  };
   constructor() {
     super();
     this.state = {
@@ -31,8 +30,6 @@ export default class LangHome extends Component {
   }
   componentWillMount() {}
   componentDidMount() {
-    const loginInfo = Taro.getStorageSync("login");
-    this.props.ajaxGetUserAllInfo(loginInfo.userid);
     const { langName } = this.$router.params;
     this.props.ajaxGetLangHome(langName);
     this.setState({
@@ -46,28 +43,31 @@ export default class LangHome extends Component {
     });
   }
   componentWillReceiveProps(nextprops) {
-    console.log("nextprops", nextprops);
     if (nextprops.rankList.langHome) {
+      const { langHome } = nextprops.rankList;
+      let dataX = [],
+        dataY = [];
+      langHome.exponentOfLastSevenDays.map(item => {
+        dataX.push(item.updateTime);
+        dataY.push(item.fixedFinalExponent);
+      });
       const chartData = {
         dimensions: {
-          data: ["第一天", "第二天", "Wed", "Thu", "Fri", "六", "七"]
+          data: dataX.reverse()
         },
         measures: [
           {
-            // data: [10, 52, 200, 334, 390]
-            data: nextprops.rankList.langHome.exponentOfLastSevenDays
+            data: dataY.reverse()
           }
         ]
       };
       this.lineChart.refresh(chartData);
     }
   }
-
   refLineChart = node => (this.lineChart = node);
   render() {
     const { langName } = this.state;
     const { langHome } = this.props.rankList;
-
     return (
       <View>
         <View className="wrap-content">
@@ -96,7 +96,7 @@ export default class LangHome extends Component {
           <View className="data-info">
             <View className="tend-wrap">
               <View className="tend-num">{langHome.fixedFinalExponent}</View>
-              <View className="tend-title">猿指数</View>
+              <View className="tend-title">热度指数</View>
             </View>
             <View className="tend-wrap">
               <View className="tend-num">

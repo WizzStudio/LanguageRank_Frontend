@@ -9,12 +9,13 @@ import "./index.scss";
 
 class Index extends Component {
   config = {
-    navigationBarTitleText: "首页"
+    navigationBarTitleText: "HelloWorld Rank"
   };
   constructor() {
     super();
     this.state = {
-      current: 0
+      current: 0,
+      basicInfo: {}
     };
   }
   componentDidMount() {
@@ -31,6 +32,58 @@ class Index extends Component {
   componentWillReceiveProps(nextProps) {
     console.log(this.props, nextProps);
   }
+  checkLogin = () => {
+    if (Taro.getStorageSync("login")) {
+      if (Taro.getStorageSync("basicInfo")) {
+        this.setState({
+          isLogin: true
+        });
+        const loginInfo = Taro.getStorageSync("login");
+        const basicInfo = Taro.getStorageSync("basicInfo");
+        this.props.ajaxGetUserAllInfo(loginInfo.userid);
+        this.setState({
+          basicInfo: basicInfo
+        });
+      } else {
+        //这个else可以不要？？
+        // this.bindGetUserInfo();
+        // if (Taro.getStorageSync("basicInfo")) {
+        //   const basicInfo = Taro.getStorageSync("basicInfo");
+        //   this.setState({
+        //     basicInfo: basicInfo
+        //   });
+        // }
+      }
+    } else {
+      this.handleLogin();
+    }
+  };
+  handleLogin = () => {
+    Taro.login({
+      success(res) {
+        if (res.code) {
+          console.log("res.code", res.code);
+          Taro.request({
+            url: "https://pgrk.wizzstudio.com/login",
+            method: "POST",
+            data: {
+              code: res.code
+            }
+          }).then(res => {
+            console.log("re的res", res);
+            if (res.data.code === 0) {
+              const data = res.data.data;
+              Taro.setStorageSync("login", {
+                userid: data.userId,
+                openId: data.openId,
+                session_key: data.session_key
+              });
+            }
+          });
+        }
+      }
+    });
+  };
   componentWillUnmount() {}
 
   componentDidShow() {}

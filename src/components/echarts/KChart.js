@@ -3,14 +3,50 @@ import * as echarts from "../ec-canvas/echarts";
 
 function setChartData(chart, data) {
   let option = {
-    xAxis: {
-      data: []
+    color: ["#4f5fc5"],
+    tooltip: {
+      trigger: "axis",
+      formatter: function(params) {
+        var res = "";
+        res += "最低" + params[0].value[3] + "k" + "\n";
+        res +=
+          "平均" +
+          params[0].value[1] +
+          "k" +
+          "\n" +
+          "最高" +
+          params[0].value[4] +
+          "k";
+        return res;
+      }
     },
-    yAxis: {},
-    series: []
+    xAxis: {
+      data: [],
+      axisLabel: {
+        interval: 0,
+        rotate: 320
+      }
+    },
+    yAxis: {
+      axisLabel: {
+        formatter: "{value}k"
+      }
+    },
+    series: [
+      {
+        itemStyle: {
+          normal: {
+            color: "#ff0000",
+            borderWidth: 1,
+            opacity: 1
+          }
+        }
+      }
+    ]
   };
   if (data && data.dimensions && data.measures) {
     option.xAxis.data = data.dimensions.data;
+    console.log("option.xAxis.data", option.xAxis.data);
     option.series = data.measures.map(item => {
       return {
         ...item,
