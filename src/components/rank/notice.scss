@@ -1,0 +1,35 @@
+.top {
+  position: relative;
+  //   width: 300px;
+  //   height: 100px;
+  //   border: 6px solid #555;
+  //   border-radius: 20px;
+  //   margin: 100px auto;
+  //   background-color: #8a98ff;
+}
+
+/*第一个三角形*/
+.top::before {
+  /*这里的伪元素用单冒号和双冒号都一样*/
+  content: "";
+  display: block;
+  position: absolute;
+  top: -26px;
+  //   right: 100px;
+  right: 19%;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid #555;
+}
+
+/*第二个三角形*/
+.top::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -17.6px; /*向下偏移量是矩形边框宽度的1.4（根号2）倍，即8.4，top值为-26-（-8.4）*/
+  right: 19%;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid #fcf6ed;
+}

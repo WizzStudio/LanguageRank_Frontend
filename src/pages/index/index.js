@@ -1,12 +1,23 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Button, Text } from "@tarojs/components";
 
-import { AtSegmentedControl } from "taro-ui";
+import { AtSegmentedControl, AtNoticebar } from "taro-ui";
 import AuthRankList from "../rank/authRankList";
 import DemandRankList from "../rank/demandRankList";
-
+import Notice from "../../components/rank/notice";
 import "./index.scss";
-
+import { connect } from "@tarojs/redux";
+import { ajaxGetUserAllInfo } from "../../actions/useInfo";
+@connect(
+  ({ userInfo }) => ({
+    userInfo
+  }),
+  dispatch => ({
+    ajaxGetUserAllInfo(id) {
+      dispatch(ajaxGetUserAllInfo(id));
+    }
+  })
+)
 class Index extends Component {
   config = {
     navigationBarTitleText: "HelloWorld Rank"
@@ -15,14 +26,38 @@ class Index extends Component {
     super();
     this.state = {
       current: 0,
-      basicInfo: {}
+      basicInfo: {},
+      isViewedJoinMyApplet: false
     };
   }
+  componentWillMount() {}
   componentDidMount() {
     if (!Taro.getStorageSync("login")) {
       this.handleLogin();
+    } else {
+      if (Taro.getStorageSync("basicInfo")) {
+        const loginInfo = Taro.getStorageSync("login");
+        this.props.ajaxGetUserAllInfo(loginInfo.userid);
+      }
     }
   }
+  // checkToPlan = () => {
+  //   if (this.props) {
+  //     const allInfo = this.props.userInfo.allInfo;
+  //     Taro.setStorageSync("allInfo", {
+  //       isViewedStudyPlan: allInfo.isViewedStudyPlan,
+  //       joinedNumber: allInfo.joinedNumber,
+  //       joinedToday: allInfo.joinedToday,
+  //       myLanguage: allInfo.myLanguage,
+  //       studyPlanDay: allInfo.studyPlanDay
+  //     });
+  //     if (allInfo.isViewedStudyPlan) {
+  //       Taro.navigateTo({
+  //         url: "/pages/amount/dailyPlan"
+  //       });
+  //     }
+  //   }
+  // };
   handleClick(value) {
     this.setState({
       current: value
@@ -30,7 +65,16 @@ class Index extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props, nextProps);
+    if (nextProps.userInfo.allInfo) {
+      this.setState({
+        isViewedJoinMyApplet: nextProps.userInfo.allInfo.isViewedJoinMyApplet
+      });
+      if (nextProps.userInfo.allInfo.isViewedStudyPlan) {
+        Taro.navigateTo({
+          url: "/pages/amount/dailyPlan"
+        });
+      }
+    }
   }
   checkLogin = () => {
     if (Taro.getStorageSync("login")) {
@@ -45,14 +89,6 @@ class Index extends Component {
           basicInfo: basicInfo
         });
       } else {
-        //这个else可以不要？？
-        // this.bindGetUserInfo();
-        // if (Taro.getStorageSync("basicInfo")) {
-        //   const basicInfo = Taro.getStorageSync("basicInfo");
-        //   this.setState({
-        //     basicInfo: basicInfo
-        //   });
-        // }
       }
     } else {
       this.handleLogin();
@@ -62,7 +98,6 @@ class Index extends Component {
     Taro.login({
       success(res) {
         if (res.code) {
-          console.log("res.code", res.code);
           Taro.request({
             url: "https://pgrk.wizzstudio.com/login",
             method: "POST",
@@ -70,7 +105,6 @@ class Index extends Component {
               code: res.code
             }
           }).then(res => {
-            console.log("re的res", res);
             if (res.data.code === 0) {
               const data = res.data.data;
               Taro.setStorageSync("login", {
@@ -93,7 +127,6 @@ class Index extends Component {
     Taro.login({
       success(res) {
         if (res.code) {
-          console.log("res.code", res.code);
           Taro.request({
             url: "https://pgrk.wizzstudio.com/login",
             method: "POST",
@@ -101,7 +134,6 @@ class Index extends Component {
               code: res.code
             }
           }).then(res => {
-            console.log("re的res", res);
             if (res.data.code === 0) {
               const data = res.data.data;
               Taro.setStorageSync("login", {
@@ -115,11 +147,20 @@ class Index extends Component {
       }
     });
   };
+  onShareAppMessage = res => {
+    return {
+      title: "进入小程序了解当下最流行、最赚钱的编程语言",
+      path: "/pages/index/index"
+    };
+  };
   render() {
+    const { isViewedJoinMyApplet } = this.state;
     return (
       <View className="top-bg">
         <View className="blank" />
         <View className="wrap">
+          {isViewedJoinMyApplet && <Notice />}
+          {/* <Notice /> */}
           <View className="tab-wrap">
             <AtSegmentedControl
               values={["语言热度榜", "雇主需求榜"]}

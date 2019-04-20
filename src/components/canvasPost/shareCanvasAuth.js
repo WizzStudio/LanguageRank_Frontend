@@ -1,10 +1,13 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Button, Image } from "@tarojs/components";
+import { AtButton } from "taro-ui";
 import { TaroCanvasDrawer } from "taro-plugin-canvas"; // npm 引入方式
 
 import canvasAuth from "../../assets/img/canvasAuth.png";
+import load from "../../assets/img/load.png";
 import { connect } from "@tarojs/redux";
 import { ajaxGetAuth } from "../../actions/rankList";
+import "./canvasPost.scss";
 @connect(
   ({ rankList }) => ({
     rankList
@@ -21,7 +24,11 @@ export default class ShareCanvasAuth extends Component {
 
     this.state = {
       // 绘图配置文件
+      isShow: false,
       config: null,
+      styleRes: {
+        transform: "scale(0)"
+      },
       // 绘制的图片
       shareImage: null,
       // TaroCanvasDrawer 组件状态
@@ -73,6 +80,30 @@ export default class ShareCanvasAuth extends Component {
       }
     };
   }
+  componentWillMount() {
+    console.log("改变之前");
+
+    const designWidth = 375;
+    const designHeight = 603; // 这是在顶部位置定义，底部无tabbar情况下的设计稿高度
+
+    // 以iphone6为设计稿，计算相应的缩放比例
+    const { windowWidth, windowHeight } = Taro.getSystemInfoSync();
+    const responsiveScale =
+      windowHeight / ((windowWidth / designWidth) * designHeight);
+    if (responsiveScale < 1) {
+      this.setState({
+        styleRes: {
+          transform: `scale(${responsiveScale * 0.8})`
+        }
+      });
+    } else {
+      this.setState({
+        styleRes: {
+          transform: "scale(1)"
+        }
+      });
+    }
+  }
   componentDidMount() {
     this.props.ajaxGetAuth();
     this.canvasDrawFunc();
@@ -81,9 +112,6 @@ export default class ShareCanvasAuth extends Component {
   // 调用绘画 => canvasStatus 置为true、同时设置config
   canvasDrawFunc = (config = this.state.rssConfig) => {
     const { authRank } = this.props.rankList;
-    const sysInfo = Taro.getSystemInfoSync();
-    const { screenHeight } = sysInfo;
-    console.log("sysInfo", sysInfo);
     authRank.map((rank, index) => {
       if (index <= 4) {
         config.texts.push({
@@ -116,7 +144,6 @@ export default class ShareCanvasAuth extends Component {
         });
       }
     });
-
     this.setState({
       canvasStatus: true,
       config: config
@@ -127,11 +154,11 @@ export default class ShareCanvasAuth extends Component {
   };
   // 绘制成功回调函数 （必须实现）=> 接收绘制结果、重置 TaroCanvasDrawer 状态
   onCreateSuccess = result => {
-    console.log("result", result);
     const { tempFilePath, errMsg } = result;
-    Taro.hideLoading();
+
     if (errMsg === "canvasToTempFilePath:ok") {
       this.setState({
+        isShow: true,
         shareImage: tempFilePath,
         // 重置 TaroCanvasDrawer 状态，方便下一次调用
         canvasStatus: false,
@@ -151,6 +178,8 @@ export default class ShareCanvasAuth extends Component {
     //   current: tempFilePath,
     //   urls: [tempFilePath]
     // });
+
+    Taro.hideLoading();
   };
 
   // 绘制失败回调函数 （必须实现）=> 接收绘制错误信息、重置 TaroCanvasDrawer 状态
@@ -167,7 +196,8 @@ export default class ShareCanvasAuth extends Component {
   // 保存图片至本地
   saveToAlbum = () => {
     console.log("this.state", this.state);
-    const res = Taro.saveImageToPhotosAlbum({
+    let res;
+    res = Taro.saveImageToPhotosAlbum({
       filePath: this.state.shareImage
     });
     if (res.errMsg === "saveImageToPhotosAlbum:ok") {
@@ -176,31 +206,67 @@ export default class ShareCanvasAuth extends Component {
         icon: "success",
         duration: 2000
       });
+    } else {
+      res = Taro.saveImageToPhotosAlbum({
+        filePath: this.state.shareImage
+      });
     }
   };
   closeCanvas = () => {
     // this.props.closeCanvas();
   };
   render() {
-    console.log("this.props", this.props);
+    const { styleRes } = this.state;
+    // debugger;
     return (
-      <View>
-        <View className="share-canvas">
-          <Image src={this.state.shareImage} mode="widthFix" lazy-load />
-          {// 由于部分限制，目前组件通过状态的方式来动态加载
-          this.state.canvasStatus && (
+      <View style={styleRes}>
+        {/* {this.state.isShow ? (
+            // Taro.hideLoading()
+            <Image src={this.state.shareImage} mode="widthFix" lazy-load />
+          ) : (
+            Taro.hideLoading()
+          )} */}
+        {this.state.shareImage ? (
+          <View>
+            <View className="share-canvas">
+              <Image src={this.state.shareImage} mode="widthFix" lazy-load />
+            </View>
+            <View className="canvas-button">
+              <View className="share-out">
+                <AtButton
+                  className="per-canvas-button"
+                  type="secondary"
+                  openType="share">
+                  分享给好友
+                </AtButton>
+              </View>
+              <View className="save-img">
+                <AtButton
+                  className="per-canvas-button"
+                  type="primary"
+                  onClick={this.saveToAlbum}>
+                  保存图片分享
+                </AtButton>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <View className="load-img-wrap">
+            <Image className="load-img" src={load} mode="widthFix" lazy-load />
+            <View>正在加载...</View>
+          </View>
+        )}
+
+        {// 由于部分限制，目前组件通过状态的方式来动态加载
+        this.state.canvasStatus && (
+          <View className="canvas-wrap" style={styleRes}>
             <TaroCanvasDrawer
               config={this.state.config} // 绘制配置
               onCreateSuccess={this.onCreateSuccess} // 绘制成功回调
               onCreateFail={this.onCreateFail} // 绘制失败回调
             />
-          )}
-        </View>
-        <View>
-          <View>
-            <Button onClick={this.saveToAlbum}>保存到相册</Button>
           </View>
-        </View>
+        )}
       </View>
     );
   }

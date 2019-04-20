@@ -20,7 +20,7 @@ import { ajaxGetUserPlan } from "../../actions/useInfo";
 )
 export default class DailyPlan extends Component {
   config = {
-    navigationBarTitleText: "累计七天领取奖励"
+    navigationBarTitleText: "七天认识一门编程语言"
   };
   constructor() {
     super();
@@ -33,11 +33,6 @@ export default class DailyPlan extends Component {
       allPlan: []
     };
   }
-  // static defaultProps = {
-  //   userInfo: {
-  //     userPlan: []
-  //   }
-  // };
   componentDidMount() {
     const loginInfo = getStorageSync("login");
     this.props.ajaxGetUserPlan(loginInfo.userid);
@@ -47,7 +42,6 @@ export default class DailyPlan extends Component {
     if (nextprops.userInfo) {
       const isShow = nextprops.userInfo.userPlan.isTranspondedList;
       let initCurrent = (nextprops.userInfo.userPlan.studyPlan.length - 1) * 2;
-      console.log("ini", initCurrent);
       nextprops.userInfo.userPlan.studyPlan.map((item, index) => {
         allPlan.push({
           studyPlanDay: item.studyPlanDay,
@@ -114,19 +108,22 @@ export default class DailyPlan extends Component {
       }
     }).then(response => {
       const res = response.data;
-      console.log("res", res);
       if (res.code === 0) {
-        //用户转发成功后向后台更新用户每日转发状态
-        //这一步触发dispatch请求成功之后如何及时更新到页面上
         this.props.ajaxGetUserPlan(loginInfo.userid);
       }
     });
     return {
-      title: "HelloWorld Rank"
+      title: "进入小程序了解当下最流行、最赚钱的编程语言",
+      path: "/pages/index/index"
     };
   };
+  preview = url => {
+    Taro.previewImage({
+      current: url, // 当前显示图片的http链接
+      urls: [url] // 需要预览的图片http链接列表
+    });
+  };
   render() {
-    // const { studyPlan } = this.state.userInfo.userPlan;
     const { current, isLoading, allPlan } = this.state;
     return (
       <View>
@@ -166,7 +163,9 @@ export default class DailyPlan extends Component {
                       </View>
 
                       {item.show ? (
-                        <AtCard className="plan-card">
+                        <AtCard
+                          className="plan-card"
+                          onClick={this.preview.bind(this, item.image)}>
                           <Image className="full-plan" src={item.image} />
                         </AtCard>
                       ) : (
@@ -180,8 +179,6 @@ export default class DailyPlan extends Component {
                           </View>
                         </AtCard>
                       )}
-
-                      {/* <AtCard className="plan-card">{item}</AtCard> */}
                     </SwiperItem>
                   );
                 })}

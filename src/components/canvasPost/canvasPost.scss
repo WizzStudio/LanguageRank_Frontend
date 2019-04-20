@@ -1,0 +1,26 @@
+.canvas-button {
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  .per-canvas-button {
+    height: 200px;
+    // font-size: 80px;
+  }
+}
+.canvas-wrap {
+  position: fixed;
+  right: -10000px;
+}
+.load-img-wrap {
+  width: 100%;
+  height: 425px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .load-img {
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+  }
+}

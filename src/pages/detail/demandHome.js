@@ -148,7 +148,12 @@ export default class DemandHome extends Component {
   refKChart = node => (this.kChart = node);
   refBarChart = node => (this.barChart = node);
   refPieChart = node => (this.pieChart = node);
-
+  onShareAppMessage = res => {
+    return {
+      title: "进入小程序了解当下最流行、最赚钱的编程语言",
+      path: "/pages/index/index"
+    };
+  };
   render() {
     const { langName, isLoading } = this.state;
     const { posi, logo } = this.props.demandHome;

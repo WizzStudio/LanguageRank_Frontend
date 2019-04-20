@@ -3,7 +3,7 @@ import { View } from "@tarojs/components";
 import { AtButton, AtFloatLayout, AtIcon } from "taro-ui";
 import AuthItem from "../../components/rank/authItem";
 import "./authRankList.scss";
-import ShareCanvasAuth from "../../components/rank/shareCanvasAuth";
+import ShareCanvasDemand from "../../components/canvasPost/shareCanvasDemand";
 
 import { connect } from "@tarojs/redux";
 import { ajaxGetDemand } from "../../actions/rankList";
@@ -27,7 +27,6 @@ export default class DemandRankList extends Component {
   }
   componentDidMount() {
     this.props.ajaxGetDemand();
-    console.log("this.props", this.props);
   }
   handleNavigate(name) {
     Taro.navigateTo({
@@ -54,6 +53,12 @@ export default class DemandRankList extends Component {
       isShared: false
     });
   };
+  componentDidShow() {
+    if (Taro.getStorageSync("basicInfo")) {
+      const loginInfo = Taro.getStorageSync("login");
+      this.props.ajaxGetUserAllInfo(loginInfo.userid);
+    }
+  }
   render() {
     const { demandRank } = this.props.rankList;
 
@@ -79,9 +84,16 @@ export default class DemandRankList extends Component {
         </View>
         {isShared ? (
           <View className="share-bg">
+            <View className="close-canvas">
+              <AtIcon
+                value="close-circle"
+                size="40"
+                color="#FFF"
+                onClick={this.closeCanvas}
+              />
+            </View>
             <View className="share-wrap">
-              <ShareCanvasAuth langImg="test" />
-              <AtButton onClick={this.closeCanvas}>关闭</AtButton>
+              <ShareCanvasDemand langImg="test" />
             </View>
           </View>
         ) : (

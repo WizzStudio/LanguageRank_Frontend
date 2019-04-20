@@ -1,17 +1,15 @@
 .footer-wrap {
-  height: 130px;
+  height: 110px;
   z-index: 100;
 }
 .fix-footer {
   background: #fff;
-  height: 130px;
+  height: 110px;
   width: 100%;
   display: flex;
   justify-content: center;
-  // position: fixed;
-  // bottom: 0;
   .add-plan {
-    flex: 3;
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,34 +17,41 @@
     font-size: 36px;
     font-weight: bold;
     color: white;
+    border-right: 1px solid #fff;
+    .img {
+      width: 70px;
+      height: 70px;
+      margin-right: 20px;
+    }
   }
   .no-add-plan {
-    background-color: #dcdcdc;
+    // background-color: #dcdcdc;
   }
   .cl-share {
-    // display: flex;
-    // flex-direction: column;
-    // // justify-content: space-between;
-    // align-items: center;
     flex: 1;
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    background-color: #4f5fc5;
+    font-weight: bold;
     .share-button-next {
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      background-color: #4f5fc5;
+      color: white;
+      font-size: 36px;
+      font-weight: bold;
     }
     .img {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
+      margin-right: 20px;
     }
-    font-size: 24px;
-    .share-title {
-      font-size: 24px;
-      line-height: 24px;
-    }
+    // .share-title {
+    //   font-size: 24px;
+    //   line-height: 24px;
+    // }
   }
   .ge-img {
     display: flex;
@@ -70,6 +75,10 @@ button {
   background: #fff;
 }
 
+button > .button-hover {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
 .share-canvas-wrap {
   .share-bg {
     position: fixed;
@@ -90,7 +99,14 @@ button {
       width: 100%;
       height: 100%;
       .close-canvas {
-        background-color: #dcdcdc;
+        margin-top: 20px;
+        background-color: #efefef;
+        width: 750px;
+        height: 70px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
   }

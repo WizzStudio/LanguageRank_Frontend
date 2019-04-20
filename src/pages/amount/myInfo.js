@@ -2,6 +2,7 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
 import { AtAvatar, AtToast, AtProgress, AtButton } from "taro-ui";
 import "./myInfo.scss";
+import Notice from "../../components/rank/notice";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
 import logo from "../../assets/img/logo.png";
@@ -43,9 +44,7 @@ export default class MyInfo extends Component {
     this.checkLogin();
   }
   componentWillReceiveProps(nextprops) {
-    console.log("进入props");
     if (nextprops.userInfo.allInfo) {
-      console.log("进入props的if");
       this.setState({
         allInfo: nextprops.userInfo.allInfo
       });
@@ -65,14 +64,6 @@ export default class MyInfo extends Component {
           basicInfo: basicInfo
         });
       } else {
-        //这个else可以不要？？
-        // this.bindGetUserInfo();
-        // if (Taro.getStorageSync("basicInfo")) {
-        //   const basicInfo = Taro.getStorageSync("basicInfo");
-        //   this.setState({
-        //     basicInfo: basicInfo
-        //   });
-        // }
       }
     } else {
       this.handleLogin();
@@ -119,53 +110,38 @@ export default class MyInfo extends Component {
       });
       // this.checkLogin();
     }
-    // Taro.getSetting({
-    //   success(res) {
-    //     if (res.authSetting["scope.userInfo"]) {
-    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-    //       Taro.getUserInfo(
-    //         // success(res) {
-    //         //   // console.log(res.userInfo);
-    //         //   // Taro.setStorageSync("basicInfo", {
-    //         //   //   nickname: res.userInfo.nickName,
-    //         //   //   avatar: res.userInfo.avatarUrl
-    //         //   // });
-    //         // }
-    //         {}
-    //       ).then(res => {
-    //         console.log(res.userInfo);
-    //         Taro.setStorageSync("basicInfo", {
-    //           nickname: res.userInfo.nickName,
-    //           avatar: res.userInfo.avatarUrl
-    //         });
-    //         //TODO争议点
-    //         this.setState({
-    //           basicInfo: {
-    //             avatar: res.userInfo.nickName,
-    //             nickname: res.userInfo.avatarUrl
-    //           }
-    //         });
-    //       });
-    //     }
-    //   }
-    // });
   };
   toDailyPlan = () => {
-    const { isLogin } = this.state;
-    if (isLogin) {
-      Taro.navigateTo({
-        url: "/pages/amount/dailyPlan"
-      });
+    const { isLogin, allInfo } = this.state;
+    if (allInfo.myLanguage) {
+      if (isLogin) {
+        Taro.navigateTo({
+          url: "/pages/amount/dailyPlan"
+        });
+      } else {
+        this.setState({
+          noPlan: true
+        });
+      }
     } else {
-      this.setState({
-        noPlan: true
+      Taro.showToast({
+        title: "请先去语言主页加入学习计划哦~",
+        icon: "none"
       });
     }
   };
   toAward = () => {
-    Taro.navigateTo({
-      url: "/pages/amount/myAward"
-    });
+    const { allInfo } = this.state;
+    if (allInfo.myLanguage) {
+      Taro.navigateTo({
+        url: "/pages/amount/myAward"
+      });
+    } else {
+      Taro.showToast({
+        title: "请先去语言主页加入学习计划哦~",
+        icon: "none"
+      });
+    }
   };
   noteLogin = () => {
     Taro.showToast({
@@ -180,6 +156,8 @@ export default class MyInfo extends Component {
     return (
       <View className="top-bg">
         <View className="blank" />
+        {allInfo.isViewedJoinMyApplet && <Notice />}
+        {/* <Notice /> */}
         {isLogin ? (
           <View>
             <View className="intro">
@@ -210,22 +188,21 @@ export default class MyInfo extends Component {
               />
               <View className="plan-state">
                 <View className="per-plan-state">
-                  {allInfo.joinedNumber + 1 ? (
-                    <View className="num">{allInfo.joinedNumber}</View>
-                  ) : (
+                  {allInfo.joinedNumber === null ? (
                     <View className="num">?</View>
+                  ) : (
+                    <View className="num">{allInfo.joinedNumber}</View>
                   )}
 
-                  <View className="text">已加入学习计划 </View>
+                  <View className="text">已加入学习计划人数 </View>
                 </View>
                 <View className="per-plan-state">
-                  {allInfo.joinedToday + 1 ? (
-                    <View className="num">{allInfo.joinedToday}</View>
-                  ) : (
+                  {allInfo.joinedToday === null ? (
                     <View className="num">?</View>
+                  ) : (
+                    <View className="num">{allInfo.joinedToday}</View>
                   )}
-
-                  <View className="text">今日新增 </View>
+                  <View className="text">今日新增人数 </View>
                 </View>
               </View>
               <View className="plan-progress">
@@ -305,12 +282,12 @@ export default class MyInfo extends Component {
                 <View className="per-plan-state">
                   <View className="num">?</View>
 
-                  <View className="text">已加入学习计划 </View>
+                  <View className="text">已加入学习计划人数 </View>
                 </View>
                 <View className="per-plan-state">
                   <View className="num">?</View>
 
-                  <View className="text">今日新增 </View>
+                  <View className="text">今日新增人数 </View>
                 </View>
               </View>
               <View className="plan-progress">

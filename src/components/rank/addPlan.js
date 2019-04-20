@@ -3,11 +3,8 @@ import { View, CoverView, CoverImage } from "@tarojs/components";
 import "./addPlan.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
-import shareimg from "../../assets/icon/share.png";
-import saveimg from "../../assets/icon/saveimg.png";
-// import ShareCanvasAuth from "../../components/rank/shareCanvasAuth";
-import ShareCanvasDemand from "../../components/rank/shareCanvasDemand";
-
+import shareimg from "../../assets/icon/share2.png";
+import addPlanimg from "../../assets/icon/addPlan.png";
 @connect(
   ({ userInfo }) => ({
     userInfo
@@ -27,32 +24,33 @@ export default class AuthItem extends Component {
       isStudying: false
     };
   }
-  componentDidMount() {
+  componentWillMount() {
     this.setState({
       lang: this.props.langName
     });
     const loginInfo = Taro.getStorageSync("login");
-    this.props.ajaxGetUserAllInfo(loginInfo.userid);
+    if (Taro.getStorageSync("allInfo")) {
+    } else {
+      this.props.ajaxGetUserAllInfo(loginInfo.userid);
+    }
   }
   componentWillReceiveProps(nextprops) {
-    console.log("nextprops", nextprops);
     if (
       nextprops &&
       this.props.langName == nextprops.userInfo.allInfo.myLanguage
     ) {
-      console.log(
-        "object",
-        this.props.langName,
-        nextprops.userInfo.allInfo.myLanguage
-      );
       this.setState({
         isStudying: true
       });
     }
   }
   tryAddPlan = () => {
-    const { allInfo } = this.props.userInfo;
-
+    let allInfo;
+    if (Taro.getStorageSync("allInfo")) {
+      allInfo = Taro.getStorageSync("allInfo");
+    } else {
+      allInfo = this.props.userInfo.allInfo;
+    }
     if (!Taro.getStorageSync("basicInfo")) {
       Taro.switchTab({
         url: "/pages/amount/myInfo"
@@ -104,7 +102,12 @@ export default class AuthItem extends Component {
         });
       } else if (res.code === 2) {
         Taro.showToast({
-          title: "该语言奖励礼包正在在火速赶来，先试试其他语言吧",
+          title: "该语言奖励礼包正在火速赶来，先试试其他语言吧",
+          icon: "none"
+        });
+      } else if (res.code === 3) {
+        Taro.showToast({
+          title: "你已经在学习该语言了~",
           icon: "none"
         });
       } else {
@@ -117,29 +120,29 @@ export default class AuthItem extends Component {
   };
   cancelPlan = () => {};
   showCanvas = () => {
-    this.setState({
-      isShared: true
-    });
+    // this.setState({
+    //   isShared: true
+    // });
+    this.props.onHandleCanvas();
   };
   closeCanvas = () => {
     this.setState({
       isShared: false
     });
   };
+
   render() {
     const { isShared, isStudying } = this.state;
-    console.log("this.isS", isStudying);
     return (
       <View>
         {isShared ? (
           <View className="share-canvas-wrap">
             <View className="share-bg">
               <View className="share-wrap">
-                <ShareCanvasDemand
+                <ShareCanvasOne
                   rankContent="213"
                   handleClose={this.closeCanvas}
                 />
-                {/* <AtButton onClick={this.closeCanvas}>关闭</AtButton> */}
                 <View onClick={this.closeCanvas} className="close-canvas">
                   关闭
                 </View>
@@ -156,7 +159,8 @@ export default class AuthItem extends Component {
                 <View className="add-plan no-add-plan">正在学习中</View>
               ) : (
                 <View className="add-plan" onClick={this.tryAddPlan}>
-                  学习领奖励
+                  <Image src={addPlanimg} className="img" />
+                  <View className="share-title">学习领奖励</View>
                 </View>
               )}
 
@@ -164,15 +168,15 @@ export default class AuthItem extends Component {
                 <button open-type="share" className="share-button">
                   <View className="share-button-next">
                     <Image src={shareimg} className="img" />
-                    <View className="share-title">分享</View>
+                    <View className="share-title">分享给好友</View>
                   </View>
                 </button>
               </View>
 
-              <View className="ge-img" onClick={this.showCanvas}>
+              {/* <View className="ge-img" onClick={this.showCanvas}>
                 <Image src={saveimg} className="img" />
                 <View className="save-title">生成图片</View>
-              </View>
+              </View> */}
             </View>
           </View>
         </View>

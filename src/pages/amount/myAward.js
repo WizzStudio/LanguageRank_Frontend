@@ -29,15 +29,11 @@ export default class MyAward extends Component {
   //     }
   //   }
   // };
-  componentDidMount() {
+  componentWillMount() {
     const loginInfo = Taro.getStorageSync("login");
     this.props.ajaxGetUserAward(loginInfo.userid);
-    console.log("this.stat11e", this.state);
   }
 
-  componentWillReceiveProps(nextprops) {
-    console.log("nextprops", nextprops);
-  }
   getNoAward = () => {
     Taro.showToast({
       title: "完成七日计划,即可领取奖励~",
@@ -45,9 +41,9 @@ export default class MyAward extends Component {
     });
   };
   getPerAward = (num, index) => {
-    console.log("num,index", num, index);
     let content = "";
     if (index === -1) {
+      //设置-1表示当前在学习的计划中，判断是否到7填
       num === 1
         ? (content = this.props.userInfo.userAward.studyingLanguage.linkOne)
         : (content = this.props.userInfo.userAward.studyingLanguage.linkTwo);
@@ -67,7 +63,6 @@ export default class MyAward extends Component {
       confirmColor: "#4f5fc5",
       success(res) {
         if (res.confirm) {
-          console.log("用户点击确定");
           Taro.setClipboardData({
             data: content,
             success: function() {
@@ -82,7 +77,6 @@ export default class MyAward extends Component {
             }
           });
         } else if (res.cancel) {
-          console.log("用户点击取消");
         }
       }
     });
@@ -139,7 +133,7 @@ export default class MyAward extends Component {
                         onClick={this.getNoAward}
                       />
                     </View>
-                    <View className="award-name">{havingAward.contentOne}</View>
+                    <View className="award-name">{item.contentOne}</View>
                   </View>
                   <View className="per-award">
                     <View className="award-content">
@@ -149,7 +143,7 @@ export default class MyAward extends Component {
                         onClick={this.getNoAward}
                       />
                     </View>
-                    <View className="award-name">{havingAward.contentTwo}</View>
+                    <View className="award-name">{item.contentTwo}</View>
                   </View>
                 </View>
               </View>

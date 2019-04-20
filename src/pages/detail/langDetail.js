@@ -30,14 +30,20 @@ export default class LangDetail extends Component {
       langName: ""
     };
   }
-  componentWillMount() {}
-  componentDidMount() {
+  componentWillMount() {
     const { langName } = this.$router.params;
     this.setState({
       langName
     });
     this.props.ajaxGetLangMore(langName);
   }
+  componentDidMount() {}
+  onShareAppMessage = res => {
+    return {
+      title: "进入小程序了解当下最流行、最赚钱的编程语言",
+      path: "/pages/index/index"
+    };
+  };
   render() {
     const { langName } = this.state;
     const { langMore } = this.props.rankList;

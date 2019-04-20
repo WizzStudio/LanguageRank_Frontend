@@ -46,7 +46,6 @@ function setChartData(chart, data) {
   };
   if (data && data.dimensions && data.measures) {
     option.xAxis.data = data.dimensions.data;
-    console.log("option.xAxis.data", option.xAxis.data);
     option.series = data.measures.map(item => {
       return {
         ...item,

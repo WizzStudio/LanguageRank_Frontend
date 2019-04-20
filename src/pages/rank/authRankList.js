@@ -1,12 +1,11 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View, Canvas, Text } from "@tarojs/components";
-import { AtFloatLayout, AtButton, AtIcon } from "taro-ui";
+import { View } from "@tarojs/components";
+import { AtFloatLayout, AtButton, AtIcon, AtBadge } from "taro-ui";
 import "./authRankList.scss";
 import AuthItem from "../../components/rank/authItem";
-import ShareCanvasAuth from "../../components/rank/shareCanvasAuth";
+import ShareCanvasAuth from "../../components/canvasPost/shareCanvasAuth";
 import { connect } from "@tarojs/redux";
 import { ajaxGetAuth } from "../../actions/rankList";
-
 @connect(
   ({ rankList }) => ({
     rankList
@@ -22,7 +21,8 @@ class AuthRankList extends Component {
     super();
     this.state = {
       isOpened: false,
-      isShared: false
+      isShared: false,
+      responsive: 1
     };
   }
   static defaultProps = {
@@ -32,8 +32,9 @@ class AuthRankList extends Component {
   };
   componentWillMount() {
     this.props.ajaxGetAuth();
-    // this.props.asyncGetUser();
   }
+  componentWillReceiveProps(nextprops) {}
+
   handleNavigate(name) {
     Taro.navigateTo({
       url: "/pages/detail/langHome?langName=" + encodeURI(name)
@@ -60,6 +61,7 @@ class AuthRankList extends Component {
       isShared: false
     });
   };
+  componentDidShow() {}
   render() {
     const rankList = this.props.rankList.authRank;
     const { isShared } = this.state;
@@ -85,11 +87,16 @@ class AuthRankList extends Component {
         </View>
         {isShared ? (
           <View className="share-bg">
+            <View className="close-canvas">
+              <AtIcon
+                value="close-circle"
+                size="40"
+                color="#FFF"
+                onClick={this.closeCanvas}
+              />
+            </View>
             <View className="share-wrap">
               <ShareCanvasAuth rankContent="213" />
-              <AtButton onClick={this.closeCanvas} className="close-canvas">
-                关闭
-              </AtButton>
             </View>
           </View>
         ) : (
