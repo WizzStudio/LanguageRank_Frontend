@@ -27,7 +27,8 @@ class Index extends Component {
     this.state = {
       current: 0,
       basicInfo: {},
-      isViewedJoinMyApplet: false
+      isViewedJoinMyApplet: false,
+      isViewedStudyPlan: false
     };
   }
   componentWillMount() {}
@@ -65,14 +66,42 @@ class Index extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    //
     if (nextProps.userInfo.allInfo) {
-      this.setState({
-        isViewedJoinMyApplet: nextProps.userInfo.allInfo.isViewedJoinMyApplet
-      });
-      if (nextProps.userInfo.allInfo.isViewedStudyPlan) {
-        Taro.navigateTo({
-          url: "/pages/amount/dailyPlan"
-        });
+      console.log("00nextProps", nextProps);
+      if (this.props != nextProps) {
+        console.log("进到这个了", nextProps);
+        if (
+          nextProps.userInfo.allInfo.isViewedJoinMyApplet !=
+          this.state.isViewedJoinMyApplet
+        ) {
+          console.log("11nextProps", nextProps);
+          this.setState({
+            isViewedJoinMyApplet:
+              nextProps.userInfo.allInfo.isViewedJoinMyApplet
+          });
+        }
+        if (
+          nextProps.userInfo.allInfo.isViewedStudyPlan !=
+          this.state.isViewedStudyPlan
+        ) {
+          console.log("22nextProps", nextProps);
+          this.setState({
+            isViewedStudyPlan: nextProps.userInfo.allInfo.isViewedStudyPlan
+          });
+        } else {
+          this.setState({
+            isViewedStudyPlan: false
+          });
+        }
+
+        // if (nextProps.userInfo.allInfo.isViewedStudyPlan) {
+        //   console.log("nextprops", nextProps);
+        //   Taro.navigateTo({
+        //     url: "/pages/amount/dailyPlan"
+        //   });
+        //   return;
+        // }
       }
     }
   }
@@ -153,8 +182,14 @@ class Index extends Component {
       path: "/pages/index/index"
     };
   };
+  // toPlan = () => {
+  //   Taro.navigateTo({
+  //     url: "/pages/amount/dailyPlan"
+  //   });
+  // };
   render() {
-    const { isViewedJoinMyApplet } = this.state;
+    const { isViewedJoinMyApplet, isViewedStudyPlan } = this.state;
+    // isViewedStudyPlan ? this.toPlan() : "";
     return (
       <View className="top-bg">
         <View className="blank" />
@@ -171,7 +206,7 @@ class Index extends Component {
           </View>
           {this.state.current === 0 ? (
             <View className="tab-content">
-              <AuthRankList />
+              <AuthRankList isViewed={this.state.isViewedStudyPlan} />
             </View>
           ) : null}
           {this.state.current === 1 ? (

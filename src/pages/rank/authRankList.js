@@ -33,7 +33,20 @@ class AuthRankList extends Component {
   componentWillMount() {
     this.props.ajaxGetAuth();
   }
-  componentWillReceiveProps(nextprops) {}
+  componentDidMount() {
+    const isViewed = this.props.isViewed;
+    console.log("isViewd", isViewed);
+  }
+  componentWillReceiveProps(nextprops) {
+    console.log("nextprops", nextprops);
+    if (nextprops != this.props) {
+      if (nextprops.isViewed) {
+        Taro.navigateTo({
+          url: "/pages/amount/dailyPlan"
+        });
+      }
+    }
+  }
 
   handleNavigate(name) {
     Taro.navigateTo({
