@@ -230,7 +230,7 @@ export default class MyInfo extends Component {
                     type="primary"
                     className="my-award my-button"
                     onClick={this.toAward}>
-                    我的奖励
+                    积分商城
                   </AtButton>
                   <AtButton
                     openType="feedback"

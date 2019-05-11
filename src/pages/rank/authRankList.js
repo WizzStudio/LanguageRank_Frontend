@@ -1,6 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View } from "@tarojs/components";
-import { AtFloatLayout, AtButton, AtIcon, AtBadge } from "taro-ui";
+import { View, CoverView } from "@tarojs/components";
+import { AtFloatLayout, AtButton, AtIcon } from "taro-ui";
 import "./authRankList.scss";
 import AuthItem from "../../components/rank/authItem";
 import ShareCanvasAuth from "../../components/canvasPost/shareCanvasAuth";
@@ -12,7 +12,8 @@ import { ajaxGetAuth } from "../../actions/rankList";
   }),
   dispatch => ({
     ajaxGetAuth() {
-      dispatch(ajaxGetAuth());
+      //加个return 就可以then了！！！！！！！！！！！！！！
+      return dispatch(ajaxGetAuth());
     }
   })
 )
@@ -20,6 +21,7 @@ class AuthRankList extends Component {
   constructor() {
     super();
     this.state = {
+      pageLoaded: false,
       isOpened: false,
       isShared: false,
       responsive: 1
@@ -30,27 +32,23 @@ class AuthRankList extends Component {
       authRank: []
     }
   };
-  componentWillMount() {
-    this.props.ajaxGetAuth();
-  }
+  componentWillMount() {}
   componentDidMount() {
-    const isViewed = this.props.isViewed;
-    console.log("isViewd", isViewed);
+    Taro.showLoading({
+      title: "加载中..."
+    });
+    this.props.ajaxGetAuth().then(res => {
+      Taro.hideLoading();
+      console.log("res", res);
+    });
   }
-  componentWillReceiveProps(nextprops) {
-    console.log("nextprops", nextprops);
-    if (nextprops != this.props) {
-      if (nextprops.isViewed) {
-        Taro.navigateTo({
-          url: "/pages/amount/dailyPlan"
-        });
-      }
-    }
-  }
+  componentWillReceiveProps(nextprops) {}
 
   handleNavigate(name) {
     Taro.navigateTo({
-      url: "/pages/detail/langHome?langName=" + encodeURI(name)
+      url: `/pages/detail/langIndex?rankIndex=${"auth"}&langName=${encodeURI(
+        name
+      )}`
     });
   }
 
@@ -76,8 +74,8 @@ class AuthRankList extends Component {
   };
   componentDidShow() {}
   render() {
-    const rankList = this.props.rankList.authRank;
-    const { isShared } = this.state;
+    const rankList = this.props.rankList ? this.props.rankList.authRank : [];
+    const { isShared, pageLoaded } = this.state;
     return (
       <View>
         {rankList.map((rank, index) => {

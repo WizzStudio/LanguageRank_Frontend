@@ -40,6 +40,7 @@ export const ajaxGetUserAllInfo = userId => {
     } else {
       dispatch(getUserFail(res.msg));
     }
+    return res;
   };
 };
 
@@ -69,6 +70,7 @@ export const ajaxGetUserPlan = userId => {
     } else {
       dispatch(getUserFail(res.msg));
     }
+    return res;
   };
 };
 

@@ -14,7 +14,7 @@ import { ajaxGetUserAllInfo } from "../../actions/useInfo";
   }),
   dispatch => ({
     ajaxGetUserAllInfo(id) {
-      dispatch(ajaxGetUserAllInfo(id));
+      return dispatch(ajaxGetUserAllInfo(id));
     }
   })
 )
@@ -38,7 +38,40 @@ class Index extends Component {
     } else {
       if (Taro.getStorageSync("basicInfo")) {
         const loginInfo = Taro.getStorageSync("login");
-        this.props.ajaxGetUserAllInfo(loginInfo.userid);
+        Taro.getSetting().then(res => {
+          if (res.authSetting["scope.userInfo"]) {
+            Taro.getUserInfo().then(userInfoRes => {
+              console.log("userInfoRes", userInfoRes);
+            });
+          }
+        });
+        this.props.ajaxGetUserAllInfo(loginInfo.userid).then(res => {
+          if (res.code === 0) {
+            if (
+              this.props.userInfo.allInfo.isViewedJoinMyApplet !=
+              this.state.isViewedJoinMyApplet
+            ) {
+              console.log("11nextProps", this.props);
+              this.setState({
+                isViewedJoinMyApplet: this.props.userInfo.allInfo
+                  .isViewedJoinMyApplet
+              });
+            }
+            if (
+              this.props.userInfo.allInfo.isViewedStudyPlan !=
+              this.state.isViewedStudyPlan
+            ) {
+              console.log("22nextProps", this.props);
+              this.setState({
+                isViewedStudyPlan: this.props.userInfo.allInfo.isViewedStudyPlan
+              });
+            } else {
+              this.setState({
+                isViewedStudyPlan: false
+              });
+            }
+          }
+        });
       }
     }
   }
@@ -65,46 +98,6 @@ class Index extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    //
-    if (nextProps.userInfo.allInfo) {
-      console.log("00nextProps", nextProps);
-      if (this.props != nextProps) {
-        console.log("进到这个了", nextProps);
-        if (
-          nextProps.userInfo.allInfo.isViewedJoinMyApplet !=
-          this.state.isViewedJoinMyApplet
-        ) {
-          console.log("11nextProps", nextProps);
-          this.setState({
-            isViewedJoinMyApplet:
-              nextProps.userInfo.allInfo.isViewedJoinMyApplet
-          });
-        }
-        if (
-          nextProps.userInfo.allInfo.isViewedStudyPlan !=
-          this.state.isViewedStudyPlan
-        ) {
-          console.log("22nextProps", nextProps);
-          this.setState({
-            isViewedStudyPlan: nextProps.userInfo.allInfo.isViewedStudyPlan
-          });
-        } else {
-          this.setState({
-            isViewedStudyPlan: false
-          });
-        }
-
-        // if (nextProps.userInfo.allInfo.isViewedStudyPlan) {
-        //   console.log("nextprops", nextProps);
-        //   Taro.navigateTo({
-        //     url: "/pages/amount/dailyPlan"
-        //   });
-        //   return;
-        // }
-      }
-    }
-  }
   checkLogin = () => {
     if (Taro.getStorageSync("login")) {
       if (Taro.getStorageSync("basicInfo")) {

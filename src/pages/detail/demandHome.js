@@ -12,7 +12,6 @@ import {
   ajaxGetCity,
   ajaxGetSalary
 } from "../../actions/rankList";
-import demandHome from "../../reducers/index";
 import "./langDetail.scss";
 
 @connect(
@@ -43,24 +42,16 @@ export default class DemandHome extends Component {
       }
     };
   }
-  // static defaultProps = {
-  //   demandHome: {
-  //     salary: [],
-  //     demandPosi: [],
-  //     city: [],
-  //     posi: []
-  //   }
-  // };
   componentWillMount() {}
   componentDidMount() {
-    const { langName } = this.$router.params;
+    const { demandNameProp } = this.props;
     this.setState({
-      langName
+      langName: demandNameProp
     });
-    this.props.getDemandHome(langName);
+    console.log("langNameProp", demandNameProp);
+    this.props.getDemandHome(demandNameProp);
   }
   componentWillReceiveProps(nextprops) {
-    console.log("需求nextprops", nextprops);
     if (nextprops.demandHome.salary) {
       const { salary } = nextprops.demandHome;
       this.setState({
@@ -156,13 +147,9 @@ export default class DemandHome extends Component {
   };
   render() {
     const { langName, isLoading } = this.state;
-    const { posi, logo } = this.props.demandHome;
+    const { posi, logo } = this.props.demandHome ? this.props.demandHome : "";
     return (
       <View>
-        <View className="demand-title">
-          <Image src={logo} className="demand-logo" />
-          {langName}相关岗位
-        </View>
         <View className="wrap-content">
           <View className="wrap-title">热门岗位</View>
           <View>

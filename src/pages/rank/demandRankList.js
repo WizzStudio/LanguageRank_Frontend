@@ -30,7 +30,9 @@ export default class DemandRankList extends Component {
   }
   handleNavigate(name) {
     Taro.navigateTo({
-      url: "/pages/detail/demandHome?langName=" + encodeURI(name)
+      url: `/pages/detail/langIndex?rankIndex=${"demand"}&langName=${encodeURI(
+        name
+      )}`
     });
   }
   openIntro = () => {
@@ -60,7 +62,7 @@ export default class DemandRankList extends Component {
     }
   }
   render() {
-    const { demandRank } = this.props.rankList;
+    const { demandRank } = this.props.rankList ? this.props.rankList : [];
 
     return (
       <View>

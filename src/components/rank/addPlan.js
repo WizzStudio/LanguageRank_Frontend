@@ -1,5 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, CoverView, CoverImage } from "@tarojs/components";
+import { AtButton } from "taro-ui";
 import "./addPlan.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
@@ -156,26 +157,29 @@ export default class AuthItem extends Component {
           <View className="footer-wrap">
             <View className="fix-footer">
               {isStudying ? (
-                <View className="add-plan no-add-plan">正在学习中</View>
+                // <View className="add-plan no-add-plan">正在学习中</View>
+                <AtButton disabled circle type="primary" size="small">
+                  正在学习中
+                </AtButton>
               ) : (
-                <View className="add-plan" onClick={this.tryAddPlan}>
-                  <Image src={addPlanimg} className="img" />
-                  <View className="share-title">学习领奖励</View>
-                </View>
+                // <View className="add-plan" onClick={this.tryAddPlan}>
+                <AtButton
+                  circle
+                  type="primary"
+                  size="small"
+                  onClick={this.tryAddPlan}>
+                  进入猿圈
+                </AtButton>
+                // </View>
               )}
 
-              <View className="cl-share">
+              {/* <View className="cl-share">
                 <button open-type="share" className="share-button">
                   <View className="share-button-next">
                     <Image src={shareimg} className="img" />
                     <View className="share-title">分享给好友</View>
                   </View>
                 </button>
-              </View>
-
-              {/* <View className="ge-img" onClick={this.showCanvas}>
-                <Image src={saveimg} className="img" />
-                <View className="save-title">生成图片</View>
               </View> */}
             </View>
           </View>

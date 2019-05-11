@@ -82,8 +82,12 @@ export default class MyAward extends Component {
     });
   };
   render() {
-    const hadAward = this.props.userInfo.userAward.studyedLanguage;
-    const havingAward = this.props.userInfo.userAward.studyingLanguage;
+    const hadAward = this.props.userInfo.userAward
+      ? this.props.userInfo.userAward.studyedLanguage
+      : [];
+    const havingAward = this.props.userInfo.userAward
+      ? this.props.userInfo.userAward.studyingLanguage
+      : [];
     return (
       <View>
         <View className="my-award" key={index}>

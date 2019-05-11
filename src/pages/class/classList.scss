@@ -1,0 +1,17 @@
+.per-class {
+  display: flex;
+  padding: 20px;
+  align-items: center;
+  .title {
+    flex: 8;
+    font-weight: 700;
+  }
+  .person-num {
+    flex: 2;
+    font-weight: 100;
+    font-size: 30px;
+  }
+  .add-btn {
+    flex: 1;
+  }
+}

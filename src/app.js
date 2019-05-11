@@ -20,10 +20,13 @@ class App extends Component {
     pages: [
       "pages/index/index",
       "pages/amount/myInfo",
+      "pages/class/classIndex",
+      "pages/class/classHome",
+      "pages/class/classList",
       "pages/amount/dailyPlan",
       "pages/amount/myAward",
-      "pages/detail/demandHome",
-      "pages/detail/langHome",
+      "pages/amount/userRank",
+      "pages/detail/langIndex",
       "pages/detail/langDetail"
     ],
     window: {
@@ -39,6 +42,12 @@ class App extends Component {
           text: "排行榜",
           iconPath: "./assets/icon/rank2.png",
           selectedIconPath: "./assets/icon/rank.png"
+        },
+        {
+          pagePath: "pages/class/classIndex",
+          text: "猿圈",
+          iconPath: "./assets/img/logo.png",
+          selectedIconPath: "./assets/img/logo.png"
         },
         {
           pagePath: "pages/amount/myInfo",

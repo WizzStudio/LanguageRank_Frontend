@@ -34,22 +34,44 @@ export const getDemand = data => {
   };
 };
 //异步---请求权威和需求榜单
+// export const ajaxGetAuth = () => {
+//   return async dispatch => {
+//     Taro.showLoading({
+//       title: "加载中..."
+//     });
+//     const response = await Taro.request({
+//       url: "https://pgrk.wizzstudio.com/languagerank"
+//     });
+//     Taro.hideLoading();
+//     const res = response.data;
+//     if (res.code === 0) {
+//       dispatch(getAuth(res.data));
+//     } else {
+//       //TODO  存疑  具体需要看后端返回字段。
+//       dispatch(getRankFail(res.msg));
+//     }
+//   };
+// };
+
 export const ajaxGetAuth = () => {
-  return async dispatch => {
-    Taro.showLoading({
-      title: "加载中..."
+  return dispatch => {
+    // Taro.showLoading({
+    //   title: "加载中..."
+    // });
+    return Taro.request({
+      url: "https://pgrk.wizzstudio.com/languagerank",
+      success(response) {
+        const res = response.data;
+        if (res.code === 0) {
+          dispatch(getAuth(res.data));
+        } else {
+          dispatch(getRankFail(res.msg));
+        }
+      }
+    }).then(res => {
+      console.log("auth回调");
+      return res.data;
     });
-    const response = await Taro.request({
-      url: "https://pgrk.wizzstudio.com/languagerank"
-    });
-    Taro.hideLoading();
-    const res = response.data;
-    if (res.code === 0) {
-      dispatch(getAuth(res.data));
-    } else {
-      //TODO  存疑  具体需要看后端返回字段。
-      dispatch(getRankFail(res.msg));
-    }
   };
 };
 export const ajaxGetDemand = () => {

@@ -14,7 +14,7 @@ import { ajaxGetUserPlan } from "../../actions/useInfo";
   }),
   dispatch => ({
     ajaxGetUserPlan(data) {
-      dispatch(ajaxGetUserPlan(data));
+      return dispatch(ajaxGetUserPlan(data));
     }
   })
 )
@@ -35,7 +35,9 @@ export default class DailyPlan extends Component {
   }
   componentDidMount() {
     const loginInfo = getStorageSync("login");
-    this.props.ajaxGetUserPlan(loginInfo.userid);
+    this.props.ajaxGetUserPlan(loginInfo.userid).then(res => {
+      console.log("res", res);
+    });
   }
   componentWillReceiveProps(nextprops) {
     let allPlan = [];

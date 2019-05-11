@@ -1,0 +1,58 @@
+.comment-wrap {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px;
+  .avatar {
+    padding: 20px;
+  }
+  .content-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    font-size: 35px;
+    font-weight: 400;
+    .title {
+      display: flex;
+      justify-content: space-between;
+      .floor {
+        font-weight: 100;
+      }
+    }
+    .content {
+      margin: 30px auto;
+      white-space: pre-line;
+    }
+    .time {
+      font-size: 30px;
+      font-weight: 100;
+    }
+  }
+}
+.cmt-list {
+  .cmt-button {
+    margin: 20px auto;
+    display: flex;
+    justify-content: flex-end;
+    .per-button {
+      margin: auto 10px;
+    }
+  }
+}
+.input-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+
+  .input {
+    width: 80%;
+    height: 80px;
+    border: 1px solid #6e7b8b;
+  }
+  .button {
+    height: 100px;
+    width: 20%;
+  }
+}
