@@ -96,7 +96,7 @@ export default class AuthItem extends Component {
           isStudying: true
         });
         Taro.navigateTo({
-          url: "/pages/amount/dailyPlan"
+          url: "/pages/class/classHome"
         });
         Taro.showToast({
           title: "加入成功"

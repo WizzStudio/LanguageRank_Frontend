@@ -1,6 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View, Image } from "@tarojs/components";
-import { AtAvatar, AtToast, AtProgress, AtButton } from "taro-ui";
+import { View, Image, Text } from "@tarojs/components";
+import { AtAvatar, AtToast, AtDivider, AtButton } from "taro-ui";
 import "./myInfo.scss";
 import Notice from "../../components/rank/notice";
 import { connect } from "@tarojs/redux";
@@ -155,29 +155,19 @@ export default class MyInfo extends Component {
     const { allInfo } = this.state;
     return (
       <View className="top-bg">
-        <View className="blank" />
         {allInfo.isViewedJoinMyApplet && <Notice />}
-        {/* <Notice /> */}
         {isLogin ? (
           <View>
             <View className="intro">
               <View className="my-avatar center">
                 <AtAvatar circle={true} size="large" image={basicInfo.avatar} />
               </View>
-              <View className="my-name center">{basicInfo.nickName}</View>
-            </View>
-            <View className="blank" />
-            <View className="study-plan">
-              <View className="blank" />
-
-              <View className="plan-title-wrap" onClick={this.toDailyPlan}>
-                <View className="plan-title">我的学习计划</View>
-                {allInfo.myLanguage ? (
-                  <View className="isPlaned">{allInfo.myLanguage}</View>
-                ) : (
-                  <View className="isPlaned">未加入</View>
-                )}
+              <View className="intro-right">
+                <View className="my-name center">{basicInfo.nickName}</View>
+                <View className="my-score">积分：555</View>
               </View>
+            </View>
+            <View className="study-plan">
               <AtToast
                 isOpened={noPlan}
                 text="{请先登陆哦~}"
@@ -186,59 +176,19 @@ export default class MyInfo extends Component {
                 hasMask={true}
                 duration={500}
               />
-              <View className="plan-state">
-                <View className="per-plan-state">
-                  {allInfo.joinedNumber === null ? (
-                    <View className="num">?</View>
-                  ) : (
-                    <View className="num">{allInfo.joinedNumber}</View>
-                  )}
-
-                  <View className="text">已加入学习计划人数 </View>
-                </View>
-                <View className="per-plan-state">
-                  {allInfo.joinedToday === null ? (
-                    <View className="num">?</View>
-                  ) : (
-                    <View className="num">{allInfo.joinedToday}</View>
-                  )}
-                  <View className="text">今日新增人数 </View>
-                </View>
-              </View>
-              <View className="plan-progress">
-                {allInfo.studyPlanDay ? (
-                  <AtProgress
-                    percent={Math.round((allInfo.studyPlanDay / 7) * 100)}
-                    strokeWidth={10}
-                    status="progress"
-                  />
-                ) : (
-                  <AtProgress percent={0} strokeWidth={10} status="progress" />
-                )}
-                {/* <AtProgress percent={0} strokeWidth={10} status="progress" /> */}
-                <View className="progress-intro">完成计划可获得相应奖励</View>
-              </View>
               <View className="plan-action">
-                <View>
-                  <AtButton
-                    type="primary"
-                    className="my-plan my-button"
-                    onClick={this.toDailyPlan}>
-                    我的计划
-                  </AtButton>
-                  <AtButton
-                    type="primary"
-                    className="my-award my-button"
-                    onClick={this.toAward}>
-                    积分商城
-                  </AtButton>
-                  <AtButton
-                    openType="feedback"
-                    type="secondary"
-                    className="my-question">
-                    问题反馈
-                  </AtButton>
+                <View className="per-action">我的收藏</View>
+                <AtDivider />
+                <View className="per-action" onClick={this.toAward}>
+                  积分商城
                 </View>
+                <AtDivider />
+                <View className="per-action">积分抽奖</View>
+                <AtDivider />
+                <View className="per-action">好友排行</View>
+                <AtDivider />
+                <View className="per-action">关注公众号</View>
+                <AtDivider />
               </View>
             </View>
           </View>
@@ -246,14 +196,9 @@ export default class MyInfo extends Component {
           <View>
             <View className="intro">
               <View className="my-avatar center">
-                <AtAvatar
-                  circle
-                  size="large"
-                  // image="https://jdc.jd.com/img/200"
-                  image={logo}
-                />
+                <AtAvatar circle={true} size="large" image={logo} />
               </View>
-              <View className="my-name center">
+              <View className="intro-right">
                 <AtButton
                   openType="getUserInfo"
                   onGetUserInfo={this.bindGetUserInfo}
@@ -264,36 +209,6 @@ export default class MyInfo extends Component {
             </View>
             <View className="blank" />
             <View className="study-plan">
-              <View className="blank" />
-
-              <View className="plan-title-wrap" onClick={this.noteLogin}>
-                <View className="plan-title">我的学习计划</View>
-                <View className="isPlaned">未加入</View>
-              </View>
-              <AtToast
-                isOpened={noPlan}
-                text="{请先登陆哦~}"
-                icon="{close-circle}"
-                status="error"
-                hasMask={true}
-                duration={500}
-              />
-              <View className="plan-state">
-                <View className="per-plan-state">
-                  <View className="num">?</View>
-
-                  <View className="text">已加入学习计划人数 </View>
-                </View>
-                <View className="per-plan-state">
-                  <View className="num">?</View>
-
-                  <View className="text">今日新增人数 </View>
-                </View>
-              </View>
-              <View className="plan-progress">
-                <AtProgress percent={0} strokeWidth={10} status="progress" />
-                <View className="progress-intro">完成计划可获得相应奖励</View>
-              </View>
               <View className="plan-action">
                 <View>
                   <AtButton
@@ -319,6 +234,13 @@ export default class MyInfo extends Component {
             </View>
           </View>
         )}
+        <View className="footer">
+          <View className="about">关于我们</View>
+          <Text decode="{{true}}" space="{{true}}">
+            \r\t\r\t | \r\t\r\t
+          </Text>
+          <View className="question">问题反馈</View>
+        </View>
       </View>
     );
   }

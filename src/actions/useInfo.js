@@ -104,6 +104,7 @@ export const ajaxAddUserPlan = (lang, id) => {
     } else {
       dispatch(getUserFail(res.msg));
     }
+    return res;
   };
 };
 
@@ -133,5 +134,6 @@ export const ajaxGetUserAward = id => {
     } else {
       dispatch(getUserFail(res.msg));
     }
+    return res;
   };
 };

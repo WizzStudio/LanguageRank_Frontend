@@ -7,13 +7,21 @@ $color-brand: #4f5fc5;
   align-items: center;
   justify-content: center;
 }
-.at-card__content {
-  padding: 10px;
-}
-.at-card__header {
-  display: none !important;
-}
+// .at-card__content {
+//   padding: 10px;
+// }
+// .at-card__header {
+//   display: none !important;
+// }
+// .at-card {
+//   height: 600px !important;
+//   background-color: #fff;
+//   border: 12px solid #4f5fc5 !important;
+//   // box-shadow: (20px 20px 20px #dcdcdc, -20px -20px 20px #dcdcdc);
+//   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+// }
 .at-tabs__item {
+  font-size: 32px;
   font-weight: 800;
 }
 .at-tabs__item-underline {

@@ -9,6 +9,7 @@ import {
 } from "taro-ui";
 import "./classHome.scss";
 import CommentItem from "../../components/detail/CommentList";
+import DailyPlan from "../amount/dailyPlan";
 import imgTest from "../../assets/img/canvasAuth.png";
 
 export default class ClassHome extends Component {
@@ -63,8 +64,10 @@ export default class ClassHome extends Component {
         <AtDivider />
 
         <View className="content-name">第一天</View>
+        <DailyPlan />
         <View className="content-wrap">
-          <View className="content-detail">打卡获取链接</View>
+          {/* <View className="content-detail">打卡获取链接</View> */}
+
           <View className="punch-btn">
             <AtButton type="primary" size="normal" onClick={this.toUserRank}>
               打卡

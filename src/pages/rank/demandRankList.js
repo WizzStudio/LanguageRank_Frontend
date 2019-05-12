@@ -55,12 +55,7 @@ export default class DemandRankList extends Component {
       isShared: false
     });
   };
-  componentDidShow() {
-    if (Taro.getStorageSync("basicInfo")) {
-      const loginInfo = Taro.getStorageSync("login");
-      this.props.ajaxGetUserAllInfo(loginInfo.userid);
-    }
-  }
+  componentDidShow() {}
   render() {
     const { demandRank } = this.props.rankList ? this.props.rankList : [];
 

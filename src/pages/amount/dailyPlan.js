@@ -1,8 +1,4 @@
-import Taro, {
-  Component,
-  getStorageSync,
-  closeBLEConnection
-} from "@tarojs/taro";
+import Taro, { Component, getStorageSync } from "@tarojs/taro";
 import { View, Swiper } from "@tarojs/components";
 import { AtCard, AtButton, AtActivityIndicator, AtIcon } from "taro-ui";
 import "./dailyPlan.scss";
@@ -26,9 +22,6 @@ export default class DailyPlan extends Component {
     super();
     this.state = {
       current: 0,
-      userInfo: {
-        userPlan: []
-      },
       isLoading: true,
       allPlan: []
     };
@@ -37,14 +30,10 @@ export default class DailyPlan extends Component {
     const loginInfo = getStorageSync("login");
     this.props.ajaxGetUserPlan(loginInfo.userid).then(res => {
       console.log("res", res);
-    });
-  }
-  componentWillReceiveProps(nextprops) {
-    let allPlan = [];
-    if (nextprops.userInfo) {
-      const isShow = nextprops.userInfo.userPlan.isTranspondedList;
-      let initCurrent = (nextprops.userInfo.userPlan.studyPlan.length - 1) * 2;
-      nextprops.userInfo.userPlan.studyPlan.map((item, index) => {
+      let allPlan = [];
+      const isShow = this.props.userInfo.userPlan.isTranspondedList;
+      let initCurrent = (this.props.userInfo.userPlan.studyPlan.length - 1) * 2;
+      this.props.userInfo.userPlan.studyPlan.map((item, index) => {
         allPlan.push({
           studyPlanDay: item.studyPlanDay,
           image: item.imageOne,
@@ -59,12 +48,11 @@ export default class DailyPlan extends Component {
         });
       });
       this.setState({
-        userInfo: nextprops.userInfo,
         isLoading: false,
         allPlan: allPlan,
         current: initCurrent
       });
-    }
+    });
   }
 
   toAward = () => {
@@ -147,7 +135,8 @@ export default class DailyPlan extends Component {
                 nextMargin="50px"
                 current={current}
                 onChange={this.handleSwiper}
-                indicatorDots>
+                // indicatorDots
+              >
                 {allPlan.map((item, index) => {
                   return (
                     <SwiperItem
@@ -168,16 +157,23 @@ export default class DailyPlan extends Component {
                         <AtCard
                           className="plan-card"
                           onClick={this.preview.bind(this, item.image)}>
-                          <Image className="full-plan" src={item.image} />
+                          {/* <Image className="full-plan" src={item.image} /> */}
+                          改的资料
                         </AtCard>
                       ) : (
-                        <AtCard className="plan-card cover">
-                          <View className="no-plan-note">点击下方按钮</View>
-                          <View className="no-plan-note">
-                            可领取第二份资料~
-                          </View>
-                          <View className="no-plan-note">
-                            <AtIcon value="arrow-down" size="49" color="#fff" />
+                        <AtCard className=" plan-card ">
+                          <View className=" cover">
+                            <View className="no-plan-note">点击下方按钮</View>
+                            <View className="no-plan-note">
+                              可领取第二份资料~
+                            </View>
+                            <View className="no-plan-note">
+                              <AtIcon
+                                value="arrow-down"
+                                size="49"
+                                color="#fff"
+                              />
+                            </View>
                           </View>
                         </AtCard>
                       )}
@@ -190,7 +186,7 @@ export default class DailyPlan extends Component {
         </View>
 
         <View className="action">
-          <AtButton type="primary" className="transfer-award" open-type="share">
+          {/* <AtButton type="primary" className="transfer-award" open-type="share">
             转发领取当天第二份资料
           </AtButton>
           <AtButton
@@ -198,7 +194,7 @@ export default class DailyPlan extends Component {
             className="get-award"
             onClick={this.toAward}>
             领取奖励
-          </AtButton>
+          </AtButton> */}
         </View>
       </View>
     );

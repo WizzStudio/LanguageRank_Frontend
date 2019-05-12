@@ -4,13 +4,37 @@ $color-brand: #4f5fc5;
   border-radius: 16px;
 }
 .top-bg {
-  background-color: $color-brand;
+  // background-color: $color-brand;
   margin: 0;
 }
 .blank {
   height: 20px;
 }
-
+.intro {
+  background-color: $color-brand;
+  display: flex;
+  justify-content: flex-start;
+  height: 300px;
+  .my-avatar {
+    width: 50px;
+    height: 50px;
+    margin: auto 120px auto 80px;
+  }
+  .intro-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #fff;
+    .my-name {
+      font-size: 50px;
+    }
+  }
+}
+//更改avatar默认样式
+.at-avatar--large {
+  width: 160px;
+  height: 160px;
+}
 .center {
   display: flex;
   justify-content: center;
@@ -19,17 +43,35 @@ $color-brand: #4f5fc5;
 }
 .study-plan {
   margin-top: 50px;
-  border: 2px solid white;
-  border-top-left-radius: 50px;
-  border-top-right-radius: 50px;
+  // border: 2px solid white;
+  // border-top-left-radius: 50px;
+  // border-top-right-radius: 50px;
   background-color: white;
+  .plan-action {
+    margin: 20px 50px;
+    .per-action {
+      height: 25px;
+      font-size: 36px;
+      padding: 10px;
+    }
+  }
 }
-.my-name {
-  font-size: 36px;
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: 300;
+  margin: 30px auto;
+  background-color: white;
+  .about {
+    text-decoration: underline;
+  }
+  .question {
+    text-decoration: underline;
+  }
 }
-// .my-id {
-//   font-size: 40em;
-// }
+
 .plan-title-wrap {
   font-size: 40px;
   font-weight: bold;
@@ -45,55 +87,4 @@ $color-brand: #4f5fc5;
 .isPlaned {
   font-size: 32px;
   font-weight: normal;
-}
-.plan-state {
-  margin: 80px auto;
-  display: flex;
-  justify-content: space-around;
-  font-size: 36px;
-  font-weight: bold;
-}
-.per-plan-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  .num {
-    font-size: 60px;
-  }
-  .text {
-    font-size: 28px;
-  }
-}
-
-.plan-progress {
-  margin: 20px 50px;
-}
-.progress-intro {
-  font-size: 32px;
-  display: flex;
-  justify-content: center;
-}
-.plan-action {
-  margin: 20px 50px;
-}
-.my-plan {
-  margin-top: 100px;
-  margin-bottom: 40px;
-}
-.my-question {
-  margin-top: 80px;
-  margin-bottom: 40px;
-}
-.login-out {
-  background-color: #ee4000;
-  border-color: #ee4000;
-  margin-top: 50px;
-}
-.add-question {
-  width: 150px;
-  margin: 40px auto;
-  text-align: center;
-  font-size: 24px;
-  color: #999999;
 }

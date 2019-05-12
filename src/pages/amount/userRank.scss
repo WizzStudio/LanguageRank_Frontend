@@ -1,0 +1,58 @@
+.userRank {
+  margin: 30px 40px;
+  .title-wrap {
+    .avatar {
+      display: flex;
+      justify-content: center;
+      align-self: center;
+      //   width: 120px;
+      //   height: 120px;
+      margin-bottom: -60px;
+    }
+    .card-wrap {
+      display: flex;
+      justify-content: space-around;
+      height: 300px;
+      background-color: #4f5fc5;
+      border: 1px solid #4f5fc5;
+      border-radius: 20px;
+      .per-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 16%;
+        color: #fff;
+        .name {
+          font-size: 35px;
+          font-weight: 400;
+          margin-bottom: 20px;
+        }
+        .num {
+          font-size: 50px;
+          font-weight: 700;
+        }
+      }
+    }
+    .btn-wrap {
+      display: flex;
+      justify-content: space-between;
+      margin: 30px auto;
+
+      .envy {
+        width: 40%;
+      }
+      .achieve {
+        width: 40%;
+      }
+    }
+  }
+}
+//更改默认样式
+.at-tabs__header {
+  width: 60%;
+}
+.at-button__text {
+  font-size: 35px;
+  font-weight: 500;
+}

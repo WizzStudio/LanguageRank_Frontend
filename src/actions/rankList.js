@@ -54,24 +54,20 @@ export const getDemand = data => {
 // };
 
 export const ajaxGetAuth = () => {
-  return dispatch => {
+  return async dispatch => {
     // Taro.showLoading({
     //   title: "加载中..."
     // });
-    return Taro.request({
-      url: "https://pgrk.wizzstudio.com/languagerank",
-      success(response) {
-        const res = response.data;
-        if (res.code === 0) {
-          dispatch(getAuth(res.data));
-        } else {
-          dispatch(getRankFail(res.msg));
-        }
-      }
-    }).then(res => {
-      console.log("auth回调");
-      return res.data;
+    const response = await Taro.request({
+      url: "https://pgrk.wizzstudio.com/languagerank"
     });
+    const res = response.data;
+    if (res.code === 0) {
+      dispatch(getAuth(res.data));
+    } else {
+      dispatch(getRankFail(res.msg));
+    }
+    return res;
   };
 };
 export const ajaxGetDemand = () => {

@@ -23,7 +23,7 @@ class App extends Component {
       "pages/class/classIndex",
       "pages/class/classHome",
       "pages/class/classList",
-      "pages/amount/dailyPlan",
+      // "pages/amount/dailyPlan",
       "pages/amount/myAward",
       "pages/amount/userRank",
       "pages/detail/langIndex",
@@ -46,8 +46,8 @@ class App extends Component {
         {
           pagePath: "pages/class/classIndex",
           text: "猿圈",
-          iconPath: "./assets/img/logo.png",
-          selectedIconPath: "./assets/img/logo.png"
+          iconPath: "./assets/icon/class.png",
+          selectedIconPath: "./assets/icon/class2.png"
         },
         {
           pagePath: "pages/amount/myInfo",
