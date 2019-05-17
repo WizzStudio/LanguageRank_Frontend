@@ -4,7 +4,7 @@ import "./myAward.scss";
 import { AtDivider } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserAward } from "../../actions/useInfo";
-import awardimg from "../../assets/img/award.png";
+import { addUserRelation } from "../../utils/addUserRelation";
 @connect(
   ({ userInfo }) => ({
     userInfo
@@ -32,6 +32,9 @@ export default class MyAward extends Component {
   componentWillMount() {
     const loginInfo = Taro.getStorageSync("login");
     this.props.ajaxGetUserAward(loginInfo.userid);
+  }
+  componentDidMount() {
+    addUserRelation(this);
   }
 
   getNoAward = () => {

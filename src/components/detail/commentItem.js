@@ -6,6 +6,11 @@ import "./comment.scss";
 export default class CommentItem extends Component {
   constructor() {}
   render() {
+    const { floor, userId, comment, saveTime, nickName, avatarUrl } =
+      this.props.perCmt || "";
+    let saveTimeRes = saveTime
+      ? saveTime.slice(0, 10) + " " + saveTime.slice(11, 18)
+      : "";
     return (
       <View className="comment-wrap">
         <View className="avatar">
@@ -13,13 +18,11 @@ export default class CommentItem extends Component {
         </View>
         <View className="content-wrap">
           <View className="title">
-            <View className="nickname">昵称</View>
-            <View className="floor">#432</View>
+            <View className="nickname">{"nickName"}</View>
+            <View className="floor">#{floor}</View>
           </View>
-          <View className="content">
-            已连续打卡233天啦已连续打卡233天啦已连续打卡233天啦已连续打卡233天啦已连续打卡233天啦
-          </View>
-          <View className="time">今天9:02</View>
+          <View className="content">{comment}</View>
+          <View className="time">{saveTimeRes}</View>
         </View>
       </View>
     );

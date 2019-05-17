@@ -7,15 +7,17 @@ import {
   AtTabsPane,
   AtIcon,
   AtDivider,
-  AtInput
+  AtInput,
+  AtButton,
+  AtMessage
 } from "taro-ui";
 import "./langDetail.scss";
-import AddPlan from "../../components/rank/addPlan";
 import { connect } from "@tarojs/redux";
 import { ajaxGetLangHome } from "../../actions/rankList";
 import LangHome from "./langHome";
 import DemandHome from "./demandHome";
 import CommentList from "../../components/detail/CommentList";
+import AddComment from "../../components/detail/addComment";
 @connect(
   ({ rankList }) => ({
     rankList
@@ -36,10 +38,10 @@ export default class LangIndex extends Component {
       langName: "",
       rankIndex: "",
       isModalOpen: false,
-      currentTab: 0
+      currentTab: 0,
+      inputValue: ""
     };
   }
-  componentWillMount() {}
   componentDidMount() {
     const { langName, rankIndex } = this.$router.params;
     this.props.ajaxGetLangHome(langName);
@@ -61,12 +63,49 @@ export default class LangIndex extends Component {
       currentTab: value
     });
   };
+  handleInputChange = val => {
+    this.setState({
+      inputValue: val
+    });
+    return val;
+  };
+  toClassHome = () => {
+    Taro.navigateTo({
+      url: "/pages/class/classHome"
+    });
+  };
+  updateCmt = () => {
+    const languageName = this.state.langName;
+    const comment = this.state.inputValue;
+    console.log("inputValue", this.state);
+    Taro.request({
+      url: "https://pgrk.wizzstudio.com/updateemployeerankcomment",
+      method: "POST",
+      data: {
+        languageName,
+        comment,
+        userId: 1
+      }
+    }).then(response => {
+      const res = response.data;
+      if (res.code === 0) {
+        Taro.atMessage({
+          message: "评论成功",
+          type: "success"
+        });
+      }
+      this.setState({
+        inputValue: ""
+      });
+    });
+  };
   render() {
     const { langName, currentTab, rankIndex } = this.state;
     const { langHome } = this.props.rankList || {};
     const tabList = [{ title: "语言热度详情" }, { title: "评论" }];
     return (
       <View className="wrap-content">
+        <AtMessage />
         <View className="lang-title">
           <View className="icon">
             <Image src={langHome.languageSymbol} className="logo" />
@@ -83,7 +122,10 @@ export default class LangIndex extends Component {
           <View className="state">
             {/* <View>{langHome.joinedNumber}人</View>
               <View>已加入学习计划</View> */}
-            <AddPlan langName={langName} />
+            {/* <AddPlan langName={langName} /> */}
+            <AtButton type="primary" size="small" onClick={this.toClassHome}>
+              进入猿圈
+            </AtButton>
           </View>
         </View>
         <View className="intro-card">
@@ -102,18 +144,6 @@ export default class LangIndex extends Component {
             <View className="tend-num">99</View>
           </View>
         </View>
-        {/* <View className="data-info">
-            <View className="tend-wrap">
-              <View className="tend-num">{langHome.fixedFinalExponent}</View>
-              <View className="tend-title">热度指数</View>
-            </View>
-            <View className="tend-wrap">
-              <View className="tend-num">
-                {langHome.fixedFinalExponentIncreasing}
-              </View>
-              <View className="tend-title">成长指数</View>
-            </View>
-          </View> */}
         <View className="wrap-title">好友在用</View>
         <View className="avatar-wrap">
           <View className="per-avatar">
@@ -147,9 +177,27 @@ export default class LangIndex extends Component {
             {rankIndex == "demand" && <DemandHome demandNameProp={langName} />}
           </AtTabsPane>
           <AtTabsPane current={currentTab} index={1}>
-            <CommentList />
+            <CommentList type={rankIndex} langName={langName} fresh={1} />
           </AtTabsPane>
         </AtTabs>
+        {currentTab && (
+          <View>
+            {/* <View className="input-top" />
+            <View className="input-wrap">
+              <AtInput
+                type="text"
+                maxLength="999"
+                placeholder="我有问题想问"
+                value={this.state.inputValue}
+                onChange={this.handleInputChange.bind(this)}
+              />
+              <AtButton type="primary" size="small" onClick={this.updateCmt}>
+                提交
+              </AtButton>
+            </View> */}
+            <AddComment />
+          </View>
+        )}
       </View>
     );
   }

@@ -1,6 +1,5 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Button, Text } from "@tarojs/components";
-
 import { AtSegmentedControl, AtNoticebar } from "taro-ui";
 import AuthRankList from "../rank/authRankList";
 import DemandRankList from "../rank/demandRankList";
@@ -8,6 +7,7 @@ import Notice from "../../components/rank/notice";
 import "./index.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
+import { addUserRelation } from "../../utils/addUserRelation";
 @connect(
   ({ userInfo }) => ({
     userInfo
@@ -27,71 +27,21 @@ class Index extends Component {
     this.state = {
       current: 0,
       basicInfo: {},
-      isViewedJoinMyApplet: false,
-      isViewedStudyPlan: false
+      isViewedJoinMyApplet: false
     };
   }
-  componentWillMount() {}
   componentDidMount() {
-    if (!Taro.getStorageSync("login")) {
-      this.handleLogin();
-    } else {
-      if (Taro.getStorageSync("basicInfo")) {
-        const loginInfo = Taro.getStorageSync("login");
-        Taro.getSetting().then(res => {
-          if (res.authSetting["scope.userInfo"]) {
-            Taro.getUserInfo().then(userInfoRes => {
-              console.log("userInfoRes", userInfoRes);
-            });
-          }
-        });
-        this.props.ajaxGetUserAllInfo(loginInfo.userid).then(res => {
-          if (res.code === 0) {
-            if (
-              this.props.userInfo.allInfo.isViewedJoinMyApplet !=
-              this.state.isViewedJoinMyApplet
-            ) {
-              console.log("11nextProps", this.props);
-              this.setState({
-                isViewedJoinMyApplet: this.props.userInfo.allInfo
-                  .isViewedJoinMyApplet
-              });
-            }
-            if (
-              this.props.userInfo.allInfo.isViewedStudyPlan !=
-              this.state.isViewedStudyPlan
-            ) {
-              console.log("22nextProps", this.props);
-              this.setState({
-                isViewedStudyPlan: this.props.userInfo.allInfo.isViewedStudyPlan
-              });
-            } else {
-              this.setState({
-                isViewedStudyPlan: false
-              });
-            }
-          }
-        });
-      }
+    if (Taro.getStorageSync("basicInfo")) {
+      Taro.getSetting().then(res => {
+        if (res.authSetting["scope.userInfo"]) {
+          Taro.getUserInfo().then(userInfoRes => {
+            // console.log("userInfoRes", userInfoRes);
+            this.handleLogin(userInfoRes.iv, userInfoRes.encryptedData);
+          });
+        }
+      });
     }
   }
-  // checkToPlan = () => {
-  //   if (this.props) {
-  //     const allInfo = this.props.userInfo.allInfo;
-  //     Taro.setStorageSync("allInfo", {
-  //       isViewedStudyPlan: allInfo.isViewedStudyPlan,
-  //       joinedNumber: allInfo.joinedNumber,
-  //       joinedToday: allInfo.joinedToday,
-  //       myLanguage: allInfo.myLanguage,
-  //       studyPlanDay: allInfo.studyPlanDay
-  //     });
-  //     if (allInfo.isViewedStudyPlan) {
-  //       Taro.navigateTo({
-  //         url: "/pages/amount/dailyPlan"
-  //       });
-  //     }
-  //   }
-  // };
   handleClick(value) {
     this.setState({
       current: value
@@ -99,44 +49,41 @@ class Index extends Component {
   }
 
   checkLogin = () => {
-    if (Taro.getStorageSync("login")) {
-      if (Taro.getStorageSync("basicInfo")) {
-        this.setState({
-          isLogin: true
-        });
-        const loginInfo = Taro.getStorageSync("login");
-        const basicInfo = Taro.getStorageSync("basicInfo");
-        this.props.ajaxGetUserAllInfo(loginInfo.userid);
-        this.setState({
-          basicInfo: basicInfo
-        });
-      } else {
-      }
+    if (Taro.getStorageSync("basicInfo")) {
+      this.setState({
+        isLogin: true
+      });
+      const loginInfo = Taro.getStorageSync("login");
+      const basicInfo = Taro.getStorageSync("basicInfo");
+      this.props.ajaxGetUserAllInfo(loginInfo.userid);
+      this.setState({
+        basicInfo: basicInfo
+      });
     } else {
-      this.handleLogin();
     }
   };
-  handleLogin = () => {
-    Taro.login({
-      success(res) {
-        if (res.code) {
-          Taro.request({
-            url: "https://pgrk.wizzstudio.com/login",
-            method: "POST",
-            data: {
-              code: res.code
-            }
-          }).then(res => {
-            if (res.data.code === 0) {
-              const data = res.data.data;
-              Taro.setStorageSync("login", {
-                userid: data.userId,
-                openId: data.openId,
-                session_key: data.session_key
-              });
-            }
-          });
-        }
+  handleLogin = (iv, encryptedData) => {
+    Taro.login().then(res => {
+      if (res.code) {
+        Taro.request({
+          url: "https://pgrk.wizzstudio.com/login",
+          method: "POST",
+          data: {
+            code: res.code,
+            iv,
+            encryptedData
+          }
+        }).then(loginRes => {
+          console.log("loginRes", loginRes);
+          if (loginRes.data.code === 0) {
+            const data = loginRes.data.data;
+            Taro.setStorageSync("login", {
+              userId: data.userId,
+              openId: data.openId,
+              session_key: data.session_key
+            });
+          }
+        });
       }
     });
   };
@@ -145,44 +92,17 @@ class Index extends Component {
   componentDidShow() {}
 
   componentDidHide() {}
-  handleLogin = () => {
-    Taro.login({
-      success(res) {
-        if (res.code) {
-          Taro.request({
-            url: "https://pgrk.wizzstudio.com/login",
-            method: "POST",
-            data: {
-              code: res.code
-            }
-          }).then(res => {
-            if (res.data.code === 0) {
-              const data = res.data.data;
-              Taro.setStorageSync("login", {
-                userid: data.userId,
-                openId: data.openId,
-                session_key: data.session_key
-              });
-            }
-          });
-        }
-      }
-    });
-  };
+
   onShareAppMessage = res => {
+    const loginInfo = Taro.getStorageSync("login");
+    const id = loginInfo.userid;
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
-      path: "/pages/index/index"
+      path: `/pages/index/index?userid=${id}`
     };
   };
-  // toPlan = () => {
-  //   Taro.navigateTo({
-  //     url: "/pages/amount/dailyPlan"
-  //   });
-  // };
   render() {
-    const { isViewedJoinMyApplet, isViewedStudyPlan } = this.state;
-    // isViewedStudyPlan ? this.toPlan() : "";
+    const { isViewedJoinMyApplet } = this.state;
     return (
       <View className="top-bg">
         <View className="blank" />

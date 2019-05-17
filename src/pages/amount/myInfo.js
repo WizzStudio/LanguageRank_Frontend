@@ -1,6 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image, Text } from "@tarojs/components";
-import { AtAvatar, AtToast, AtDivider, AtButton } from "taro-ui";
+import { AtAvatar, AtToast, AtDivider, AtButton, AtIcon } from "taro-ui";
 import "./myInfo.scss";
 import Notice from "../../components/rank/notice";
 import { connect } from "@tarojs/redux";
@@ -12,7 +12,7 @@ import logo from "../../assets/img/logo.png";
   }),
   dispatch => ({
     ajaxGetUserAllInfo(data) {
-      dispatch(ajaxGetUserAllInfo(data));
+      return dispatch(ajaxGetUserAllInfo(data));
     }
   })
 )
@@ -50,14 +50,11 @@ export default class MyInfo extends Component {
       });
     }
   }
-  componentDidShow() {
-    this.checkLogin();
-  }
   checkLogin = () => {
     if (Taro.getStorageSync("login")) {
       if (Taro.getStorageSync("basicInfo")) {
         const loginInfo = Taro.getStorageSync("login");
-        this.props.ajaxGetUserAllInfo(loginInfo.userid);
+        this.props.ajaxGetUserAllInfo(loginInfo.userId);
         const basicInfo = Taro.getStorageSync("basicInfo");
         this.setState({
           isLogin: true,
@@ -70,26 +67,26 @@ export default class MyInfo extends Component {
     }
   };
   handleLogin = () => {
-    Taro.login({
-      success(res) {
-        if (res.code) {
-          Taro.request({
-            url: "https://pgrk.wizzstudio.com/login",
-            method: "POST",
-            data: {
-              code: res.code
-            }
-          }).then(res => {
-            if (res.data.code === 0) {
-              const data = res.data.data;
-              Taro.setStorageSync("login", {
-                userid: data.userId,
-                openId: data.openId,
-                session_key: data.session_key
-              });
-            }
-          });
-        }
+    Taro.login().then(res => {
+      console.log("res", res);
+      if (res.code) {
+        Taro.request({
+          url: "https://pgrk.wizzstudio.com/login",
+          method: "POST",
+          data: {
+            code: res.code
+          }
+        }).then(loginRes => {
+          console.log("loginRes", loginRes);
+          if (loginRes.data.code === 0) {
+            const data = loginRes.data.data;
+            Taro.setStorageSync("login", {
+              userId: data.userId,
+              openId: data.openId,
+              session_key: data.session_key
+            });
+          }
+        });
       }
     });
   };
@@ -100,7 +97,7 @@ export default class MyInfo extends Component {
         avatar: e.detail.userInfo.avatarUrl
       });
       const loginInfo = Taro.getStorageSync("login");
-      this.props.ajaxGetUserAllInfo(loginInfo.userid);
+      this.props.ajaxGetUserAllInfo(loginInfo.userId);
       this.setState({
         isLogin: true,
         basicInfo: {
@@ -111,36 +108,34 @@ export default class MyInfo extends Component {
       // this.checkLogin();
     }
   };
-  toDailyPlan = () => {
-    const { isLogin, allInfo } = this.state;
-    if (allInfo.myLanguage) {
-      if (isLogin) {
+  toPage = type => {
+    const { allInfo, isLogin } = this.state;
+    // if (!isLogin) {
+    //   Taro.showToast({
+    //     title: "请先进行登陆哦~",
+    //     icon: "none"
+    //   });
+    //   return;
+    // }
+    // if (!allInfo.myLanguage) {
+    //   Taro.showToast({
+    //     title: "请先去语言主页加入学习计划哦~",
+    //     icon: "none"
+    //   });
+    //   return;
+    // }
+    switch (type) {
+      case "myAward":
         Taro.navigateTo({
-          url: "/pages/amount/dailyPlan"
+          url: "/pages/amount/myAward?userId=111"
         });
-      } else {
-        this.setState({
-          noPlan: true
+        break;
+      case "memberRank":
+        Taro.navigateTo({
+          url: "/pages/amount/memberRank"
         });
-      }
-    } else {
-      Taro.showToast({
-        title: "请先去语言主页加入学习计划哦~",
-        icon: "none"
-      });
-    }
-  };
-  toAward = () => {
-    const { allInfo } = this.state;
-    if (allInfo.myLanguage) {
-      Taro.navigateTo({
-        url: "/pages/amount/myAward"
-      });
-    } else {
-      Taro.showToast({
-        title: "请先去语言主页加入学习计划哦~",
-        icon: "none"
-      });
+      default:
+        break;
     }
   };
   noteLogin = () => {
@@ -156,8 +151,8 @@ export default class MyInfo extends Component {
     return (
       <View className="top-bg">
         {allInfo.isViewedJoinMyApplet && <Notice />}
-        {isLogin ? (
-          <View>
+        <View>
+          {isLogin ? (
             <View className="intro">
               <View className="my-avatar center">
                 <AtAvatar circle={true} size="large" image={basicInfo.avatar} />
@@ -167,33 +162,7 @@ export default class MyInfo extends Component {
                 <View className="my-score">积分：555</View>
               </View>
             </View>
-            <View className="study-plan">
-              <AtToast
-                isOpened={noPlan}
-                text="{请先登陆哦~}"
-                icon="{close-circle}"
-                status="error"
-                hasMask={true}
-                duration={500}
-              />
-              <View className="plan-action">
-                <View className="per-action">我的收藏</View>
-                <AtDivider />
-                <View className="per-action" onClick={this.toAward}>
-                  积分商城
-                </View>
-                <AtDivider />
-                <View className="per-action">积分抽奖</View>
-                <AtDivider />
-                <View className="per-action">好友排行</View>
-                <AtDivider />
-                <View className="per-action">关注公众号</View>
-                <AtDivider />
-              </View>
-            </View>
-          </View>
-        ) : (
-          <View>
+          ) : (
             <View className="intro">
               <View className="my-avatar center">
                 <AtAvatar circle={true} size="large" image={logo} />
@@ -202,38 +171,56 @@ export default class MyInfo extends Component {
                 <AtButton
                   openType="getUserInfo"
                   onGetUserInfo={this.bindGetUserInfo}
-                  className="my-name center">
+                  type="secondary">
                   点击登陆
                 </AtButton>
               </View>
             </View>
-            <View className="blank" />
-            <View className="study-plan">
-              <View className="plan-action">
-                <View>
-                  <AtButton
-                    type="primary"
-                    className="my-plan my-button"
-                    onClick={this.noteLogin}>
-                    我的计划
-                  </AtButton>
-                  <AtButton
-                    type="primary"
-                    className="my-award my-button"
-                    onClick={this.noteLogin}>
-                    我的奖励
-                  </AtButton>
-                  <AtButton
-                    openType="feedback"
-                    type="secondary"
-                    className="my-question">
-                    问题反馈
-                  </AtButton>
-                </View>
+          )}
+          <View className="study-plan">
+            <AtToast
+              isOpened={noPlan}
+              text="{请先登陆哦~}"
+              icon="{close-circle}"
+              status="error"
+              hasMask={true}
+              duration={500}
+            />
+            <View className="plan-action">
+              <View className="per-action">
+                <AtIcon value="heart" size="30" color="#4f5fc5" />
+                <View className="name">我的收藏</View>
               </View>
+              <AtDivider />
+              <View
+                className="per-action"
+                onClick={this.toPage.bind(this, "memberRank")}>
+                <AtIcon value="numbered-list" size="30" color="#4f5fc5" />
+                <View className="name">好友排行</View>
+              </View>
+              <AtDivider />
+              <View
+                className="per-action"
+                onClick={this.toPage.bind(this, "myAward")}>
+                <AtIcon value="shopping-bag" size="30" color="#4f5fc5" />
+                <View className="name">积分商城</View>
+              </View>
+              <AtDivider />
+              <View className="per-action">
+                <AtIcon value="bell" size="30" color="#4f5fc5" />
+                <View className="name">积分抽奖</View>
+              </View>
+
+              <AtDivider />
+              <View className="per-action">
+                <AtIcon value="tag" size="30" color="#4f5fc5" />
+                <View className="name">关注公众号</View>
+              </View>
+              <AtDivider />
             </View>
           </View>
-        )}
+        </View>
+
         <View className="footer">
           <View className="about">关于我们</View>
           <Text decode="{{true}}" space="{{true}}">

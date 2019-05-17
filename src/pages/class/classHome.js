@@ -8,10 +8,21 @@ import {
   AtFloatLayout
 } from "taro-ui";
 import "./classHome.scss";
-import CommentItem from "../../components/detail/CommentList";
+import CommentList from "../../components/detail/CommentList";
 import DailyPlan from "../amount/dailyPlan";
 import imgTest from "../../assets/img/canvasAuth.png";
-
+import AddClass from "../../components/class/addClass";
+import QuitClass from "../../components/class/quitClass";
+import { ajaxGetClassMember } from "../../actions/classInfo";
+import { connect } from "@tarojs/redux";
+@connect(
+  ({ classInfo }) => ({ classInfo }),
+  dispatch => ({
+    ajaxGetClassMember(data) {
+      return dispatch(ajaxGetClassMember(data));
+    }
+  })
+)
 export default class ClassHome extends Component {
   config = {
     navigationBarTitleText: "猿圈"
@@ -20,12 +31,29 @@ export default class ClassHome extends Component {
     super();
     this.state = {
       currentTab: 0,
-      ruleOpened: false
+      ruleOpened: false,
+      isAdded: false
     };
   }
   componentDidMount() {
-    console.log("进入home");
+    this.getClassMember();
+    const param = this.$router.params || "";
+    if (param) {
+      this.setState({
+        isAdded: true
+      });
+    }
   }
+  getClassMember = () => {
+    const clazzId = 1;
+    const data = {
+      clazzId,
+      pageIndex: 1
+    };
+    this.props.ajaxGetClassMember(data).then(res => {
+      console.log("res", res);
+    });
+  };
   tabClick = value => {
     this.setState({
       currentTab: value
@@ -46,9 +74,17 @@ export default class ClassHome extends Component {
       ruleOpened: false
     });
   };
+  toClassDetail = () => {
+    const clazzId = 1;
+    Taro.navigateTo({
+      url: `/pages/class/classDetail?clazzId=${clazzId}`
+    });
+  };
   render() {
     const tabList = [{ title: "讨论" }, { title: "成员" }];
-    const { currentTab } = this.state;
+    const { currentTab, isAdded } = this.state;
+    const { classMember } = this.props.classInfo || [];
+    const clazzId = 1;
     return (
       <View className="classHome">
         <View className="title-wrap">
@@ -58,16 +94,26 @@ export default class ClassHome extends Component {
           <View className="title-content">
             <View className="title-name">七天认识Java</View>
             <View className="title-state">180人加入|800条讨论</View>
-            <View className="title-action">分享</View>
+            <View className="title-action">
+              <AtButton
+                type="secondary"
+                size="small"
+                onClick={this.toClassDetail}>
+                课程详情
+              </AtButton>
+              {isAdded ? (
+                <QuitClass clazzId={clazzId} />
+              ) : (
+                <AddClass clazzId={clazzId} />
+              )}
+            </View>
           </View>
         </View>
         <AtDivider />
 
         <View className="content-name">第一天</View>
-        <DailyPlan />
+        <DailyPlan clazzId={clazzId} />
         <View className="content-wrap">
-          {/* <View className="content-detail">打卡获取链接</View> */}
-
           <View className="punch-btn">
             <AtButton type="primary" size="normal" onClick={this.toUserRank}>
               打卡
@@ -98,10 +144,24 @@ export default class ClassHome extends Component {
           tabList={tabList}
           onClick={this.tabClick.bind(this)}>
           <AtTabsPane current={currentTab} index={0}>
-            <CommentItem />
+            <CommentList typeCmt="class" />
           </AtTabsPane>
           <AtTabsPane current={currentTab} index={1}>
-            成员列表
+            <View className="member-list">
+              {classMember.map((item, index) => (
+                <View className="member-item" key={item.userId}>
+                  <View className="rank">{index + 1}</View>
+                  <View className="avatar-wrap">
+                    <Image
+                      className="avatar"
+                      src="https://jdc.jd.com/img/200"
+                    />
+                  </View>
+                  <View className="name">{"item.nickName"}</View>
+                  <View className="total">30</View>
+                </View>
+              ))}
+            </View>
           </AtTabsPane>
         </AtTabs>
       </View>

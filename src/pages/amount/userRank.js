@@ -20,12 +20,8 @@ export default class UserRank extends Component {
     return (
       <View className="userRank">
         <View className="title-wrap">
-          <View className="avatar">
-            <AtAvatar
-              circle={true}
-              size="large"
-              image={"https://jdc.jd.com/img/200"}
-            />
+          <View className="avatar-wrap">
+            <Image className="avatar" src="https://jdc.jd.com/img/200" />
           </View>
           <View className="card-wrap">
             <View className="per-item">
@@ -42,9 +38,9 @@ export default class UserRank extends Component {
             </View>
           </View>
           <View className="btn-wrap">
-            <View className="envy">
+            {/* <View className="envy">
               <AtButton type="primary">膜拜TA</AtButton>
-            </View>
+            </View> */}
             <View className="achieve">
               <AtButton type="primary">生成成就卡</AtButton>
             </View>
@@ -56,7 +52,24 @@ export default class UserRank extends Component {
           tabList={tabList}
           onClick={this.tabClick.bind(this)}>
           <AtTabsPane current={currentTab} index={0}>
-            勤奋排行
+            <View className="member-list">
+              <View className="member-item">
+                <View className="rank">1</View>
+                <View className="avatar-wrap">
+                  <Image className="avatar" src="https://jdc.jd.com/img/200" />
+                </View>
+                <View className="name">二哈</View>
+                <View className="total">30</View>
+              </View>
+              <View className="member-item">
+                <View className="rank">1</View>
+                <View className="avatar-wrap">
+                  <Image className="avatar" src="https://jdc.jd.com/img/200" />
+                </View>
+                <View className="name">二哈</View>
+                <View className="total">30</View>
+              </View>
+            </View>
           </AtTabsPane>
           <AtTabsPane current={currentTab} index={1}>
             人气排行

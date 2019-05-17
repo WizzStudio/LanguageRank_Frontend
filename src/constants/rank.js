@@ -12,3 +12,7 @@ export const GET_POSI = "GET_POSI";
 export const GET_SALARY = "GET_SALARY";
 export const GET_DEMANDPOSI = "GET_DEMANDPOSI";
 export const GET_CITY = "GET_CITY";
+
+//请求评论
+export const GET_AUTH_CMT = "GET_AUTH_CMT";
+export const GET_DEMAND_CMT = "GET_DEMAND_CMT";

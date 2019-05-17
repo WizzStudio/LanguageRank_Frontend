@@ -99,7 +99,7 @@ export default class LangHome extends Component {
         ))}
         <AtDivider />
         <View>
-          <View className="wrap-title">语言简史</View>
+          <View className="wrap-title">github热门项目</View>
           <View className="history">{langHome.languageDevelopmentHistory}</View>
         </View>
         <View className="to-detail-wrap">

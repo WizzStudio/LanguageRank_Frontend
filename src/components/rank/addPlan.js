@@ -3,16 +3,14 @@ import { View, CoverView, CoverImage } from "@tarojs/components";
 import { AtButton } from "taro-ui";
 import "./addPlan.scss";
 import { connect } from "@tarojs/redux";
-import { ajaxGetUserAllInfo } from "../../actions/useInfo";
-import shareimg from "../../assets/icon/share2.png";
-import addPlanimg from "../../assets/icon/addPlan.png";
+import { ajaxJoinClass } from "../../actions/useInfo";
 @connect(
-  ({ userInfo }) => ({
-    userInfo
+  ({ classInfo }) => ({
+    classInfo
   }),
   dispatch => ({
-    ajaxGetUserAllInfo(data) {
-      dispatch(ajaxGetUserAllInfo(data));
+    ajaxJoinClass(data) {
+      dispatch(ajaxJoinClass(data));
     }
   })
 )
@@ -25,26 +23,8 @@ export default class AuthItem extends Component {
       isStudying: false
     };
   }
-  componentWillMount() {
-    this.setState({
-      lang: this.props.langName
-    });
-    const loginInfo = Taro.getStorageSync("login");
-    if (Taro.getStorageSync("allInfo")) {
-    } else {
-      this.props.ajaxGetUserAllInfo(loginInfo.userid);
-    }
-  }
-  componentWillReceiveProps(nextprops) {
-    if (
-      nextprops &&
-      this.props.langName == nextprops.userInfo.allInfo.myLanguage
-    ) {
-      this.setState({
-        isStudying: true
-      });
-    }
-  }
+  componentWillMount() {}
+  componentWillReceiveProps(nextprops) {}
   tryAddPlan = () => {
     let allInfo;
     if (Taro.getStorageSync("allInfo")) {

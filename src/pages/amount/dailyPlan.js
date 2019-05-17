@@ -1,23 +1,21 @@
 import Taro, { Component, getStorageSync } from "@tarojs/taro";
-import { View, Swiper } from "@tarojs/components";
+import { View, Swiper, SwiperItem } from "@tarojs/components";
 import { AtCard, AtButton, AtActivityIndicator, AtIcon } from "taro-ui";
 import "./dailyPlan.scss";
 import { connect } from "@tarojs/redux";
-import { ajaxGetUserPlan } from "../../actions/useInfo";
+import { ajaxGetUserClassPlan } from "../../actions/classInfo";
+import { getLoginInfo } from "../../utils/getlocalInfo";
 @connect(
-  ({ userInfo }) => ({
-    userInfo
+  ({ classInfo }) => ({
+    classInfo
   }),
   dispatch => ({
-    ajaxGetUserPlan(data) {
-      return dispatch(ajaxGetUserPlan(data));
+    ajaxGetUserClassPlan(data) {
+      return dispatch(ajaxGetUserClassPlan(data));
     }
   })
 )
 export default class DailyPlan extends Component {
-  config = {
-    navigationBarTitleText: "七天认识一门编程语言"
-  };
   constructor() {
     super();
     this.state = {
@@ -27,85 +25,28 @@ export default class DailyPlan extends Component {
     };
   }
   componentDidMount() {
-    const loginInfo = getStorageSync("login");
-    this.props.ajaxGetUserPlan(loginInfo.userid).then(res => {
-      console.log("res", res);
-      let allPlan = [];
-      const isShow = this.props.userInfo.userPlan.isTranspondedList;
-      let initCurrent = (this.props.userInfo.userPlan.studyPlan.length - 1) * 2;
-      this.props.userInfo.userPlan.studyPlan.map((item, index) => {
-        allPlan.push({
-          studyPlanDay: item.studyPlanDay,
-          image: item.imageOne,
-          show: true,
-          number: 0
-        });
-        allPlan.push({
-          studyPlanDay: item.studyPlanDay,
-          image: item.imageTwo,
-          show: isShow[index],
-          number: 1
-        });
-      });
-      this.setState({
-        isLoading: false,
-        allPlan: allPlan,
-        current: initCurrent
-      });
-    });
+    this.getUserPlan();
   }
-
-  toAward = () => {
-    Taro.navigateTo({
-      url: "/pages/amount/myAward"
+  getUserPlan = () => {
+    const userId = getLoginInfo().userId;
+    const clazzId = this.props.clazzId;
+    const data = {
+      userId,
+      clazzId
+    };
+    this.props.ajaxGetUserClassPlan(data).then(res => {
+      if (res.code === 0) {
+        this.setState({
+          isLoading: false
+        });
+      }
     });
   };
-  showPlanDay = str => {
-    switch (str) {
-      case "FIRST_DAY":
-        return "第一天";
-      case "SECOND_DAY":
-        return "第二天";
-      case "THIRD_DAY":
-        return "第三天";
-      case "FOURTH_DAY":
-        return "第四天";
-      case "FIFTH_DAY":
-        return "第五天";
-      case "SIXTH_DAY":
-        return "第六天";
-      case "ACCOMPLISHED":
-        return "第七天";
-      default:
-        break;
-    }
-  };
+
   handleSwiper = e => {
     this.setState({
       current: e.detail.current
     });
-  };
-  onShareAppMessage = res => {
-    const { current } = this.state;
-    // current === 0 ? this.state.current - 1 : current;
-    const loginInfo = getStorageSync("login");
-    Taro.request({
-      url: "https://pgrk.wizzstudio.com/updatetranspond",
-      method: "POST",
-      data: {
-        userId: loginInfo.userid,
-        studyPlanDay: parseInt(current / 2) + 1
-      }
-    }).then(response => {
-      const res = response.data;
-      if (res.code === 0) {
-        this.props.ajaxGetUserPlan(loginInfo.userid);
-      }
-    });
-    return {
-      title: "进入小程序了解当下最流行、最赚钱的编程语言",
-      path: "/pages/index/index"
-    };
   };
   preview = url => {
     Taro.previewImage({
@@ -114,7 +55,8 @@ export default class DailyPlan extends Component {
     });
   };
   render() {
-    const { current, isLoading, allPlan } = this.state;
+    const { current, isLoading } = this.state;
+    const { userPlan } = this.props.classInfo || [];
     return (
       <View>
         <View className="main-plan">
@@ -139,62 +81,53 @@ export default class DailyPlan extends Component {
               >
                 {allPlan.map((item, index) => {
                   return (
-                    <SwiperItem
-                      index={index}
-                      key={index}
-                      // className={`plan-item ${current === index ? active : ""}`}
-                      className={[
-                        "plan-item",
-                        current === index ? "active" : ""
-                      ].join(" ")}>
-                      <View className="plan-title">
-                        {item.number
-                          ? this.showPlanDay(item.studyPlanDay) + "(二)"
-                          : this.showPlanDay(item.studyPlanDay) + "（一）"}
-                      </View>
-
-                      {item.show ? (
-                        <AtCard
-                          className="plan-card"
-                          onClick={this.preview.bind(this, item.image)}>
-                          {/* <Image className="full-plan" src={item.image} /> */}
-                          改的资料
-                        </AtCard>
-                      ) : (
-                        <AtCard className=" plan-card ">
-                          <View className=" cover">
-                            <View className="no-plan-note">点击下方按钮</View>
-                            <View className="no-plan-note">
-                              可领取第二份资料~
-                            </View>
-                            <View className="no-plan-note">
-                              <AtIcon
-                                value="arrow-down"
-                                size="49"
-                                color="#fff"
-                              />
-                            </View>
-                          </View>
-                        </AtCard>
-                      )}
+                    <SwiperItem key={item.studyPlanDay} index={index}>
+                      11111
                     </SwiperItem>
+                    // <SwiperItem
+                    //   index={index}
+                    //   key={index}
+                    //   // className={`plan-item ${current === index ? active : ""}`}
+                    //   className={[
+                    //     "plan-item",
+                    //     current === index ? "active" : ""
+                    //   ].join(" ")}>
+                    //   <View className="plan-title">
+                    //     {item.number
+                    //       ? this.showPlanDay(item.studyPlanDay) + "(二)"
+                    //       : this.showPlanDay(item.studyPlanDay) + "（一）"}
+                    //   </View>
+
+                    //   {item.show ? (
+                    //     <AtCard
+                    //       className="plan-card"
+                    //       onClick={this.preview.bind(this, item.image)}>
+                    //       {/* <Image className="full-plan" src={item.image} /> */}
+                    //       改的资料
+                    //     </AtCard>
+                    //   ) : (
+                    //     <AtCard className=" plan-card ">
+                    //       <View className=" cover">
+                    //         <View className="no-plan-note">点击下方按钮</View>
+                    //         <View className="no-plan-note">
+                    //           可领取第二份资料~
+                    //         </View>
+                    //         <View className="no-plan-note">
+                    //           <AtIcon
+                    //             value="arrow-down"
+                    //             size="49"
+                    //             color="#fff"
+                    //           />
+                    //         </View>
+                    //       </View>
+                    //     </AtCard>
+                    //   )}
+                    // </SwiperItem>
                   );
                 })}
               </Swiper>
             )}
           </View>
-        </View>
-
-        <View className="action">
-          {/* <AtButton type="primary" className="transfer-award" open-type="share">
-            转发领取当天第二份资料
-          </AtButton>
-          <AtButton
-            type="secondary"
-            className="get-award"
-            onClick={this.toAward}>
-            领取奖励
-          </AtButton> */}
         </View>
       </View>
     );

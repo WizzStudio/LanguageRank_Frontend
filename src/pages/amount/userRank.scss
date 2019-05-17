@@ -1,13 +1,16 @@
 .userRank {
   margin: 30px 40px;
   .title-wrap {
-    .avatar {
+    .avatar-wrap {
       display: flex;
       justify-content: center;
       align-self: center;
-      //   width: 120px;
-      //   height: 120px;
       margin-bottom: -60px;
+      .avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+      }
     }
     .card-wrap {
       display: flex;
@@ -36,7 +39,8 @@
     }
     .btn-wrap {
       display: flex;
-      justify-content: space-between;
+      //   justify-content: space-between;
+      justify-content: center;
       margin: 30px auto;
 
       .envy {
@@ -44,6 +48,33 @@
       }
       .achieve {
         width: 40%;
+      }
+    }
+  }
+  .member-list {
+    margin: 20px auto;
+    .member-item {
+      display: flex;
+      align-items: center;
+      height: 130px;
+
+      .rank {
+        flex: 1;
+      }
+      .avatar-wrap {
+        flex: 1;
+        margin: auto 10px;
+        .avatar {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+        }
+      }
+      .name {
+        flex: 4;
+      }
+      .total {
+        flex: 2;
       }
     }
   }

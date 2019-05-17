@@ -43,9 +43,6 @@ $color-brand: #4f5fc5;
 }
 .study-plan {
   margin-top: 50px;
-  // border: 2px solid white;
-  // border-top-left-radius: 50px;
-  // border-top-right-radius: 50px;
   background-color: white;
   .plan-action {
     margin: 20px 50px;
@@ -53,6 +50,12 @@ $color-brand: #4f5fc5;
       height: 25px;
       font-size: 36px;
       padding: 10px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      .name {
+        margin-left: 20px;
+      }
     }
   }
 }
@@ -70,21 +73,4 @@ $color-brand: #4f5fc5;
   .question {
     text-decoration: underline;
   }
-}
-
-.plan-title-wrap {
-  font-size: 40px;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.plan-title {
-  color: $color-brand;
-  font-weight: bold;
-}
-.isPlaned {
-  font-size: 32px;
-  font-weight: normal;
 }

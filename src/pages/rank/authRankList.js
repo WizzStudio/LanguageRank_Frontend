@@ -3,6 +3,7 @@ import { View, CoverView } from "@tarojs/components";
 import { AtFloatLayout, AtButton, AtIcon } from "taro-ui";
 import "./authRankList.scss";
 import AuthItem from "../../components/rank/authItem";
+import cmt from "../../assets/icon/cmt.png";
 import ShareCanvasAuth from "../../components/canvasPost/shareCanvasAuth";
 import { connect } from "@tarojs/redux";
 import { ajaxGetAuth } from "../../actions/rankList";
@@ -32,18 +33,9 @@ class AuthRankList extends Component {
       authRank: []
     }
   };
-  componentWillMount() {}
   componentDidMount() {
-    Taro.showLoading({
-      title: "加载中..."
-    });
-    this.props.ajaxGetAuth().then(res => {
-      Taro.hideLoading();
-      console.log("res", res);
-    });
+    this.props.ajaxGetAuth();
   }
-  componentWillReceiveProps(nextprops) {}
-
   handleNavigate(name) {
     Taro.navigateTo({
       url: `/pages/detail/langIndex?rankIndex=${"auth"}&langName=${encodeURI(
@@ -75,14 +67,16 @@ class AuthRankList extends Component {
   componentDidShow() {}
   render() {
     const rankList = this.props.rankList ? this.props.rankList.authRank : [];
-    const { isShared, pageLoaded } = this.state;
+    const { isShared } = this.state;
     return (
       <View>
         {rankList.map((rank, index) => {
           return (
             <View
               key={index}
-              onClick={this.handleNavigate.bind(this, rank.languageName)}>
+              onClick={this.handleNavigate.bind(this, rank.languageName)}
+              className="item-wrap">
+              {/* <View className="item-left"> */}
               <AuthItem
                 langImg={rank.languageSymbol}
                 langName={rank.languageName}
@@ -90,6 +84,10 @@ class AuthRankList extends Component {
                 tend={rank.languageTend}
                 index={index}
               />
+              {/* </View> */}
+              {/* <View className="item-right">
+                <Image src={cmt} className="cmt-logo" />
+              </View> */}
             </View>
           );
         })}
@@ -145,9 +143,4 @@ class AuthRankList extends Component {
     );
   }
 }
-AuthRankList.defaultProps = {
-  rankList: {
-    authRank: []
-  }
-};
 export default AuthRankList;

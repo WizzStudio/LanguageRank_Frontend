@@ -1,0 +1,52 @@
+.memberRank {
+  margin: 20px 20px;
+  .top {
+    font-size: 30px;
+    font-weight: 300;
+    display: flex;
+    justify-content: center;
+  }
+  .nickname {
+    color: #4f5fc5;
+    font-weight: 600;
+    font-size: 40px;
+    margin: 10px auto;
+  }
+  .title {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 30px;
+  }
+  .member-list {
+    margin: 20px auto;
+    .member-item {
+      display: flex;
+      align-items: center;
+      height: 130px;
+
+      .rank {
+        flex: 1;
+      }
+      .avatar-wrap {
+        flex: 1;
+        margin: auto 10px;
+        .avatar {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+        }
+      }
+      .name {
+        flex: 4;
+      }
+      .total {
+        flex: 2;
+      }
+    }
+  }
+}
+//更改默认样式
+.at-divider {
+  height: 50px;
+}

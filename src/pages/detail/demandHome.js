@@ -4,7 +4,6 @@ import { AtDivider, AtActivityIndicator } from "taro-ui";
 import PieChart from "../../components/echarts/PieChart";
 import BarChart from "../../components/echarts/BarChart";
 import KChart from "../../components/echarts/KChart";
-import AddPlan from "../../components/rank/addPlan";
 import { connect } from "@tarojs/redux";
 import {
   ajaxGetDemandPosi,
@@ -203,7 +202,6 @@ export default class DemandHome extends Component {
             )}
           </View>
         </View>
-        <AddPlan langName={langName} />
       </View>
     );
   }

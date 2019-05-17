@@ -1,0 +1,39 @@
+.input-top {
+  height: 100px;
+}
+.input-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 100px;
+  background: #fff;
+  .input {
+    width: 80%;
+    height: 80px;
+    border: 1px solid #6e7b8b;
+  }
+  .button {
+    height: 100px;
+    width: 20%;
+  }
+}
+at-input {
+  width: 80%;
+}
+at-button {
+  width: 20%;
+}
+.at-input {
+  padding: 0px !important;
+  // width: 480px !important;
+  height: 80px !important;
+  border: 1px solid #333 !important;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+.at-input__container {
+  height: 100%;
+}

@@ -23,9 +23,10 @@ class App extends Component {
       "pages/class/classIndex",
       "pages/class/classHome",
       "pages/class/classList",
-      // "pages/amount/dailyPlan",
+      "pages/class/classDetail",
       "pages/amount/myAward",
       "pages/amount/userRank",
+      "pages/amount/memberRank",
       "pages/detail/langIndex",
       "pages/detail/langDetail"
     ],
