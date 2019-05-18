@@ -43,9 +43,9 @@ export default class ClassIndex extends Component {
       url: "/pages/class/classList"
     });
   };
-  toClassHome = () => {
+  toClassHome = clazzId => {
     Taro.navigateTo({
-      url: "/pages/class/classHome?isAdded=1"
+      url: `/pages/class/classHome?clazzId=${clazzId}`
     });
   };
   render() {
@@ -64,7 +64,7 @@ export default class ClassIndex extends Component {
               <View
                 key={item.clazzName}
                 className="per-award"
-                onClick={this.toClassHome}>
+                onClick={this.toClassHome.bind(this, item.clazzId)}>
                 <View className="award-content">
                   <Image src={testImg} className="award-img" />
                 </View>

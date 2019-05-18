@@ -43,18 +43,17 @@ export default class MyInfo extends Component {
   componentDidMount() {
     this.checkLogin();
   }
-  componentWillReceiveProps(nextprops) {
-    if (nextprops.userInfo.allInfo) {
-      this.setState({
-        allInfo: nextprops.userInfo.allInfo
-      });
-    }
-  }
   checkLogin = () => {
     if (Taro.getStorageSync("login")) {
       if (Taro.getStorageSync("basicInfo")) {
         const loginInfo = Taro.getStorageSync("login");
-        this.props.ajaxGetUserAllInfo(loginInfo.userId);
+        this.props.ajaxGetUserAllInfo(loginInfo.userId).then(res => {
+          if (res.code === 0) {
+            this.setState({
+              allInfo: nextprops.userInfo.allInfo
+            });
+          }
+        });
         const basicInfo = Taro.getStorageSync("basicInfo");
         this.setState({
           isLogin: true,
@@ -63,49 +62,6 @@ export default class MyInfo extends Component {
       } else {
       }
     } else {
-      this.handleLogin();
-    }
-  };
-  handleLogin = () => {
-    Taro.login().then(res => {
-      console.log("res", res);
-      if (res.code) {
-        Taro.request({
-          url: "https://pgrk.wizzstudio.com/login",
-          method: "POST",
-          data: {
-            code: res.code
-          }
-        }).then(loginRes => {
-          console.log("loginRes", loginRes);
-          if (loginRes.data.code === 0) {
-            const data = loginRes.data.data;
-            Taro.setStorageSync("login", {
-              userId: data.userId,
-              openId: data.openId,
-              session_key: data.session_key
-            });
-          }
-        });
-      }
-    });
-  };
-  bindGetUserInfo = e => {
-    if (e.detail.userInfo) {
-      Taro.setStorageSync("basicInfo", {
-        nickName: e.detail.userInfo.nickName,
-        avatar: e.detail.userInfo.avatarUrl
-      });
-      const loginInfo = Taro.getStorageSync("login");
-      this.props.ajaxGetUserAllInfo(loginInfo.userId);
-      this.setState({
-        isLogin: true,
-        basicInfo: {
-          nickName: e.detail.userInfo.nickName,
-          avatar: e.detail.userInfo.avatarUrl
-        }
-      });
-      // this.checkLogin();
     }
   };
   toPage = type => {

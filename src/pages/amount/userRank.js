@@ -1,14 +1,63 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
 import { AtButton, AtAvatar, AtDivider, AtTabs, AtTabsPane } from "taro-ui";
+import myApi from "../../service/api";
 import "./userRank.scss";
+const myUserId = Taro.getStorageSync("login").userId;
 export default class UserRank extends Component {
   constructor() {
     super();
     this.state = {
-      currentTab: 0
+      currentTab: 0,
+      clazzId: 0,
+      userRankInfo: {}
     };
   }
+  componentDidMount() {
+    const { params } = this.$router || "";
+    this.setState({
+      clazzId: params.clazzId
+    });
+    // const userId = Taro.getStorageSync("login").userId;
+    this.getAllUserRank(myUserId, params.clazzId);
+    this.getPopularRank(myUserId);
+  }
+  //获取所有人中某用户的信息。
+  getAllUserRank = (userId, clazzId) => {
+    const data = {
+      clazzId,
+      userId
+    };
+    myApi("/getuserpunchcardmessagetoday", "POST", data).then(res => {
+      this.setState({
+        userRankInfo: res.data
+      });
+    });
+  };
+  //获取人气排行榜单
+  getPopularRank = (userId, pageIndex = 1) => {
+    const { clazzId } = this.$router.params;
+    const data = {
+      userId,
+      clazzId,
+      pageIndex
+    };
+    myApi("/getpopularityrank", "POST", data).then(res => {
+      console.log("res", res);
+    });
+  };
+  //获取班级勤奋排行
+  getHardRank = (userId, pageIndex = 1) => {
+    const { clazzId } = this.$router.params;
+    const data = {
+      userId,
+      clazzId,
+      pageIndex
+    };
+    myApi("/gethardworkingrank", "POST", data).then(res => {
+      console.log("res", res);
+    });
+  };
   tabClick = value => {
     this.setState({
       currentTab: value
@@ -16,25 +65,28 @@ export default class UserRank extends Component {
   };
   render() {
     const tabList = [{ title: "勤奋排行" }, { title: "人气排行" }];
-    const { currentTab } = this.state;
+    const { currentTab, userRankInfo } = this.state;
     return (
       <View className="userRank">
         <View className="title-wrap">
           <View className="avatar-wrap">
             <Image className="avatar" src="https://jdc.jd.com/img/200" />
           </View>
+          <View className="right-score">总积分：{userRankInfo.totalScore}</View>
           <View className="card-wrap">
             <View className="per-item">
               <View className="name">连续打卡</View>
-              <View className="num">1</View>
+              <View className="num">
+                {userRankInfo.uninterruptedStudyPlanDay}
+              </View>
             </View>
             <View className="per-item">
               <View className="name">总计打卡</View>
-              <View className="num">1000</View>
+              <View className="num">{userRankInfo.totalPunchCardDay}</View>
             </View>
             <View className="per-item">
               <View className="name">获得积分</View>
-              <View className="num">10</View>
+              <View className="num">{userRankInfo.todayScore}</View>
             </View>
           </View>
           <View className="btn-wrap">

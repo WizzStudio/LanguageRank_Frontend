@@ -20,6 +20,7 @@ class App extends Component {
     pages: [
       "pages/index/index",
       "pages/amount/myInfo",
+      "pages/login/login",
       "pages/class/classIndex",
       "pages/class/classHome",
       "pages/class/classList",

@@ -5,21 +5,26 @@ import {
   AtDivider,
   AtTabs,
   AtTabsPane,
-  AtFloatLayout
+  AtFloatLayout,
+  AtIcon
 } from "taro-ui";
 import "./classHome.scss";
-import CommentList from "../../components/detail/CommentList";
+import CmtList from "../../components/detail/cmtList";
+import AddComment from "../../components/detail/addComment";
 import DailyPlan from "../amount/dailyPlan";
 import imgTest from "../../assets/img/canvasAuth.png";
-import AddClass from "../../components/class/addClass";
+import JoinClass from "../../components/class/joinClass";
 import QuitClass from "../../components/class/quitClass";
-import { ajaxGetClassMember } from "../../actions/classInfo";
+import { ajaxGetClassMember, getClassMsg } from "../../actions/classInfo";
 import { connect } from "@tarojs/redux";
 @connect(
   ({ classInfo }) => ({ classInfo }),
   dispatch => ({
     ajaxGetClassMember(data) {
       return dispatch(ajaxGetClassMember(data));
+    },
+    getClassMsg(data) {
+      return dispatch(getClassMsg(data));
     }
   })
 )
@@ -32,20 +37,30 @@ export default class ClassHome extends Component {
     this.state = {
       currentTab: 0,
       ruleOpened: false,
-      isAdded: false
+      isAdded: false,
+      isPunched: true,
+      clazzId: 0
     };
   }
   componentDidMount() {
-    this.getClassMember();
     const param = this.$router.params || "";
     if (param) {
+      console.log("param", param);
+      const { clazzId } = param;
       this.setState({
-        isAdded: true
+        clazzId
       });
+      this.getClassMessage(clazzId);
+      this.getClassMember(clazzId);
     }
   }
-  getClassMember = () => {
-    const clazzId = 1;
+  getClassMessage = clazzId => {
+    const dataMsg = {
+      clazzId
+    };
+    this.props.getClassMsg(dataMsg);
+  };
+  getClassMember = clazzId => {
     const data = {
       clazzId,
       pageIndex: 1
@@ -60,8 +75,9 @@ export default class ClassHome extends Component {
     });
   };
   toUserRank = () => {
+    const { clazzId } = this.state;
     Taro.navigateTo({
-      url: "/pages/amount/userRank"
+      url: `/pages/amount/userRank?clazzId=${clazzId}`
     });
   };
   openRule = () => {
@@ -82,9 +98,8 @@ export default class ClassHome extends Component {
   };
   render() {
     const tabList = [{ title: "讨论" }, { title: "成员" }];
-    const { currentTab, isAdded } = this.state;
-    const { classMember } = this.props.classInfo || [];
-    const clazzId = 1;
+    const { currentTab, isAdded, clazzId } = this.state;
+    const { classMember, classMsg } = this.props.classInfo || [];
     return (
       <View className="classHome">
         <View className="title-wrap">
@@ -92,32 +107,47 @@ export default class ClassHome extends Component {
             <Image src={imgTest} className="img" />
           </View>
           <View className="title-content">
-            <View className="title-name">七天认识Java</View>
-            <View className="title-state">180人加入|800条讨论</View>
-            <View className="title-action">
+            <View className="title-name">
+              <View className="content">{classMsg.clazzName}</View>
               <AtButton
                 type="secondary"
                 size="small"
                 onClick={this.toClassDetail}>
                 课程详情
               </AtButton>
+            </View>
+            <View className="title-state">
+              {classMsg.studentNumber}人加入 | {classMsg.commentNumber}条讨论
+            </View>
+            <View className="title-action">
               {isAdded ? (
-                <QuitClass clazzId={clazzId} />
+                // <QuitClass clazzId={clazzId} />
+                <AtIcon value="share" size="28" color="#4f5fc5" />
               ) : (
-                <AddClass clazzId={clazzId} />
+                <JoinClass clazzId={clazzId} />
               )}
             </View>
           </View>
         </View>
         <AtDivider />
 
-        <View className="content-name">第一天</View>
-        <DailyPlan clazzId={clazzId} />
+        {isAdded ? (
+          <DailyPlan clazzId={clazzId} />
+        ) : (
+          <View>尚未加入此班级</View>
+        )}
+
         <View className="content-wrap">
           <View className="punch-btn">
-            <AtButton type="primary" size="normal" onClick={this.toUserRank}>
-              打卡
-            </AtButton>
+            {classMsg.isPunched ? (
+              <AtButton type="primary" size="normal" onClick={this.toUserRank}>
+                查看排行
+              </AtButton>
+            ) : (
+              <AtButton type="primary" size="normal" onClick={this.toUserRank}>
+                打卡
+              </AtButton>
+            )}
           </View>
           <View className="punch-rule" onClick={this.openRule}>
             打卡规则
@@ -144,11 +174,11 @@ export default class ClassHome extends Component {
           tabList={tabList}
           onClick={this.tabClick.bind(this)}>
           <AtTabsPane current={currentTab} index={0}>
-            <CommentList typeCmt="class" />
+            <CmtList typeCmt="class" clazzId={clazzId} />
           </AtTabsPane>
           <AtTabsPane current={currentTab} index={1}>
             <View className="member-list">
-              {classMember.map((item, index) => (
+              {classMember.members.map((item, index) => (
                 <View className="member-item" key={item.userId}>
                   <View className="rank">{index + 1}</View>
                   <View className="avatar-wrap">
@@ -157,13 +187,16 @@ export default class ClassHome extends Component {
                       src="https://jdc.jd.com/img/200"
                     />
                   </View>
-                  <View className="name">{"item.nickName"}</View>
-                  <View className="total">30</View>
+                  <View className="name">{item.nickName}</View>
+                  <View className="total">
+                    {item.uninterruptedStudyPlanDay}
+                  </View>
                 </View>
               ))}
             </View>
           </AtTabsPane>
         </AtTabs>
+        {currentTab === 0 ? <AddComment type="class" clazzId={clazzId} /> : ""}
       </View>
     );
   }

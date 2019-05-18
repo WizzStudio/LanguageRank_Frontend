@@ -1,5 +1,5 @@
 import Taro from "@tarojs/taro";
-const HOST = "https://pgrk.wizzstudio.com";
+import { HOST } from "./config";
 const createActionSucess = (TYPE, data) => {
   return {
     type: TYPE,

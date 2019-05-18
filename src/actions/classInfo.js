@@ -10,7 +10,8 @@ import {
   GET_CLASS_FRIEND,
   GET_CLASS_MEMBER,
   GET_CLASS_CMT,
-  GET_CLASS_FAIL
+  GET_CLASS_FAIL,
+  GET_CLASS_MSG
 } from "../constants/classInfo";
 import fetchData from "../service/createAction";
 import { getLoginInfo } from "../utils/getlocalInfo";
@@ -95,4 +96,17 @@ export const ajaxGetClassCmt = data => {
     data
   };
   return fetchData(option, GET_CLASS_CMT);
+};
+
+//查看班级基本信息
+export const getClassMsg = data => {
+  const option = {
+    url: "/getclazzmessage",
+    method: "POST",
+    data: {
+      userId,
+      clazzId: data.clazzId
+    }
+  };
+  return fetchData(option, GET_CLASS_MSG);
 };

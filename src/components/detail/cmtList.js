@@ -4,8 +4,7 @@ import { AtButton, AtInput, AtPagination, AtTextarea } from "taro-ui";
 import CommentItem from "./commentItem";
 import "./comment.scss";
 import { connect } from "@tarojs/redux";
-import { getAuthCmt, getDemandCmt } from "../../actions/comment";
-import AddComment from "./addComment";
+import { getAuthCmt, getDemandCmt, getClassCmt } from "../../actions/comment";
 @connect(
   ({ cmtInfo }) => ({
     cmtInfo
@@ -22,7 +21,7 @@ import AddComment from "./addComment";
     }
   })
 )
-export default class CommentList extends Component {
+class CmtList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,53 +30,63 @@ export default class CommentList extends Component {
       pagination: {
         pageSize: 10,
         current: 1
-      }
+      },
+      commentList: []
     };
   }
   componentDidMount() {
-    // this.getCmtList(1, 1);
+    this.getCmtList(1, 1);
   }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.langName !== prevProps.langName) {
+  componentDidUpdate(prevProps) {
+    if (this.props.typeCmt !== prevProps.typeCmt) {
       this.getCmtList(1, 1);
     }
-    // console.log("this.props222", this.props);
   }
   getCmtList = (pageIndex = 1, commentDisplayMode = 1) => {
-    console.log("this.props", this.props);
-    const { type } = this.props || "";
-    const data = {
-      languageName: this.props.langName,
-      pageIndex,
-      commentDisplayMode
-    };
-    this.props.getAuthCmt(data).then(res => {
-      console.log("res", res);
-    });
-    // if (type) {
-    //   switch (type) {
-    //     case "auth":
-    //       this.props.getAuthCmt(data).then(res => {
-    //         console.log("res", res);
-    //       });
-    //       return;
-    //     case "demand":
-    //       this.props.getDemandCmt(data).then(res => {
-    //         console.log("res", res);
-    //       });
-    //       return;
-    //     case "class":
-    //       this.props.getClassCmt(data).then(res => {
-    //         console.log("res", res);
-    //       });
-    //       return;
-    //     default:
-    //       break;
-    //   }
-    // }
+    console.log("执行了getCmt");
+    const { typeCmt } = this.props || "";
+    let data = {};
+    if (typeCmt === "class") {
+      data = {
+        clazzId: this.props.clazzId,
+        pageIndex,
+        commentDisplayMode
+      };
+    } else {
+      data = {
+        languageName: this.props.langName,
+        pageIndex,
+        commentDisplayMode
+      };
+    }
+    switch (typeCmt) {
+      case "auth":
+        this.props.getAuthCmt(data).then(res => {
+          console.log("执行了getCmt111");
+          this.setState({
+            commentList: this.props.cmtInfo.authCmt.commentList
+          });
+        });
+        return;
+      case "demand":
+        this.props.getDemandCmt(data).then(res => {
+          this.setState({
+            commentList: this.props.cmtInfo.demandCmt.commentList
+          });
+        });
+        return;
+      case "class":
+        this.props.getClassCmt(data).then(res => {
+          this.setState({
+            commentList: this.props.cmtInfo.classCmt.commentList
+          });
+        });
+        return;
+      default:
+        break;
+    }
   };
   changeCmtPage = params => {
-    console.log("params", params);
     this.getCmtList(params.current, 1);
   };
   changeCmtMode = type => {
@@ -99,8 +108,7 @@ export default class CommentList extends Component {
     }
   };
   render() {
-    const commentList =
-      this.props.cmtInfo.authCmt && this.props.cmtInfo.authCmt.commentList;
+    const { commentList } = this.state;
     const { btnMode } = this.state;
     return (
       <View className="cmt-list">
@@ -134,8 +142,14 @@ export default class CommentList extends Component {
           // current={1}
           onPageChange={this.changeCmtPage}
         />
-        <AddComment />
       </View>
     );
   }
 }
+
+CmtList.defaultProps = {
+  typeCmt: "",
+  langName: "",
+  clazzId: ""
+};
+export default CmtList;

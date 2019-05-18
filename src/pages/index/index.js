@@ -30,6 +30,13 @@ class Index extends Component {
       isViewedJoinMyApplet: false
     };
   }
+  componentWillMount() {
+    if (!Taro.getStorageSync("basicInfo")) {
+      Taro.navigateTo({
+        url: "/pages/login/login"
+      });
+    }
+  }
   componentDidMount() {
     if (Taro.getStorageSync("basicInfo")) {
       Taro.getSetting().then(res => {

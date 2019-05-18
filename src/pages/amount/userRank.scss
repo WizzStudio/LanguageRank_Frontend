@@ -5,12 +5,23 @@
       display: flex;
       justify-content: center;
       align-self: center;
-      margin-bottom: -60px;
+      margin-bottom: -15%;
       .avatar {
         width: 140px;
         height: 140px;
         border-radius: 50%;
       }
+      // .score {
+      //   // align-self: flex-end;
+      //   justify-self: flex-end;
+      // }
+    }
+    .right-score {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 30px;
+      margin-bottom: 20px;
+      color: #999;
     }
     .card-wrap {
       display: flex;

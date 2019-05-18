@@ -56,7 +56,7 @@ export default class DailyPlan extends Component {
   };
   render() {
     const { current, isLoading } = this.state;
-    const { userPlan } = this.props.classInfo || [];
+    const { userClassPlan } = this.props.classInfo || [];
     return (
       <View>
         <View className="main-plan">
@@ -77,12 +77,14 @@ export default class DailyPlan extends Component {
                 nextMargin="50px"
                 current={current}
                 onChange={this.handleSwiper}
-                // indicatorDots
-              >
-                {allPlan.map((item, index) => {
+                indicatorDots>
+                {userClassPlan.map((item, index) => {
                   return (
                     <SwiperItem key={item.studyPlanDay} index={index}>
-                      11111
+                      <View className="plan-title">
+                        第 {item.studyPlanDay} 天
+                      </View>
+                      {item.content}
                     </SwiperItem>
                     // <SwiperItem
                     //   index={index}

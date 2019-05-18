@@ -8,7 +8,8 @@ import {
   GET_USER_CLASS_PLAN,
   GET_CLASS_FRIEND,
   GET_CLASS_MEMBER,
-  GET_CLASS_FAIL
+  GET_CLASS_FAIL,
+  GET_CLASS_MSG
 } from "../constants/classInfo";
 
 const INIT_STATE = [];
@@ -33,6 +34,11 @@ export default function classInfo(state = INIT_STATE, action) {
       return {
         ...state,
         classMember: action.payload
+      };
+    case GET_CLASS_MSG:
+      return {
+        ...state,
+        classMsg: action.payload
       };
     default:
       return {

@@ -11,7 +11,7 @@ const userId = getLoginInfo().userId || "";
 //权威榜评论
 export const getAuthCmt = data => {
   const option = {
-    url: "/getemployeerankcomment",
+    url: "/getfixedrankcomment",
     method: "POST",
     data
   };
@@ -20,13 +20,17 @@ export const getAuthCmt = data => {
 //需求榜评论
 export const getDemandCmt = data => {
   const option = {
-    url: "/getfixedrankcomment",
+    url: "/getemployeerankcomment",
     method: "POST",
     data
   };
   return fetchData(option, GET_DEMAND_CMT);
 };
 export const getClassCmt = data => {
-  const option = {};
+  const option = {
+    url: "/getclazzcomment",
+    method: "POST",
+    data
+  };
   return fetchData(option, GET_CLASS_CMT);
 };

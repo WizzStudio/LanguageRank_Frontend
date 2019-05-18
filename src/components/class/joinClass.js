@@ -14,7 +14,7 @@ import { getLoginInfo } from "../../utils/getlocalInfo";
     }
   })
 )
-export default class AddClass extends Component {
+export default class JoinClass extends Component {
   userAddClass = () => {
     const clazzId = this.props.clazzId;
     const userId = getLoginInfo().userId || "";

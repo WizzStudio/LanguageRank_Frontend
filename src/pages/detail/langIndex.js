@@ -16,7 +16,7 @@ import { connect } from "@tarojs/redux";
 import { ajaxGetLangHome } from "../../actions/rankList";
 import LangHome from "./langHome";
 import DemandHome from "./demandHome";
-import CommentList from "../../components/detail/CommentList";
+import CmtList from "../../components/detail/cmtList";
 import AddComment from "../../components/detail/addComment";
 @connect(
   ({ rankList }) => ({
@@ -49,9 +49,9 @@ export default class LangIndex extends Component {
       langName,
       rankIndex
     });
+    console.log("this.cmtNode", this.cmtNode);
   }
-  componentWillReceiveProps(nextprops) {}
-  refLineChart = node => (this.lineChart = node);
+
   onShareAppMessage = res => {
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
@@ -69,9 +69,9 @@ export default class LangIndex extends Component {
     });
     return val;
   };
-  toClassHome = () => {
+  toClassList = () => {
     Taro.navigateTo({
-      url: "/pages/class/classHome"
+      url: "/pages/class/classList"
     });
   };
   updateCmt = () => {
@@ -99,6 +99,10 @@ export default class LangIndex extends Component {
       });
     });
   };
+  refCmt = node => (this.cmtNode = node);
+  updateCmt = () => {
+    this.cmtNode.getCmtList();
+  };
   render() {
     const { langName, currentTab, rankIndex } = this.state;
     const { langHome } = this.props.rankList || {};
@@ -123,8 +127,8 @@ export default class LangIndex extends Component {
             {/* <View>{langHome.joinedNumber}人</View>
               <View>已加入学习计划</View> */}
             {/* <AddPlan langName={langName} /> */}
-            <AtButton type="primary" size="small" onClick={this.toClassHome}>
-              进入猿圈
+            <AtButton type="primary" size="small" onClick={this.toClassList}>
+              我想学
             </AtButton>
           </View>
         </View>
@@ -144,7 +148,7 @@ export default class LangIndex extends Component {
             <View className="tend-num">99</View>
           </View>
         </View>
-        <View className="wrap-title">好友在用</View>
+        {/* <View className="wrap-title">好友在用</View>
         <View className="avatar-wrap">
           <View className="per-avatar">
             <Image src="https://jdc.jd.com/img/200" />
@@ -161,41 +165,31 @@ export default class LangIndex extends Component {
               <AtIcon value="add" size="30" color="#4f5fc5" />
             </button>
           </View>
-        </View>
+        </View> */}
         <AtDivider />
         <AtTabs
           current={currentTab}
           tabList={tabList}
           onClick={this.tabClick.bind(this)}>
           <AtTabsPane current={currentTab} index={0}>
-            {/* {rankIndex == "auth" ? (
-              <LangHome langNameProp={langName} />
-            ) : (
-              <DemandHome demandNameProp={langName} />
-            )} */}
             {rankIndex == "auth" && <LangHome langNameProp={langName} />}
             {rankIndex == "demand" && <DemandHome demandNameProp={langName} />}
           </AtTabsPane>
           <AtTabsPane current={currentTab} index={1}>
-            <CommentList type={rankIndex} langName={langName} fresh={1} />
+            <CmtList
+              ref={this.refCmt}
+              typeCmt={rankIndex}
+              langName={langName}
+            />
           </AtTabsPane>
         </AtTabs>
         {currentTab && (
           <View>
-            {/* <View className="input-top" />
-            <View className="input-wrap">
-              <AtInput
-                type="text"
-                maxLength="999"
-                placeholder="我有问题想问"
-                value={this.state.inputValue}
-                onChange={this.handleInputChange.bind(this)}
-              />
-              <AtButton type="primary" size="small" onClick={this.updateCmt}>
-                提交
-              </AtButton>
-            </View> */}
-            <AddComment />
+            <AddComment
+              type={rankIndex}
+              langName={langName}
+              onRresh={this.updateCmt}
+            />
           </View>
         )}
       </View>

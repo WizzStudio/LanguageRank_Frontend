@@ -5,7 +5,7 @@
     justify-content: flex-start;
     .img {
       width: 180px;
-      height: 280px;
+      height: 240px;
       border: 1px solid #dcdcdc;
       border-radius: 20px;
     }
@@ -17,6 +17,11 @@
       .title-name {
         font-size: 45px;
         font-weight: 700;
+        display: flex;
+        align-items: center;
+        .content {
+          margin-right: 8px;
+        }
       }
       .title-state {
         font-size: 30px;

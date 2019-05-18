@@ -1,14 +1,20 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtInput, AtButton } from "taro-ui";
+import { AtInput, AtButton, AtMessage } from "taro-ui";
 import "./addComment.scss";
-export default class AddComment extends Component {
+import { getLoginInfo } from "../../utils/getlocalInfo";
+import myApi from "../../service/api";
+const userId = getLoginInfo().userId || "";
+
+class AddComment extends Component {
   constructor() {
     super();
     this.state = {
       inputValue: ""
     };
   }
+  componentDidMount() {}
+  componentDidUpdate(prevprops) {}
   handleInputChange = val => {
     this.setState({
       inputValue: val
@@ -16,33 +22,79 @@ export default class AddComment extends Component {
     return val;
   };
   updateCmt = () => {
-    const languageName = this.state.langName;
     const comment = this.state.inputValue;
+    const { type, clazzId, langName } = this.props;
     console.log("inputValue", this.state);
-    Taro.request({
-      url: "https://pgrk.wizzstudio.com/updateemployeerankcomment",
-      method: "POST",
-      data: {
-        languageName,
-        comment,
-        userId: 1
-      }
-    }).then(response => {
-      const res = response.data;
-      if (res.code === 0) {
-        Taro.atMessage({
-          message: "评论成功",
-          type: "success"
+    let data = {},
+      url = "";
+    switch (type) {
+      case "class":
+        data = {
+          clazzId,
+          comment,
+          userId
+        };
+        url = "/updateclazzcomment";
+        myApi(url, "POST", data).then(res => {
+          if (res.code === 0) {
+            this.setState({
+              inputValue: ""
+            });
+            Taro.atMessage({
+              message: "评论成功",
+              type: "success"
+            });
+          }
         });
-      }
-      this.setState({
-        inputValue: ""
-      });
-    });
+        break;
+      case "auth":
+        data = {
+          languageName: langName,
+          comment,
+          userId
+        };
+        url = "/updatefixedrankcomment";
+        myApi(url, "POST", data).then(res => {
+          if (res.code === 0) {
+            this.setState({
+              inputValue: ""
+            });
+            Taro.atMessage({
+              message: "评论成功",
+              type: "success"
+            });
+            console.log("this.props", this.props);
+            this.props.onRefresh();
+          }
+        });
+        break;
+      case "demand":
+        data = {
+          languageName: langName,
+          comment,
+          userId
+        };
+        url = "/updateemployeerankcomment";
+        myApi(url, "POST", data).then(res => {
+          if (res.code === 0) {
+            this.setState({
+              inputValue: ""
+            });
+            Taro.atMessage({
+              message: "评论成功",
+              type: "success"
+            });
+          }
+        });
+      default:
+        break;
+    }
   };
   render() {
+    this.props.onRefresh();
     return (
       <View>
+        <AtMessage />
         <View className="input-top" />
         <View className="input-wrap">
           {/* <View className="input"> */}
@@ -61,3 +113,12 @@ export default class AddComment extends Component {
     );
   }
 }
+AddComment.defaultProps = {
+  type: "",
+  langName: "",
+  clazzId: "",
+  onRefresh: () => {
+    console.log("还在初始化");
+  }
+};
+export default AddComment;
