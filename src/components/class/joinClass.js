@@ -29,9 +29,9 @@ class JoinClass extends Component {
       };
       this.props.ajaxJoinClass(data).then(res => {
         if (res.code === 0) {
-          Taro.showToast({
-            title: "加入成功",
-            icon: "success"
+          Taro.atMessage({
+            message: "你已在当前班级",
+            type: "success"
           });
           const { index } = this.props;
           if (index != -2) {
@@ -61,7 +61,7 @@ class JoinClass extends Component {
     return (
       <View>
         <AtMessage />
-        <AtButton type="primary" size="small" onClick={this.userAddClass}>
+        <AtButton type="primary" size="small">
           加入
         </AtButton>
       </View>

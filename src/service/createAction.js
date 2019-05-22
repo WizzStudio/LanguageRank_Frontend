@@ -15,7 +15,7 @@ const createActionFail = data => {
 export default function fetchData(option, TYPE) {
   return async dispatch => {
     Taro.showLoading({
-      title: "拼命加载中..."
+      title: "loading..."
     });
     const response = await Taro.request({
       url: HOST + option.url,

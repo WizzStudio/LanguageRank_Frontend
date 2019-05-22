@@ -7,6 +7,9 @@ import "./userRank.scss";
 import fistImg from "../../assets/img/fist.png";
 const myUserId = Taro.getStorageSync("login").userId;
 export default class UserRank extends Component {
+  config = {
+    navigationBarTitleText: "好友排行"
+  };
   constructor() {
     super();
     this.state = {
@@ -16,7 +19,9 @@ export default class UserRank extends Component {
       currUserId: myUserId,
       popRank: {},
       hardRank: {},
-      todayPlan: ""
+      todayPlan: "",
+      myHardRank: {},
+      myPopRank: {}
     };
   }
   componentWillMount() {
@@ -36,12 +41,26 @@ export default class UserRank extends Component {
         hardRank = res[1],
         popRank = res[2],
         todayPlan = res[3];
+      let myHardRank = {},
+        myPopRank = {};
+      hardRank.members.forEach(item => {
+        if (item.userId === myUserId) {
+          myHardRank = item;
+        }
+      });
+      popRank.members.forEach(item => {
+        if (item.userId === myUserId) {
+          myPopRank = item;
+        }
+      });
       this.setState({
         clazzId,
         userRankInfo,
         hardRank,
         popRank,
-        todayPlan
+        todayPlan,
+        myHardRank,
+        myPopRank
       });
     });
   }
@@ -154,7 +173,10 @@ export default class UserRank extends Component {
       currUserId,
       userRankInfo,
       popRank,
-      hardRank
+      hardRank,
+      myHardRank,
+      myPopRank,
+      todayPlan
     } = this.state;
     return (
       <View className="userRank">
@@ -193,6 +215,10 @@ export default class UserRank extends Component {
             </View>
           </View>
         </View>
+        <View className="plan-wrap">
+          <Image src={todayPlan} className="plan-img" />
+          <View className="plan-text">长按二维码，获取今日学习资料</View>
+        </View>
         <AtDivider />
         <AtTabs
           current={currentTab}
@@ -206,6 +232,17 @@ export default class UserRank extends Component {
                 <View className="name title">用户</View>
                 <View className="total title">积分</View>
                 <View className="title">膜拜</View>
+              </View>
+              <View className="member-item">
+                <View className="rank">我</View>
+                <View className="avatar-wrap">
+                  <Image className="avatar" src="https://jdc.jd.com/img/200" />
+                </View>
+                <View className="name">{myHardRank.nickName}</View>
+                <View className="total">{myHardRank.todayScore}</View>
+                <View>
+                  <Image src={fistImg} className="fist-img" />
+                </View>
               </View>
               {hardRank.members.map((item, index) => (
                 <View
@@ -235,6 +272,20 @@ export default class UserRank extends Component {
           </AtTabsPane>
           <AtTabsPane current={currentTab} index={1}>
             <View className="member-list">
+              <View className="member-item">
+                <View className="rank title">排名</View>
+                <View className="avatar-wrap title" />
+                <View className="name title">用户</View>
+                <View className="total title">膜拜数</View>
+              </View>
+              <View className="member-item">
+                <View className="rank">我</View>
+                <View className="avatar-wrap">
+                  <Image className="avatar" src="https://jdc.jd.com/img/200" />
+                </View>
+                <View className="name">{myPopRank.nickName}</View>
+                <View className="total">{myPopRank.todayScore}</View>
+              </View>
               {popRank.members.map((item, index) => (
                 <View
                   className={`member-item ${item.userId === currUserId &&

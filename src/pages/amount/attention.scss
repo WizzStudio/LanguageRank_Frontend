@@ -1,0 +1,16 @@
+.attention {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 30px;
+  .sub-img {
+    width: 640px;
+    height: 640px;
+  }
+  .text-bottom {
+    font-size: 40px;
+    font-weight: 600;
+    white-space: pre-wrap;
+  }
+}

@@ -1,6 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtButton, AtInput, AtPagination, AtTextarea } from "taro-ui";
+import { AtButton, AtPagination, AtTextarea } from "taro-ui";
 import CommentItem from "./commentItem";
 import "./comment.scss";
 import { connect } from "@tarojs/redux";
@@ -40,17 +40,12 @@ class CmtList extends Component {
       this.props.typeCmt !== prevProps.typeCmt ||
       this.props.clazzId !== prevProps.clazzId
     ) {
-      console.log("属性改变了");
       this.getCmtList(1, 1);
     }
   }
   getCmtList = (pageIndex = 1, commentDisplayMode = 1) => {
     const { typeCmt } = this.props || "";
-    const { commentList, cmtTotal } = this.state;
     let data = {};
-    if (commentList.length + 1 >= cmtTotal) {
-      return;
-    }
     if (typeCmt === "class") {
       data = {
         clazzId: this.props.clazzId,
@@ -68,30 +63,27 @@ class CmtList extends Component {
       case "auth":
         this.props.getAuthCmt(data).then(res => {
           this.setState({
-            commentList: commentList.concat(
-              this.props.cmtInfo.authCmt.commentList
-            ),
-            cmtTotal: this.props.cmtInfo.authCmt.total
+            commentList: this.props.cmtInfo.authCmt.commentList,
+            cmtTotal: this.props.cmtInfo.authCmt.total,
+            currPage: this.props.cmtInfo.authCmt.pageIndex
           });
         });
         return;
       case "demand":
         this.props.getDemandCmt(data).then(res => {
           this.setState({
-            commentList: commentList.concat(
-              this.props.cmtInfo.demandCmt.commentList
-            ),
-            cmtTotal: this.props.cmtInfo.demandCmt.total
+            commentList: this.props.cmtInfo.demandCmt.commentList,
+            cmtTotal: this.props.cmtInfo.demandCmt.total,
+            currPage: this.props.cmtInfo.demandCmt.pageIndex
           });
         });
         return;
       case "class":
         this.props.getClassCmt(data).then(res => {
           this.setState({
-            commentList: commentList.concat(
-              this.props.cmtInfo.classCmt.commentList
-            ),
-            cmtTotal: this.props.cmtInfo.classCmt.total
+            commentList: this.props.cmtInfo.classCmt.commentList,
+            cmtTotal: this.props.cmtInfo.classCmt.total,
+            currPage: this.props.cmtInfo.classCmt.pageIndex
           });
         });
         return;

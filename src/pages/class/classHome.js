@@ -5,17 +5,16 @@ import {
   AtDivider,
   AtTabs,
   AtTabsPane,
-  AtFloatLayout
+  AtFloatLayout,
+  AtForm
 } from "taro-ui";
 import "./classHome.scss";
 import CmtList from "../../components/detail/cmtList";
 import AddComment from "../../components/detail/addComment";
 import DailyPlan from "../amount/dailyPlan";
-import imgTest from "../../assets/img/canvasAuth.png";
 import JoinClass from "../../components/class/joinClass";
 import myApi from "../../service/api";
 import more from "../../assets/img/more.png";
-import share from "../../assets/img/share.png";
 import ShareBtn from "../../components/class/shareBtn";
 import {
   ajaxGetClassMember,
@@ -24,7 +23,6 @@ import {
 } from "../../actions/classInfo";
 import { connect } from "@tarojs/redux";
 import { getLoginInfo } from "../../utils/getlocalInfo";
-
 import checkToLogin from "../../utils/checkToLogin";
 const myUserId = getLoginInfo().userId;
 @connect(
@@ -61,7 +59,6 @@ export default class ClassHome extends Component {
   componentDidMount() {
     const param = this.$router.params || "";
     if (param) {
-      console.log("param", param);
       const { clazzId } = param;
       this.setState({
         clazzId
@@ -125,11 +122,13 @@ export default class ClassHome extends Component {
       url: `/pages/amount/userRank?clazzId=${clazzId}`
     });
   };
-  punchToUserRank = () => {
+  punchToUserRank = e => {
+    const { formId } = e.detail;
     const { clazzId } = this.state;
     const data = {
       userId: myUserId,
-      clazzId
+      clazzId,
+      formId
     };
     myApi("/punchcard", "POST", data).then(res => {
       console.log("res", res);
@@ -192,10 +191,6 @@ export default class ClassHome extends Component {
       }
     });
   };
-  onReachBottom() {
-    console.log("到底了");
-    this.cmtNode.getCmtList();
-  }
   refCmt = node => (this.cmtNode = node);
   updateCmt = () => {
     this.cmtNode.getCmtList();
@@ -208,17 +203,19 @@ export default class ClassHome extends Component {
       <View className="classHome">
         <View className="title-wrap">
           <View className="img-wrap">
-            <Image src={imgTest} className="img" />
+            <Image src={classMsg.clazzImage} className="img" />
           </View>
           <View className="title-content">
             <View className="title-name">
-              <View className="content">{classMsg.clazzName}</View>
-              <AtButton
-                type="secondary"
-                size="small"
-                onClick={this.toClassDetail}>
-                课程详情
-              </AtButton>
+              <View className="content">
+                {classMsg.clazzName}
+                <AtButton
+                  type="secondary"
+                  size="small"
+                  onClick={this.toClassDetail}>
+                  课程详情
+                </AtButton>
+              </View>
             </View>
             <View className="title-state">
               {classMsg.studentNumber}人加入 | {classMsg.commentNumber}条讨论
@@ -262,12 +259,11 @@ export default class ClassHome extends Component {
                 查看排行
               </AtButton>
             ) : (
-              <AtButton
-                type="primary"
-                size="normal"
-                onClick={this.punchToUserRank}>
-                打卡
-              </AtButton>
+              <AtForm reportSubmit={true} onSubmit={this.punchToUserRank}>
+                <AtButton type="primary" size="normal" formType="submit">
+                  打卡
+                </AtButton>
+              </AtForm>
             )}
           </View>
           <View className="punch-rule" onClick={this.openRule}>
@@ -280,7 +276,18 @@ export default class ClassHome extends Component {
               <View className="intro-title" ref={this.refTest}>
                 榜单介绍
               </View>
-              <View className="intro-content">打卡规则</View>
+              <View className="intro-content">
+                1、打卡积分的用途 \n①去积分商城兑换海量好礼
+                \n②参与排行，与好友pk\n 2、积分获取规则
+                \n连续第N天打卡成功，当天获得10×N个积分。\n 例如：\n
+                连续第1天12点前打卡，当天获得10分，累计10分。\n
+                连续第2天12点前打卡，当天获得20分，累计30分。\n
+                连续第3天12点前打卡，当天获得30分，累计60分。\n ......\n
+                某天12点之后打卡，当天奖励正常积分数的一半。\n
+                中断打卡后，当天奖励重新从10分开始计算，总积分累计。\n
+                4、收集膜拜奖励 每获得一个好友膜拜奖10分 \n
+                5、奖励上限:每人每天最多可获得300分\n
+              </View>
               <View className="intro-close">
                 <AtButton type="primary" onClick={this.closeRule.bind(this)}>
                   确定
@@ -300,10 +307,10 @@ export default class ClassHome extends Component {
           <AtTabsPane current={currentTab} index={1}>
             <View className="member-list">
               <View className="member-item">
-                <View className="rank">排名</View>
-                <View className="avatar-wrap">头像</View>
-                <View className="name">昵称</View>
-                <View className="total">打卡天数</View>
+                <View className="rank title">排名</View>
+                <View className="avatar-wrap title" />
+                <View className="name title">用户</View>
+                <View className="total title">打卡天数</View>
               </View>
               {classMember.members.map((item, index) => (
                 <View className="member-item" key={item.userId}>

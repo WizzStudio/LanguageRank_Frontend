@@ -76,6 +76,19 @@
       margin: 15px auto;
       font-size: 30px;
     }
+    .intro-title {
+      font-size: 40px;
+      display: flex;
+      justify-content: center;
+      margin: 20px auto;
+    }
+    .intro-content {
+      font-size: 35px;
+      color: #111;
+      white-space: pre-wrap;
+      line-height: 2em;
+      margin-bottom: 40px;
+    }
   }
   .member-list {
     margin: 20px auto;
@@ -83,7 +96,10 @@
       display: flex;
       align-items: center;
       height: 130px;
-
+      .title {
+        color: #4f5fc5;
+        font-size: 26px;
+      }
       .rank {
         flex: 1;
       }

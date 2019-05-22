@@ -22,11 +22,11 @@ export default class DemandRankList extends Component {
       });
     });
   }
-  handleNavigate(name) {
+  handleNavigate(name, exponent, rankNum) {
     Taro.navigateTo({
       url: `/pages/detail/langIndex?rankIndex=${"demand"}&langName=${encodeURI(
         name
-      )}`
+      )}&exponent=${exponent}&rankNum=${rankNum}`
     });
   }
   openIntro = () => {
@@ -59,7 +59,12 @@ export default class DemandRankList extends Component {
           return (
             <View
               key={index}
-              onClick={this.handleNavigate.bind(this, rank.languageName)}>
+              onClick={this.handleNavigate.bind(
+                this,
+                rank.languageName,
+                rank.employeeFinalExponent,
+                index + 1
+              )}>
               <AuthItem
                 langImg={rank.languageSymbol}
                 langName={rank.languageName}

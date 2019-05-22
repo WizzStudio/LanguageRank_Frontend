@@ -23,11 +23,11 @@ class AuthRankList extends Component {
       });
     });
   }
-  handleNavigate(name) {
+  handleNavigate(name, exponent, rankNum) {
     Taro.navigateTo({
       url: `/pages/detail/langIndex?rankIndex=${"auth"}&langName=${encodeURI(
         name
-      )}`
+      )}&exponent=${exponent}&rankNum=${rankNum}`
     });
   }
 
@@ -60,7 +60,12 @@ class AuthRankList extends Component {
           return (
             <View
               key={index}
-              onClick={this.handleNavigate.bind(this, rank.languageName)}
+              onClick={this.handleNavigate.bind(
+                this,
+                rank.languageName,
+                rank.fixedFinalExponent,
+                index + 1
+              )}
               className="item-wrap">
               <AuthItem
                 langImg={rank.languageSymbol}

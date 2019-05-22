@@ -1,14 +1,14 @@
-// .my-award {
-.award-title {
+.pre-award-title {
   color: #4f5fc5;
-  font-size: 36px;
-  margin: 50px auto 50px 20px;
+  font-size: 33px;
+  margin: 50px auto 50px 50px;
   font-weight: 700;
 }
 .award-wrap {
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 .per-award {
   font-size: 30px;
@@ -17,6 +17,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 20px auto;
   .award-img {
     width: 350px * 0.8;
     height: 495px * 0.8;
@@ -28,13 +29,7 @@
     margin: 5px 20px;
   }
 }
-// }
-.pre-award-title {
-  color: #4f5fc5;
-  font-size: 40px;
-  margin: 50px auto 50px 20px;
-  font-weight: 700;
-}
+
 .blank {
   height: 80px;
 }

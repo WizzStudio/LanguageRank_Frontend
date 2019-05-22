@@ -8,6 +8,7 @@ import { getLoginInfo } from "../../utils/getlocalInfo";
 import checkToLogin from "../../utils/checkToLogin";
 const myUserId = getLoginInfo().userId;
 import myApi from "../../service/api";
+import addUserRelation from "../../utils/addUserRelation";
 export default class MyInfo extends Component {
   config = {
     navigationBarTitleText: "HelloWorld Rank"
@@ -72,6 +73,11 @@ export default class MyInfo extends Component {
           url: "/pages/amount/myCollect"
         });
         break;
+      case "attention":
+        Taro.navigateTo({
+          url: "/pages/amount/attention"
+        });
+        break;
       default:
         break;
     }
@@ -82,11 +88,66 @@ export default class MyInfo extends Component {
       title: "登陆即可查看奖励"
     });
   };
+
+  //特加测试的东西
+  bindGetUserInfo = e => {
+    if (e.detail.userInfo) {
+      Taro.setStorageSync("basicInfo", {
+        nickName: e.detail.userInfo.nickName,
+        avatar: e.detail.userInfo.avatarUrl
+      });
+      Taro.getSetting()
+        .then(res => {
+          if (res.authSetting["scope.userInfo"]) {
+            Taro.getUserInfo().then(userInfoRes => {
+              this.handleLogin(userInfoRes.iv, userInfoRes.encryptedData);
+            });
+          }
+        })
+        .catch(() => {
+          Taro.showToast({
+            title: "登陆失败，请重试",
+            icon: "fail"
+          });
+        });
+    }
+  };
+  handleLogin = (iv, encryptedData) => {
+    Taro.login().then(res => {
+      if (res.code) {
+        Taro.request({
+          url: "https://pgrk.wizzstudio.com/login",
+          method: "POST",
+          data: {
+            code: res.code,
+            iv,
+            encryptedData
+          }
+        }).then(loginRes => {
+          console.log("loginRes", loginRes);
+          if (loginRes.data.code === 0) {
+            const data = loginRes.data.data;
+            Taro.setStorageSync("login", {
+              userId: data.userId,
+              openId: data.openId,
+              session_key: data.session_key
+            });
+            Taro.showToast({
+              title: "测试登陆成功"
+            });
+            // addUserRelation(this, data.userId);
+            // Taro.navigateBack();
+          }
+        });
+      }
+    });
+  };
   render() {
     const { isLogin, basicInfo, noPlan, score } = this.state;
     return (
       <View className="top-bg">
         {/* {allInfo.isViewedJoinMyApplet && <Notice />} */}
+
         <View>
           {isLogin ? (
             <View className="intro">
@@ -150,7 +211,9 @@ export default class MyInfo extends Component {
               </View>
 
               <AtDivider />
-              <View className="per-action">
+              <View
+                className="per-action"
+                onClick={this.toPage.bind(this, "attention")}>
                 <AtIcon value="tag" size="30" color="#4f5fc5" />
                 <View className="name">关注公众号</View>
               </View>
@@ -158,7 +221,12 @@ export default class MyInfo extends Component {
             </View>
           </View>
         </View>
-
+        <AtButton
+          openType="getUserInfo"
+          onGetUserInfo={this.bindGetUserInfo}
+          type="primary">
+          授权登陆
+        </AtButton>
         <View className="footer">
           <View className="about">关于我们</View>
           <Text decode="{{true}}" space="{{true}}">

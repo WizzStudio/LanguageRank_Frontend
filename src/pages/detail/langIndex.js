@@ -25,21 +25,23 @@ export default class LangIndex extends Component {
       rankIndex: "",
       isModalOpen: false,
       currentTab: 0,
-      reFreshFlag: 0,
-      langHome: {},
       languageFans: 0,
-      languageSymbol: ""
+      languageSymbol: "",
+      exponent: "",
+      rankNum: 0
     };
   }
   componentDidMount() {
-    const { langName, rankIndex } = this.$router.params;
+    const { langName, rankIndex, rankNum, exponent } = this.$router.params;
     this.getLangTop(langName).then(res => {
       if (res.code === 0) {
         this.setState({
           langName,
           rankIndex,
-          languageFans: res.data.languageFans,
-          languageSymbol: res.data.languageSymbol
+          languageFans: res.data.languageFans || "暂无",
+          languageSymbol: res.data.languageSymbol,
+          rankNum,
+          exponent
         });
       }
     });
@@ -79,7 +81,9 @@ export default class LangIndex extends Component {
       rankIndex,
       langHome,
       languageFans,
-      languageSymbol
+      languageSymbol,
+      rankNum,
+      exponent
     } = this.state;
     const tabList = [{ title: "语言热度详情" }, { title: "评论" }];
     return (
@@ -107,12 +111,12 @@ export default class LangIndex extends Component {
         <View className="intro-card">
           <View className="per-content">
             <View className="tend-name">热度指数</View>
-            <View className="tend-num">{langHome.fixedFinalExponent}</View>
+            <View className="tend-num">{exponent}</View>
           </View>
           <View className="divider" />
           <View className="per-content">
             <View className="tend-name">排名</View>
-            <View className="tend-num">1</View>
+            <View className="tend-num">{rankNum}</View>
           </View>
           <View className="divider" />
           <View className="per-content">
@@ -138,7 +142,7 @@ export default class LangIndex extends Component {
             </button>
           </View>
         </View> */}
-        <AtDivider />
+        {/* <AtDivider /> */}
         <AtTabs
           current={currentTab}
           tabList={tabList}

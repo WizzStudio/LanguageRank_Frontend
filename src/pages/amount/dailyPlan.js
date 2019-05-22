@@ -55,7 +55,7 @@ class DailyPlan extends Component {
     }).then(res => {
       console.log("res", res);
       if (res.tapIndex === 0) {
-        this.copyContent(item.content);
+        this.copyContent(item.link);
       } else if (res.tapIndex === 1) {
         this.collectPlan(item);
       }
@@ -63,7 +63,6 @@ class DailyPlan extends Component {
   };
   collectPlan = item => {
     const { clazzId, className } = this.props;
-    console.log("item", item);
     const data = {
       userId: myUserId,
       clazzId,
@@ -91,9 +90,6 @@ class DailyPlan extends Component {
       .then(() => {
         Taro.showToast({
           title: "复制成功"
-        });
-        this.setState({
-          sheetOpened: false
         });
       })
       .catch(() => {
@@ -133,8 +129,17 @@ class DailyPlan extends Component {
                       <View className="plan-title">
                         第{item.studyPlanDay}天
                       </View>
-                      <View onClick={this.showSheet.bind(this, item)}>
-                        {item.content}
+                      <View
+                        className="content-wrap"
+                        onClick={this.showSheet.bind(this, item)}>
+                        <View className="brief">{item.briefIntroduction}</View>
+                        <View className="content">{item.content}</View>
+                        <View className="codeStr">
+                          提取码：{"item.content"}
+                        </View>
+                        <View className="text-copy">
+                          (点击复制链接，浏览器打开)
+                        </View>
                       </View>
                     </SwiperItem>
                   );

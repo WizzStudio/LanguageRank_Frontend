@@ -6,6 +6,9 @@ import { getLoginInfo } from "../../utils/getlocalInfo";
 import ShareBtn from "../../components/class/shareBtn";
 const myUserId = getLoginInfo().userId;
 export default class MyCollect extends Component {
+  config = {
+    navigationBarTitleText: "我的收藏"
+  };
   constructor() {
     super();
     this.state = {
@@ -40,7 +43,7 @@ export default class MyCollect extends Component {
     return (
       <View className="collect-padding">
         {collectList.map(item => (
-          <View className="collect-wrap" key={item.clazzName}>
+          <View className="collect-wrap" key={item.briefIntroduction}>
             <View className="content-wrap">
               <View className="left">
                 <View className="title">{item.briefIntroduction}</View>

@@ -4,7 +4,6 @@ import "./myAward.scss";
 import { AtDivider, AtButton, AtMessage } from "taro-ui";
 import myApi from "../../service/api";
 import { getLoginInfo } from "../../utils/getlocalInfo";
-import testImg from "../../assets/img/canvasAuth.png";
 const myUserId = getLoginInfo().userId;
 export default class MyAward extends Component {
   config = {
@@ -37,7 +36,7 @@ export default class MyAward extends Component {
     const { myAvailableScore } = this.state;
     if (myAvailableScore < score) {
       Taro.atMessage({
-        message: "兑换成功",
+        message: "积分不够",
         type: "warning"
       });
       return;
@@ -56,24 +55,54 @@ export default class MyAward extends Component {
       }
     });
   };
+  showAward = (title, content) => {
+    Taro.showModal({
+      title: title,
+      content: content,
+      confirmText: "关闭",
+      confirmText: "复制",
+      confirmColor: "#4f5fc5"
+    }).then(res => {
+      if (res.confirm) {
+        this.copyContent(content);
+      }
+    });
+  };
+  copyContent = content => {
+    Taro.setClipboardData({
+      data: content
+    })
+      .then(() => {
+        Taro.showToast({
+          title: "复制成功"
+        });
+      })
+      .catch(() => {
+        Taro.showToast({
+          title: "复制失败"
+        });
+      });
+  };
   render() {
     const { myTotalScore, myAvailableScore, awardStoreList } = this.state;
     return (
       <View>
         <AtMessage />
-        <View className="my-award" key={index}>
-          <View className="pre-award-title">
-            总积分:{myTotalScore} 剩余积分:{myAvailableScore}
-          </View>
+        <View className="pre-award-title">总积分:{myTotalScore}</View>
+        <View className="pre-award-title">剩余积分:{myAvailableScore}</View>
+        <View className="my-award award-wrap" key={index}>
           {awardStoreList.map((item, index) => (
             <View key={item.awardId} className="per-award">
               <View className="award-content">
-                <Image src={testImg} className="award-img" />
+                <Image src={item.image} className="award-img" />
               </View>
               <View className="award-name">所需积分:{item.score}</View>
               {item.isExchanged ? (
-                <AtButton type="primary" size="small" disabled>
-                  已兑换
+                <AtButton
+                  type="secondary"
+                  size="small"
+                  onClick={this.showAward.bind(this, item.content, item.link)}>
+                  查看
                 </AtButton>
               ) : (
                 <AtButton
@@ -86,7 +115,7 @@ export default class MyAward extends Component {
                   )}>
                   兑换
                 </AtButton>
-              )}{" "}
+              )}
             </View>
           ))}
         </View>

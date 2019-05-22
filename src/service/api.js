@@ -4,7 +4,7 @@ const HOST = "https://pgrk.wizzstudio.com";
 
 export default async function myApi(url, method = "GET", data = {}) {
   Taro.showLoading({
-    titleL: "拼命加载中..."
+    title: "loading..."
   });
   try {
     const response = await Taro.request({

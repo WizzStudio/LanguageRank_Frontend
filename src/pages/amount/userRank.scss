@@ -58,6 +58,19 @@
       }
     }
   }
+  .plan-wrap {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .plan-img {
+      width: 200px;
+      height: 200px;
+    }
+    .plan-text {
+      font-weight: 500;
+    }
+  }
+
   .member-list {
     margin: 10px auto;
     .member-item {
