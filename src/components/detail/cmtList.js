@@ -27,25 +27,30 @@ class CmtList extends Component {
     this.state = {
       inputValue: "",
       btnMode: 1,
-      pagination: {
-        pageSize: 10,
-        current: 1
-      },
-      commentList: []
+      cmtTotal: 0,
+      commentList: [],
+      currPage: 0
     };
   }
   componentDidMount() {
     this.getCmtList(1, 1);
   }
   componentDidUpdate(prevProps) {
-    if (this.props.typeCmt !== prevProps.typeCmt) {
+    if (
+      this.props.typeCmt !== prevProps.typeCmt ||
+      this.props.clazzId !== prevProps.clazzId
+    ) {
+      console.log("属性改变了");
       this.getCmtList(1, 1);
     }
   }
   getCmtList = (pageIndex = 1, commentDisplayMode = 1) => {
-    console.log("执行了getCmt");
     const { typeCmt } = this.props || "";
+    const { commentList, cmtTotal } = this.state;
     let data = {};
+    if (commentList.length + 1 >= cmtTotal) {
+      return;
+    }
     if (typeCmt === "class") {
       data = {
         clazzId: this.props.clazzId,
@@ -62,23 +67,31 @@ class CmtList extends Component {
     switch (typeCmt) {
       case "auth":
         this.props.getAuthCmt(data).then(res => {
-          console.log("执行了getCmt111");
           this.setState({
-            commentList: this.props.cmtInfo.authCmt.commentList
+            commentList: commentList.concat(
+              this.props.cmtInfo.authCmt.commentList
+            ),
+            cmtTotal: this.props.cmtInfo.authCmt.total
           });
         });
         return;
       case "demand":
         this.props.getDemandCmt(data).then(res => {
           this.setState({
-            commentList: this.props.cmtInfo.demandCmt.commentList
+            commentList: commentList.concat(
+              this.props.cmtInfo.demandCmt.commentList
+            ),
+            cmtTotal: this.props.cmtInfo.demandCmt.total
           });
         });
         return;
       case "class":
         this.props.getClassCmt(data).then(res => {
           this.setState({
-            commentList: this.props.cmtInfo.classCmt.commentList
+            commentList: commentList.concat(
+              this.props.cmtInfo.classCmt.commentList
+            ),
+            cmtTotal: this.props.cmtInfo.classCmt.total
           });
         });
         return;
@@ -108,8 +121,7 @@ class CmtList extends Component {
     }
   };
   render() {
-    const { commentList } = this.state;
-    const { btnMode } = this.state;
+    const { commentList, btnMode, cmtTotal } = this.state;
     return (
       <View className="cmt-list">
         <View className="cmt-button">
@@ -137,8 +149,8 @@ class CmtList extends Component {
         ))}
         <AtPagination
           icon
-          total={50}
-          pageSize={10}
+          total={cmtTotal}
+          pageSize={20}
           // current={1}
           onPageChange={this.changeCmtPage}
         />

@@ -1,0 +1,16 @@
+.share-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.share-img {
+  width: 56px;
+  height: 56px;
+}
+button::after {
+  border: none;
+}
+button {
+  background-color: #fff;
+  padding: 0;
+}

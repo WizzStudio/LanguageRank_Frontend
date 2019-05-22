@@ -7,6 +7,7 @@ import Notice from "../../components/rank/notice";
 import "./index.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
+import checkToLogin from "../../utils/checkToLogin";
 import { addUserRelation } from "../../utils/addUserRelation";
 @connect(
   ({ userInfo }) => ({
@@ -31,23 +32,19 @@ class Index extends Component {
     };
   }
   componentWillMount() {
-    if (!Taro.getStorageSync("basicInfo")) {
-      Taro.navigateTo({
-        url: "/pages/login/login"
-      });
-    }
+    checkToLogin();
   }
   componentDidMount() {
-    if (Taro.getStorageSync("basicInfo")) {
-      Taro.getSetting().then(res => {
-        if (res.authSetting["scope.userInfo"]) {
-          Taro.getUserInfo().then(userInfoRes => {
-            // console.log("userInfoRes", userInfoRes);
-            this.handleLogin(userInfoRes.iv, userInfoRes.encryptedData);
-          });
-        }
-      });
-    }
+    // if (Taro.getStorageSync("basicInfo")) {
+    //   Taro.getSetting().then(res => {
+    //     if (res.authSetting["scope.userInfo"]) {
+    //       Taro.getUserInfo().then(userInfoRes => {
+    //         // console.log("userInfoRes", userInfoRes);
+    //         this.handleLogin(userInfoRes.iv, userInfoRes.encryptedData);
+    //       });
+    //     }
+    //   });
+    // }
   }
   handleClick(value) {
     this.setState({

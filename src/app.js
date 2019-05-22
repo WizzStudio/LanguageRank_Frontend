@@ -28,6 +28,7 @@ class App extends Component {
       "pages/amount/myAward",
       "pages/amount/userRank",
       "pages/amount/memberRank",
+      "pages/amount/myCollect",
       "pages/detail/langIndex",
       "pages/detail/langDetail"
     ],

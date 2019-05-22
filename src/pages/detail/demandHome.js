@@ -1,31 +1,12 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View, Image } from "@tarojs/components";
-import { AtDivider, AtActivityIndicator } from "taro-ui";
+import { View } from "@tarojs/components";
+import { AtDivider } from "taro-ui";
+import myApi from "../../service/api";
 import PieChart from "../../components/echarts/PieChart";
 import BarChart from "../../components/echarts/BarChart";
 import KChart from "../../components/echarts/KChart";
-import { connect } from "@tarojs/redux";
-import {
-  ajaxGetDemandPosi,
-  ajaxGetPosi,
-  ajaxGetCity,
-  ajaxGetSalary
-} from "../../actions/rankList";
 import "./langDetail.scss";
 
-@connect(
-  ({ demandHome }) => ({
-    demandHome
-  }),
-  dispatch => ({
-    getDemandHome(lang) {
-      dispatch(ajaxGetDemandPosi(lang));
-      dispatch(ajaxGetPosi(lang));
-      dispatch(ajaxGetCity(lang));
-      dispatch(ajaxGetSalary(lang));
-    }
-  })
-)
 export default class DemandHome extends Component {
   config = {
     navigationBarTitleText: "雇主需求详情"
@@ -33,107 +14,133 @@ export default class DemandHome extends Component {
   constructor() {
     super();
     this.state = {
-      langName: "",
-      isLoading: {
-        salary: false,
-        demandPosi: false,
-        city: false
-      }
+      posi: []
     };
   }
   componentWillMount() {}
   componentDidMount() {
-    const { demandNameProp } = this.props;
-    this.setState({
-      langName: demandNameProp
-    });
-    console.log("langNameProp", demandNameProp);
-    this.props.getDemandHome(demandNameProp);
-  }
-  componentWillReceiveProps(nextprops) {
-    if (nextprops.demandHome.salary) {
-      const { salary } = nextprops.demandHome;
-      this.setState({
-        isLoading: {
-          salary: false
-        }
-      });
-      //K线图
-      let salaryX = [],
-        salaryY = [];
-      salary.map(item => {
-        salaryX.push(item.companyName);
-        salaryY.push([
-          item.companyOrdSalary - 1,
-          item.companyOrdSalary + 1,
-          item.companyMinSalary,
-          item.companyMaxSalary
-        ]);
-      });
-      const kChartData = {
-        dimensions: {
-          data: salaryX
-        },
-        xAxis: {
-          axisLabel: {
-            interval: 0,
-            rotate: 40
-          }
-        },
-
-        measures: [
-          {
-            data: salaryY
-          }
-        ]
-      };
-      this.kChart.refresh(kChartData);
-    }
-    if (nextprops.demandHome.demandPosi) {
-      const { demandPosi } = nextprops.demandHome;
-      this.setState({
-        isLoading: {
-          demandPosi: false
-        }
-      });
-      //柱状图
-      let demandPosiX = [],
-        demandPosiY = [];
-      demandPosi.map(item => {
-        demandPosiX.push(item.companyName);
-        demandPosiY.push((item.companyPostNumber * 0.001).toFixed(3));
-      });
-      const barChartData = {
-        dimensions: {
-          data: demandPosiX
-        },
-        measures: [
-          {
-            data: demandPosiY
-          }
-        ]
-      };
-      this.barChart.refresh(barChartData);
-    }
-    if (nextprops.demandHome.city) {
-      const { city } = nextprops.demandHome;
-      this.setState({
-        isLoading: {
-          city: false
-        }
-      });
-      //饼状图
-      let cityPie = [];
-      city.map(item => {
-        cityPie.push({
-          value: item.cityPostNumber,
-          name: item.languageCity
+    Promise.all([
+      this.getInitData("posi"),
+      this.getInitData("demandPosi"),
+      this.getInitData("city"),
+      this.getInitData("salary")
+    ]).then(res => {
+      if (res[0].code === 0) {
+        this.setState({
+          posi: res[0].data.languagePostList
         });
-      });
-      const pieChartData = cityPie;
-      this.pieChart.refresh(pieChartData);
-    }
+      }
+      if (res[1].code === 0) {
+        this.initBarChart(res[1].data);
+      }
+      if (res[2].code === 0) {
+        this.initPieChart(res[2].data);
+      }
+      if (res[3].code === 0) {
+        this.initKChart(res[3].data);
+      }
+    });
   }
+  getInitData = async type => {
+    let langName = this.props.demandNameProp;
+    if (langName === "C#") {
+      langName = "C%23";
+    }
+    let url = "";
+    switch (type) {
+      case "demandPosi":
+        url = `/${langName}/companypost`;
+        break;
+      case "posi":
+        url = `/${langName}/post`;
+        break;
+      case "city":
+        url = `/${langName}/languagecity`;
+        break;
+      case "salary":
+        url = `/${langName}/salary`;
+      default:
+        break;
+    }
+    const res = await myApi(url);
+    return res;
+  };
+  initKChart = salary => {
+    this.setState({
+      isLoading: {
+        salary: false
+      }
+    });
+    let salaryX = [],
+      salaryY = [];
+    salary.map(item => {
+      salaryX.push(item.companyName);
+      salaryY.push([
+        item.companyOrdSalary - 1,
+        item.companyOrdSalary + 1,
+        item.companyMinSalary,
+        item.companyMaxSalary
+      ]);
+    });
+    const kChartData = {
+      dimensions: {
+        data: salaryX
+      },
+      xAxis: {
+        axisLabel: {
+          interval: 0,
+          rotate: 40
+        }
+      },
+
+      measures: [
+        {
+          data: salaryY
+        }
+      ]
+    };
+    this.kChart.refresh(kChartData);
+  };
+  initBarChart = demandPosi => {
+    this.setState({
+      isLoading: {
+        demandPosi: false
+      }
+    });
+    let demandPosiX = [],
+      demandPosiY = [];
+    demandPosi.map(item => {
+      demandPosiX.push(item.companyName);
+      demandPosiY.push((item.companyPostNumber * 0.001).toFixed(3));
+    });
+    const barChartData = {
+      dimensions: {
+        data: demandPosiX
+      },
+      measures: [
+        {
+          data: demandPosiY
+        }
+      ]
+    };
+    this.barChart.refresh(barChartData);
+  };
+  initPieChart = city => {
+    this.setState({
+      isLoading: {
+        city: false
+      }
+    });
+    let cityPie = [];
+    city.map(item => {
+      cityPie.push({
+        value: item.cityPostNumber,
+        name: item.languageCity
+      });
+    });
+    const pieChartData = cityPie;
+    this.pieChart.refresh(pieChartData);
+  };
   //选中dom
   refKChart = node => (this.kChart = node);
   refBarChart = node => (this.barChart = node);
@@ -145,11 +152,11 @@ export default class DemandHome extends Component {
     };
   };
   render() {
-    const { langName, isLoading } = this.state;
-    const { posi, logo } = this.props.demandHome ? this.props.demandHome : "";
+    const { posi } = this.state || [];
     return (
       <View>
         <View className="wrap-content">
+          <View className="blank" />
           <View className="wrap-title">热门岗位</View>
           <View>
             {posi.map((item, index) => (
@@ -162,44 +169,25 @@ export default class DemandHome extends Component {
             ))}
           </View>
         </View>
-
         <AtDivider />
         <View className="wrap-content">
           <View className="wrap-title">公司薪资排行</View>
           <View className="line-chart">
-            {isLoading.salary ? (
-              <View className="loading-wrap">
-                <AtActivityIndicator content="加载中..." size={60} />
-              </View>
-            ) : (
-              <KChart ref={this.refKChart} />
-            )}
+            <KChart ref={this.refKChart} />
           </View>
         </View>
         <AtDivider />
         <View className="wrap-content">
           <View className="wrap-title">公司需求量排行</View>
           <View className="line-chart">
-            {isLoading.salary ? (
-              <View className="loading-wrap">
-                <AtActivityIndicator content="加载中..." size={60} />
-              </View>
-            ) : (
-              <BarChart ref={this.refBarChart} />
-            )}
+            <BarChart ref={this.refBarChart} />
           </View>
         </View>
         <AtDivider />
         <View className="wrap-content">
           <View className="wrap-title">城市需求分析</View>
           <View className="line-chart">
-            {isLoading.salary ? (
-              <View className="loading-wrap">
-                <AtActivityIndicator content="加载中..." size={60} />
-              </View>
-            ) : (
-              <PieChart ref={this.refPieChart} />
-            )}
+            <PieChart ref={this.refPieChart} />
           </View>
         </View>
       </View>

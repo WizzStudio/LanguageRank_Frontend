@@ -1,0 +1,28 @@
+.collect-padding {
+  padding: 20px;
+  .collect-wrap {
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 7px 14px rgba(0, 0, 0, 0.25), 0 4px 4px rgba(0, 0, 0, 0.22);
+    .content-wrap {
+      display: flex;
+      justify-content: space-between;
+      .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        .title {
+          font-weight: 600;
+        }
+      }
+    }
+    .come-from {
+      display: flex;
+      justify-content: flex-end;
+      margin: 15px auto;
+      font-weight: 300;
+      font-size: 30px;
+    }
+  }
+}

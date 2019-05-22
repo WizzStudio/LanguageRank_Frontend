@@ -1,6 +1,5 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtAvatar } from "taro-ui";
 import "./comment.scss";
 
 export default class CommentItem extends Component {
@@ -13,12 +12,12 @@ export default class CommentItem extends Component {
       : "";
     return (
       <View className="comment-wrap">
-        <View className="avatar">
-          <AtAvatar image="https://jdc.jd.com/img/200" />
+        <View className="avatar-wrap">
+          <Image className="avatar" src="https://jdc.jd.com/img/200" />
         </View>
         <View className="content-wrap">
           <View className="title">
-            <View className="nickname">{"nickName"}</View>
+            <View className="nickname">{nickName}</View>
             <View className="floor">#{floor}</View>
           </View>
           <View className="content">{comment}</View>

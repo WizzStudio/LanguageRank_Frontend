@@ -5,20 +5,8 @@ import { TaroCanvasDrawer } from "taro-plugin-canvas"; // npm 引入方式
 
 import canvasAuth from "../../assets/img/canvasAuth.png";
 import load from "../../assets/img/load.png";
-import { connect } from "@tarojs/redux";
-import { ajaxGetAuth } from "../../actions/rankList";
 import "./canvasPost.scss";
-@connect(
-  ({ rankList }) => ({
-    rankList
-  }),
-  dispatch => ({
-    ajaxGetAuth() {
-      dispatch(ajaxGetAuth());
-    }
-  })
-)
-export default class ShareCanvasAuth extends Component {
+class ShareCanvasRank extends Component {
   constructor(props) {
     super(props);
 
@@ -81,8 +69,6 @@ export default class ShareCanvasAuth extends Component {
     };
   }
   componentWillMount() {
-    console.log("改变之前");
-
     const designWidth = 375;
     const designHeight = 603; // 这是在顶部位置定义，底部无tabbar情况下的设计稿高度
 
@@ -105,14 +91,15 @@ export default class ShareCanvasAuth extends Component {
     }
   }
   componentDidMount() {
-    this.props.ajaxGetAuth();
+    console.log("this.props", this.props);
     this.canvasDrawFunc();
   }
 
   // 调用绘画 => canvasStatus 置为true、同时设置config
   canvasDrawFunc = (config = this.state.rssConfig) => {
-    const { authRank } = this.props.rankList;
-    authRank.map((rank, index) => {
+    // const { authRank } = this.props.rankList;
+    const { rankListData } = this.props;
+    rankListData.map((rank, index) => {
       if (index <= 4) {
         config.texts.push({
           x: 230,
@@ -128,10 +115,14 @@ export default class ShareCanvasAuth extends Component {
           width: 580,
           zIndex: 999
         });
+        let showNum = rank.fixedFinalExponent
+          ? rank.fixedFinalExponent
+          : rank.employeeFinalExponent;
+
         config.texts.push({
           x: 510,
           y: 330 + index * 100,
-          text: rank.fixedFinalExponent,
+          text: showNum,
           fontSize: 40,
           color: "#fff",
           opacity: 1,
@@ -173,12 +164,6 @@ export default class ShareCanvasAuth extends Component {
       Taro.showToast({ icon: "none", title: errMsg || "出现错误" });
       console.log(errMsg);
     }
-    //预览;
-    // Taro.previewImage({
-    //   current: tempFilePath,
-    //   urls: [tempFilePath]
-    // });
-
     Taro.hideLoading();
   };
 
@@ -217,7 +202,6 @@ export default class ShareCanvasAuth extends Component {
   };
   render() {
     const { styleRes } = this.state;
-    // debugger;
     return (
       <View style={styleRes}>
         {/* {this.state.isShow ? (
@@ -271,3 +255,7 @@ export default class ShareCanvasAuth extends Component {
     );
   }
 }
+ShareCanvasRank.defaultProps = {
+  rankListData: []
+};
+export default ShareCanvasRank;

@@ -1,9 +1,14 @@
 .comment-wrap {
   display: flex;
   align-items: flex-start;
-  padding: 20px;
-  .avatar {
-    padding: 20px;
+  padding: 20px 0;
+  .avatar-wrap {
+    padding: 10px 20px 20px 0;
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
   }
   .content-wrap {
     display: flex;
@@ -16,13 +21,18 @@
     .title {
       display: flex;
       justify-content: space-between;
+      .nickname {
+        font-weight: 600;
+      }
       .floor {
         font-weight: 100;
+        font-size: 30px;
       }
     }
     .content {
       margin: 20px 5px;
       white-space: pre-line;
+      font-size: 40px;
     }
     .time {
       font-size: 30px;

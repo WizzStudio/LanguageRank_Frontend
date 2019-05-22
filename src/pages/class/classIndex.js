@@ -24,19 +24,12 @@ export default class ClassIndex extends Component {
   }
   componentDidMount() {
     const resInfo = getLoginInfo();
-    if (resInfo) {
-      Taro.showLoading({
-        title: "正在加载中...."
-      });
-      const data = {
-        userId: resInfo.userId
-      };
-      this.props.ajaxGetUserClass(data).then(res => {
-        console.log("res", res);
-        Taro.hideLoading();
-      });
-    } else {
-    }
+    const data = {
+      userId: resInfo.userId
+    };
+    this.props.ajaxGetUserClass(data).then(res => {
+      console.log("res", res);
+    });
   }
   toClassList = () => {
     Taro.navigateTo({
@@ -50,11 +43,6 @@ export default class ClassIndex extends Component {
   };
   render() {
     const { userClass } = this.props.classInfo || [];
-    // userClass.push({
-    //   clazzName: "Java入门班",
-    //   monitor: 2,
-    //   clazzImage: "https://xxx.jpg"
-    // });
     return (
       <View>
         <View className="blank" />
@@ -67,22 +55,25 @@ export default class ClassIndex extends Component {
                 onClick={this.toClassHome.bind(this, item.clazzId)}>
                 <View className="award-content">
                   <Image src={testImg} className="award-img" />
+                  <View className="monitor-name">
+                    班长：{item.monitorNickName}
+                  </View>
                 </View>
+
                 <View className="award-name">{item.clazzName}</View>
               </View>
             ))}
-          </View>
-        </View>
-        <View className="award-wrap">
-          <View className="per-award">
-            <View
-              className="add-award-content award-img"
-              onClick={this.toClassList}>
-              <View>+</View>
-              <View>加入项目</View>
+            <View className="per-award">
+              <View
+                className="add-award-content award-img"
+                onClick={this.toClassList}>
+                <View className="add">+</View>
+                <View>加入班级</View>
+              </View>
             </View>
           </View>
         </View>
+
         <View className="blank" />
       </View>
     );

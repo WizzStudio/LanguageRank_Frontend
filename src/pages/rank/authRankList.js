@@ -3,21 +3,8 @@ import { View, CoverView } from "@tarojs/components";
 import { AtFloatLayout, AtButton, AtIcon } from "taro-ui";
 import "./authRankList.scss";
 import AuthItem from "../../components/rank/authItem";
-import cmt from "../../assets/icon/cmt.png";
-import ShareCanvasAuth from "../../components/canvasPost/shareCanvasAuth";
-import { connect } from "@tarojs/redux";
-import { ajaxGetAuth } from "../../actions/rankList";
-@connect(
-  ({ rankList }) => ({
-    rankList
-  }),
-  dispatch => ({
-    ajaxGetAuth() {
-      //加个return 就可以then了！！！！！！！！！！！！！！
-      return dispatch(ajaxGetAuth());
-    }
-  })
-)
+import ShareCanvasRank from "../../components/canvasPost/shareCanvasRank";
+import myApi from "../../service/api";
 class AuthRankList extends Component {
   constructor() {
     super();
@@ -25,16 +12,16 @@ class AuthRankList extends Component {
       pageLoaded: false,
       isOpened: false,
       isShared: false,
-      responsive: 1
+      responsive: 1,
+      rankList: []
     };
   }
-  static defaultProps = {
-    rankList: {
-      authRank: []
-    }
-  };
   componentDidMount() {
-    this.props.ajaxGetAuth();
+    myApi("/languagerank").then(res => {
+      this.setState({
+        rankList: res.data
+      });
+    });
   }
   handleNavigate(name) {
     Taro.navigateTo({
@@ -66,8 +53,7 @@ class AuthRankList extends Component {
   };
   componentDidShow() {}
   render() {
-    const rankList = this.props.rankList ? this.props.rankList.authRank : [];
-    const { isShared } = this.state;
+    const { rankList } = this.state || [];
     return (
       <View>
         {rankList.map((rank, index) => {
@@ -76,7 +62,6 @@ class AuthRankList extends Component {
               key={index}
               onClick={this.handleNavigate.bind(this, rank.languageName)}
               className="item-wrap">
-              {/* <View className="item-left"> */}
               <AuthItem
                 langImg={rank.languageSymbol}
                 langName={rank.languageName}
@@ -84,10 +69,6 @@ class AuthRankList extends Component {
                 tend={rank.languageTend}
                 index={index}
               />
-              {/* </View> */}
-              {/* <View className="item-right">
-                <Image src={cmt} className="cmt-logo" />
-              </View> */}
             </View>
           );
         })}
@@ -105,7 +86,7 @@ class AuthRankList extends Component {
               />
             </View>
             <View className="share-wrap">
-              <ShareCanvasAuth rankContent="213" />
+              <ShareCanvasRank rankListData={rankList} />
             </View>
           </View>
         ) : (

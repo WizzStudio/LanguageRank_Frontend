@@ -11,10 +11,6 @@
         height: 140px;
         border-radius: 50%;
       }
-      // .score {
-      //   // align-self: flex-end;
-      //   justify-self: flex-end;
-      // }
     }
     .right-score {
       display: flex;
@@ -50,8 +46,8 @@
     }
     .btn-wrap {
       display: flex;
-      //   justify-content: space-between;
-      justify-content: center;
+      justify-content: space-around;
+      // justify-content: center;
       margin: 30px auto;
 
       .envy {
@@ -63,12 +59,16 @@
     }
   }
   .member-list {
-    margin: 20px auto;
+    margin: 10px auto;
     .member-item {
       display: flex;
       align-items: center;
       height: 130px;
-
+      padding: 15px;
+      .title {
+        font-size: 26px;
+        color: #4f5fc5;
+      }
       .rank {
         flex: 1;
       }
@@ -87,6 +87,14 @@
       .total {
         flex: 2;
       }
+      .fist-img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .selected-item {
+      background-color: #c7c7c7;
+      border-radius: 10px;
     }
   }
 }

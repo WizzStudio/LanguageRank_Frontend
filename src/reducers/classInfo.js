@@ -16,9 +16,14 @@ const INIT_STATE = [];
 export default function classInfo(state = INIT_STATE, action) {
   switch (action.type) {
     case GET_USER_CLASS:
+      let clazzIdArr = [];
+      action.payload.forEach(item => {
+        clazzIdArr.push(item.clazzId);
+      });
       return {
         ...state,
-        userClass: [...action.payload]
+        userClass: [...action.payload],
+        userClassId: clazzIdArr
       };
     case GET_ALL_CLASS:
       return {

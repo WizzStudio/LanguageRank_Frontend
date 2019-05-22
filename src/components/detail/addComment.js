@@ -13,8 +13,6 @@ class AddComment extends Component {
       inputValue: ""
     };
   }
-  componentDidMount() {}
-  componentDidUpdate(prevprops) {}
   handleInputChange = val => {
     this.setState({
       inputValue: val
@@ -24,7 +22,6 @@ class AddComment extends Component {
   updateCmt = () => {
     const comment = this.state.inputValue;
     const { type, clazzId, langName } = this.props;
-    console.log("inputValue", this.state);
     let data = {},
       url = "";
     switch (type) {
@@ -35,17 +32,6 @@ class AddComment extends Component {
           userId
         };
         url = "/updateclazzcomment";
-        myApi(url, "POST", data).then(res => {
-          if (res.code === 0) {
-            this.setState({
-              inputValue: ""
-            });
-            Taro.atMessage({
-              message: "评论成功",
-              type: "success"
-            });
-          }
-        });
         break;
       case "auth":
         data = {
@@ -54,19 +40,6 @@ class AddComment extends Component {
           userId
         };
         url = "/updatefixedrankcomment";
-        myApi(url, "POST", data).then(res => {
-          if (res.code === 0) {
-            this.setState({
-              inputValue: ""
-            });
-            Taro.atMessage({
-              message: "评论成功",
-              type: "success"
-            });
-            console.log("this.props", this.props);
-            this.props.onRefresh();
-          }
-        });
         break;
       case "demand":
         data = {
@@ -75,23 +48,23 @@ class AddComment extends Component {
           userId
         };
         url = "/updateemployeerankcomment";
-        myApi(url, "POST", data).then(res => {
-          if (res.code === 0) {
-            this.setState({
-              inputValue: ""
-            });
-            Taro.atMessage({
-              message: "评论成功",
-              type: "success"
-            });
-          }
-        });
       default:
         break;
     }
+    myApi(url, "POST", data).then(res => {
+      if (res.code === 0) {
+        this.setState({
+          inputValue: ""
+        });
+        Taro.atMessage({
+          message: "评论成功",
+          type: "success"
+        });
+        this.props.onRefresh();
+      }
+    });
   };
   render() {
-    this.props.onRefresh();
     return (
       <View>
         <AtMessage />
@@ -117,8 +90,6 @@ AddComment.defaultProps = {
   type: "",
   langName: "",
   clazzId: "",
-  onRefresh: () => {
-    console.log("还在初始化");
-  }
+  onRefresh: () => {}
 };
 export default AddComment;

@@ -4,7 +4,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 20px;
   padding: 18px auto;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #dddddd;
@@ -46,17 +45,5 @@
       width: 40px;
       height: 40px;
     }
-  }
-}
-
-.oddbg {
-  background-color: #e6e6fa;
-}
-.demandItem {
-  height: 90px;
-  margin: 50px 40px;
-  .langImg {
-    width: 50px;
-    height: 50px;
   }
 }

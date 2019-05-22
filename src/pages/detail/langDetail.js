@@ -2,24 +2,7 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
 import { AtDivider, AtRate, AtIcon } from "taro-ui";
 import "./langDetail.scss";
-import AddPlan from "../../components/rank/addPlan";
-import { connect } from "@tarojs/redux";
-import { ajaxGetLangMore } from "../../actions/rankList";
-import { ajaxGetUserAllInfo } from "../../actions/useInfo";
-@connect(
-  ({ rankList, userInfo }) => ({
-    rankList,
-    userInfo
-  }),
-  dispatch => ({
-    ajaxGetLangMore(langName) {
-      dispatch(ajaxGetLangMore(langName));
-    },
-    ajaxGetUserAllInfo(data) {
-      dispatch(ajaxGetUserAllInfo(data));
-    }
-  })
-)
+import myApi from "../../service/api";
 export default class LangDetail extends Component {
   config = {
     navigationBarTitleText: "语言介绍"
@@ -27,26 +10,44 @@ export default class LangDetail extends Component {
   constructor() {
     super();
     this.state = {
-      langName: ""
+      langName: "",
+      langMore: {
+        language: {},
+        languageUse: {},
+        languageAdvantage: [],
+        languageDisadvantage: [],
+        languageApplicationFields: {},
+        companyList: []
+      }
     };
   }
-  componentWillMount() {
-    const { langName } = this.$router.params;
-    this.setState({
-      langName
-    });
-    this.props.ajaxGetLangMore(langName);
+  componentWillMount() {}
+  componentDidMount() {
+    let { langName } = this.$router.params;
+    this.getLangDetail(langName);
   }
-  componentDidMount() {}
-  onShareAppMessage = res => {
+  getLangDetail = langName => {
+    if (langName === "C#") {
+      langName = "C%23";
+    }
+    let url = `/languagerank/${langName}/more`;
+    myApi(url).then(res => {
+      if (res.code === 0) {
+        this.setState({
+          langName,
+          langMore: res.data
+        });
+      }
+    });
+  };
+  onShareAppMessage = () => {
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
       path: "/pages/index/index"
     };
   };
   render() {
-    const { langName } = this.state;
-    const { langMore } = this.props.rankList || {};
+    const { langMore, langName } = this.state;
     return (
       <View>
         {langMore ? (
@@ -151,7 +152,6 @@ export default class LangDetail extends Component {
               </View>
             </View>
             <View className="blank"> </View>
-            <AddPlan langName={langName} />
           </View>
         ) : (
           ""

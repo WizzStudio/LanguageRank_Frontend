@@ -3,30 +3,24 @@ import { View } from "@tarojs/components";
 import { AtButton, AtFloatLayout, AtIcon } from "taro-ui";
 import AuthItem from "../../components/rank/authItem";
 import "./authRankList.scss";
-import ShareCanvasDemand from "../../components/canvasPost/shareCanvasDemand";
+import ShareCanvasRank from "../../components/canvasPost/shareCanvasRank";
+import myApi from "../../service/api";
 
-import { connect } from "@tarojs/redux";
-import { ajaxGetDemand } from "../../actions/rankList";
-@connect(
-  ({ rankList }) => ({
-    rankList
-  }),
-  dispatch => ({
-    ajaxGetDemand() {
-      dispatch(ajaxGetDemand());
-    }
-  })
-)
 export default class DemandRankList extends Component {
   constructor() {
     super();
     this.state = {
       isOpened: false,
-      isShared: false
+      isShared: false,
+      demandRank: []
     };
   }
   componentDidMount() {
-    this.props.ajaxGetDemand();
+    myApi("/employerdemandrank").then(res => {
+      this.setState({
+        demandRank: res.data
+      });
+    });
   }
   handleNavigate(name) {
     Taro.navigateTo({
@@ -57,8 +51,8 @@ export default class DemandRankList extends Component {
   };
   componentDidShow() {}
   render() {
-    const { demandRank } = this.props.rankList ? this.props.rankList : [];
-
+    // const { demandRank } = this.props.rankList ? this.props.rankList : [];
+    const { demandRank } = this.state;
     return (
       <View>
         {demandRank.map((rank, index) => {
@@ -90,7 +84,7 @@ export default class DemandRankList extends Component {
               />
             </View>
             <View className="share-wrap">
-              <ShareCanvasDemand langImg="test" />
+              <ShareCanvasRank rankListData={demandRank} />
             </View>
           </View>
         ) : (

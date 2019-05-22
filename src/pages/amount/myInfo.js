@@ -3,19 +3,11 @@ import { View, Image, Text } from "@tarojs/components";
 import { AtAvatar, AtToast, AtDivider, AtButton, AtIcon } from "taro-ui";
 import "./myInfo.scss";
 import Notice from "../../components/rank/notice";
-import { connect } from "@tarojs/redux";
-import { ajaxGetUserAllInfo } from "../../actions/useInfo";
 import logo from "../../assets/img/logo.png";
-@connect(
-  ({ userInfo }) => ({
-    userInfo
-  }),
-  dispatch => ({
-    ajaxGetUserAllInfo(data) {
-      return dispatch(ajaxGetUserAllInfo(data));
-    }
-  })
-)
+import { getLoginInfo } from "../../utils/getlocalInfo";
+import checkToLogin from "../../utils/checkToLogin";
+const myUserId = getLoginInfo().userId;
+import myApi from "../../service/api";
 export default class MyInfo extends Component {
   config = {
     navigationBarTitleText: "HelloWorld Rank"
@@ -29,67 +21,57 @@ export default class MyInfo extends Component {
         nickName: ""
       },
       noPlan: false,
-      allInfo: {}
+      score: 0
     };
   }
-  static defaultProps = {
-    userInfo: {
-      allInfo: {
-        studyPlanDay: 0
-      }
-    }
-  };
-
+  componentWillMount() {
+    checkToLogin();
+  }
   componentDidMount() {
     this.checkLogin();
+    this.ajaxGetIngo();
   }
+  ajaxGetIngo = async () => {
+    const data = {
+      userId: myUserId
+    };
+    const res = await myApi("/userinfo", "POST", data);
+    if (res.code === 0) {
+      this.setState({
+        score: res.data.totalScore
+      });
+    }
+    return res;
+  };
   checkLogin = () => {
     if (Taro.getStorageSync("login")) {
       if (Taro.getStorageSync("basicInfo")) {
-        const loginInfo = Taro.getStorageSync("login");
-        this.props.ajaxGetUserAllInfo(loginInfo.userId).then(res => {
-          if (res.code === 0) {
-            this.setState({
-              allInfo: nextprops.userInfo.allInfo
-            });
-          }
-        });
         const basicInfo = Taro.getStorageSync("basicInfo");
         this.setState({
           isLogin: true,
           basicInfo: basicInfo
         });
-      } else {
       }
     } else {
     }
   };
   toPage = type => {
-    const { allInfo, isLogin } = this.state;
-    // if (!isLogin) {
-    //   Taro.showToast({
-    //     title: "请先进行登陆哦~",
-    //     icon: "none"
-    //   });
-    //   return;
-    // }
-    // if (!allInfo.myLanguage) {
-    //   Taro.showToast({
-    //     title: "请先去语言主页加入学习计划哦~",
-    //     icon: "none"
-    //   });
-    //   return;
-    // }
     switch (type) {
       case "myAward":
         Taro.navigateTo({
-          url: "/pages/amount/myAward?userId=111"
+          url: "/pages/amount/myAward"
         });
         break;
       case "memberRank":
         Taro.navigateTo({
           url: "/pages/amount/memberRank"
         });
+        break;
+      case "myCollect":
+        Taro.navigateTo({
+          url: "/pages/amount/myCollect"
+        });
+        break;
       default:
         break;
     }
@@ -101,12 +83,10 @@ export default class MyInfo extends Component {
     });
   };
   render() {
-    const { isLogin, basicInfo, noPlan } = this.state;
-    // const { allInfo } = this.props.userInfo;
-    const { allInfo } = this.state;
+    const { isLogin, basicInfo, noPlan, score } = this.state;
     return (
       <View className="top-bg">
-        {allInfo.isViewedJoinMyApplet && <Notice />}
+        {/* {allInfo.isViewedJoinMyApplet && <Notice />} */}
         <View>
           {isLogin ? (
             <View className="intro">
@@ -115,7 +95,7 @@ export default class MyInfo extends Component {
               </View>
               <View className="intro-right">
                 <View className="my-name center">{basicInfo.nickName}</View>
-                <View className="my-score">积分：555</View>
+                <View className="my-score">积分：{score}</View>
               </View>
             </View>
           ) : (
@@ -143,7 +123,9 @@ export default class MyInfo extends Component {
               duration={500}
             />
             <View className="plan-action">
-              <View className="per-action">
+              <View
+                className="per-action"
+                onClick={this.toPage.bind(this, "myCollect")}>
                 <AtIcon value="heart" size="30" color="#4f5fc5" />
                 <View className="name">我的收藏</View>
               </View>

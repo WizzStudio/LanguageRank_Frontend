@@ -1,33 +1,19 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
 import {
-  AtRate,
   AtBadge,
   AtTabs,
   AtTabsPane,
-  AtIcon,
   AtDivider,
-  AtInput,
   AtButton,
   AtMessage
 } from "taro-ui";
 import "./langDetail.scss";
-import { connect } from "@tarojs/redux";
-import { ajaxGetLangHome } from "../../actions/rankList";
+import myApi from "../../service/api";
 import LangHome from "./langHome";
 import DemandHome from "./demandHome";
 import CmtList from "../../components/detail/cmtList";
 import AddComment from "../../components/detail/addComment";
-@connect(
-  ({ rankList }) => ({
-    rankList
-  }),
-  dispatch => ({
-    ajaxGetLangHome(langName) {
-      return dispatch(ajaxGetLangHome(langName));
-    }
-  })
-)
 export default class LangIndex extends Component {
   config = {
     navigationBarTitleText: "语言热度详情"
@@ -39,18 +25,32 @@ export default class LangIndex extends Component {
       rankIndex: "",
       isModalOpen: false,
       currentTab: 0,
-      inputValue: ""
+      reFreshFlag: 0,
+      langHome: {},
+      languageFans: 0,
+      languageSymbol: ""
     };
   }
   componentDidMount() {
     const { langName, rankIndex } = this.$router.params;
-    this.props.ajaxGetLangHome(langName);
-    this.setState({
-      langName,
-      rankIndex
+    this.getLangTop(langName).then(res => {
+      if (res.code === 0) {
+        this.setState({
+          langName,
+          rankIndex,
+          languageFans: res.data.languageFans,
+          languageSymbol: res.data.languageSymbol
+        });
+      }
     });
-    console.log("this.cmtNode", this.cmtNode);
   }
+  getLangTop = async langName => {
+    if (langName === "C#") {
+      langName = "C%23";
+    }
+    const res = await myApi(`/${langName}/message`);
+    return res;
+  };
 
   onShareAppMessage = res => {
     return {
@@ -63,40 +63,9 @@ export default class LangIndex extends Component {
       currentTab: value
     });
   };
-  handleInputChange = val => {
-    this.setState({
-      inputValue: val
-    });
-    return val;
-  };
   toClassList = () => {
     Taro.navigateTo({
       url: "/pages/class/classList"
-    });
-  };
-  updateCmt = () => {
-    const languageName = this.state.langName;
-    const comment = this.state.inputValue;
-    console.log("inputValue", this.state);
-    Taro.request({
-      url: "https://pgrk.wizzstudio.com/updateemployeerankcomment",
-      method: "POST",
-      data: {
-        languageName,
-        comment,
-        userId: 1
-      }
-    }).then(response => {
-      const res = response.data;
-      if (res.code === 0) {
-        Taro.atMessage({
-          message: "评论成功",
-          type: "success"
-        });
-      }
-      this.setState({
-        inputValue: ""
-      });
     });
   };
   refCmt = node => (this.cmtNode = node);
@@ -104,29 +73,32 @@ export default class LangIndex extends Component {
     this.cmtNode.getCmtList();
   };
   render() {
-    const { langName, currentTab, rankIndex } = this.state;
-    const { langHome } = this.props.rankList || {};
+    const {
+      langName,
+      currentTab,
+      rankIndex,
+      langHome,
+      languageFans,
+      languageSymbol
+    } = this.state;
     const tabList = [{ title: "语言热度详情" }, { title: "评论" }];
     return (
       <View className="wrap-content">
         <AtMessage />
         <View className="lang-title">
           <View className="icon">
-            <Image src={langHome.languageSymbol} className="logo" />
+            <Image src={languageSymbol} className="logo" />
           </View>
           <View className="name">
             <View>
               {langName}&nbsp;&nbsp;&nbsp;
               <AtBadge value="HOT" className="badge" />
             </View>
-            <View>
+            {/* <View>
               <AtRate value={langHome.languageDifficultyIndex} />
-            </View>
+            </View> */}
           </View>
           <View className="state">
-            {/* <View>{langHome.joinedNumber}人</View>
-              <View>已加入学习计划</View> */}
-            {/* <AddPlan langName={langName} /> */}
             <AtButton type="primary" size="small" onClick={this.toClassList}>
               我想学
             </AtButton>
@@ -145,7 +117,7 @@ export default class LangIndex extends Component {
           <View className="divider" />
           <View className="per-content">
             <View className="tend-name">粉丝</View>
-            <View className="tend-num">99</View>
+            <View className="tend-num">{languageFans}</View>
           </View>
         </View>
         {/* <View className="wrap-title">好友在用</View>
@@ -172,7 +144,9 @@ export default class LangIndex extends Component {
           tabList={tabList}
           onClick={this.tabClick.bind(this)}>
           <AtTabsPane current={currentTab} index={0}>
-            {rankIndex == "auth" && <LangHome langNameProp={langName} />}
+            {rankIndex == "auth" && (
+              <LangHome langHomeData={langHome} langNameProp={langName} />
+            )}
             {rankIndex == "demand" && <DemandHome demandNameProp={langName} />}
           </AtTabsPane>
           <AtTabsPane current={currentTab} index={1}>
@@ -188,7 +162,7 @@ export default class LangIndex extends Component {
             <AddComment
               type={rankIndex}
               langName={langName}
-              onRresh={this.updateCmt}
+              onRefresh={this.updateCmt}
             />
           </View>
         )}

@@ -3,77 +3,62 @@ import { View, Image } from "@tarojs/components";
 import { AtDivider } from "taro-ui";
 import LineChart from "../../components/echarts/LineChart";
 import "./langDetail.scss";
-import { connect } from "@tarojs/redux";
-import { ajaxGetLangHome } from "../../actions/rankList";
-@connect(
-  ({ rankList }) => ({
-    rankList
-  }),
-  dispatch => ({
-    ajaxGetLangHome(langName) {
-      dispatch(ajaxGetLangHome(langName));
-    }
-  })
-)
-export default class LangHome extends Component {
+import myApi from "../../service/api";
+class LangHome extends Component {
   config = {
     navigationBarTitleText: "语言热度详情"
   };
   constructor() {
     super();
     this.state = {
-      langName: "",
-      isModalOpen: false
+      langHome: {}
     };
   }
-  componentWillMount() {}
   componentDidMount() {
     const { langNameProp } = this.props;
-    console.log("home里面的this.props", this.props);
-    this.props.ajaxGetLangHome(langNameProp);
-    this.setState({
-      langName: langNameProp
-    });
-  }
-
-  navigateToDetail(name) {
-    console.log("name", name);
-    Taro.navigateTo({
-      url: "/pages/detail/langDetail?langName=" + encodeURI(name)
-    });
-  }
-  componentWillReceiveProps(nextprops) {
-    if (nextprops.rankList.langHome) {
-      const { langHome } = nextprops.rankList;
-      let dataX = [],
-        dataY = [];
-      langHome.exponentOfLastSevenDays.map(item => {
-        dataX.push(item.updateTime);
-        dataY.push(item.fixedFinalExponent);
+    this.getLangHome(langNameProp).then(res => {
+      this.initChart(res.data);
+      this.setState({
+        langHome: res.data
       });
-      const chartData = {
-        dimensions: {
-          data: dataX.reverse()
-        },
-        measures: [
-          {
-            data: dataY.reverse()
-          }
-        ]
-      };
-      this.lineChart.refresh(chartData);
-    }
+    });
   }
-  refLineChart = node => (this.lineChart = node);
-  onShareAppMessage = res => {
-    return {
-      title: "进入小程序了解当下最流行、最赚钱的编程语言",
-      path: "/pages/index/index"
-    };
+  getLangHome = async langName => {
+    if (langName === "C#") {
+      langName = "C%23";
+    }
+    const res = await myApi(`/languagerank/${langName}`);
+    return res;
   };
+  navigateToDetail = () => {
+    const { langNameProp } = this.props;
+    Taro.navigateTo({
+      url: "/pages/detail/langDetail?langName=" + encodeURI(langNameProp)
+    });
+  };
+  initChart = langHome => {
+    let dataX = [],
+      dataY = [];
+    langHome.exponentOfLastSevenDays.map(item => {
+      dataX.push(item.updateTime);
+      dataY.push(item.fixedFinalExponent);
+    });
+    const chartData = {
+      dimensions: {
+        data: dataX.reverse()
+      },
+      measures: [
+        {
+          data: dataY.reverse()
+        }
+      ]
+    };
+    this.lineChart.refresh(chartData);
+  };
+  refLineChart = node => (this.lineChart = node);
+
   render() {
-    const { langName } = this.state;
-    const { langHome } = this.props.rankList || {};
+    const { langHome } = this.state;
     return (
       <View className="wrap-content">
         <View className="blank" />
@@ -106,7 +91,7 @@ export default class LangHome extends Component {
           <View
             type="primary"
             className="to-detail"
-            onClick={this.navigateToDetail.bind(this, this.state.langName)}>
+            onClick={this.navigateToDetail}>
             更多信息
           </View>
         </View>
@@ -114,3 +99,7 @@ export default class LangHome extends Component {
     );
   }
 }
+LangHome.defaultProps = {
+  langNameProp: ""
+};
+export default LangHome;

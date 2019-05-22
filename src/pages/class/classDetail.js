@@ -1,5 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
+import myApi from "../../service/api";
 import "./classDetail.scss";
 export default class ClassDetail extends Component {
   config = {
@@ -8,7 +9,7 @@ export default class ClassDetail extends Component {
   constructor() {
     super();
     this.state = {
-      classPlan: []
+      classPlan: {}
     };
   }
   componentDidMount() {
@@ -16,15 +17,12 @@ export default class ClassDetail extends Component {
   }
   getClassPlan() {
     const { clazzId } = this.$router.params;
-    Taro.request({
-      url: "https://pgrk.wizzstudio.com/getclazzstudyplan",
-      method: "POST",
-      data: {
-        clazzId
-      }
-    }).then(response => {
-      const res = response.data;
+    const data = {
+      clazzId
+    };
+    myApi("/getclazzstudyplan", "POST", data).then(res => {
       if (res.code === 0) {
+        console.log("res.data", res.data);
         this.setState({
           classPlan: res.data
         });
@@ -32,11 +30,12 @@ export default class ClassDetail extends Component {
     });
   }
   render() {
-    const { classPlan = [] } = this.state;
+    const { classPlan } = this.state;
     return (
       <View className="classDetail">
-        {/* <View className="top-title">课程详情</View> */}
-        {classPlan.map((item, index) => (
+        <View className="title">课程简介</View>
+        <View className="content">{classPlan.clazzBriefIntroduction}</View>
+        {classPlan.studyPlanBriefIntroductionList.map((item, index) => (
           <View key={item}>
             <View className="title">第{index + 1}天</View>
             <View className="content">{item}</View>

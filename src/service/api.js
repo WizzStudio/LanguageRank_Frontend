@@ -2,7 +2,7 @@ import Taro from "@tarojs/taro";
 // import { HOST } from "./config";
 const HOST = "https://pgrk.wizzstudio.com";
 
-export default async function myApi(url, method = "GET", data) {
+export default async function myApi(url, method = "GET", data = {}) {
   Taro.showLoading({
     titleL: "拼命加载中..."
   });

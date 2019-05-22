@@ -1,10 +1,12 @@
 import Taro, { Component, getStorageSync } from "@tarojs/taro";
 import { View, Swiper, SwiperItem } from "@tarojs/components";
-import { AtCard, AtButton, AtActivityIndicator, AtIcon } from "taro-ui";
+import { AtActivityIndicator, AtMessage } from "taro-ui";
 import "./dailyPlan.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserClassPlan } from "../../actions/classInfo";
 import { getLoginInfo } from "../../utils/getlocalInfo";
+import myApi from "../../service/api";
+const myUserId = getLoginInfo().userId;
 @connect(
   ({ classInfo }) => ({
     classInfo
@@ -15,7 +17,7 @@ import { getLoginInfo } from "../../utils/getlocalInfo";
     }
   })
 )
-export default class DailyPlan extends Component {
+class DailyPlan extends Component {
   constructor() {
     super();
     this.state = {
@@ -28,10 +30,9 @@ export default class DailyPlan extends Component {
     this.getUserPlan();
   }
   getUserPlan = () => {
-    const userId = getLoginInfo().userId;
     const clazzId = this.props.clazzId;
     const data = {
-      userId,
+      userId: myUserId,
       clazzId
     };
     this.props.ajaxGetUserClassPlan(data).then(res => {
@@ -42,23 +43,71 @@ export default class DailyPlan extends Component {
       }
     });
   };
-
   handleSwiper = e => {
     this.setState({
       current: e.detail.current
     });
   };
-  preview = url => {
-    Taro.previewImage({
-      current: url, // 当前显示图片的http链接
-      urls: [url] // 需要预览的图片http链接列表
+  showSheet = item => {
+    Taro.showActionSheet({
+      itemList: ["复制", "收藏"],
+      itemColor: "#4f5fc5"
+    }).then(res => {
+      console.log("res", res);
+      if (res.tapIndex === 0) {
+        this.copyContent(item.content);
+      } else if (res.tapIndex === 1) {
+        this.collectPlan(item);
+      }
     });
+  };
+  collectPlan = item => {
+    const { clazzId, className } = this.props;
+    console.log("item", item);
+    const data = {
+      userId: myUserId,
+      clazzId,
+      studyPlanDay: item.studyPlanDay,
+      clazzName: className
+    };
+    myApi("/collect", "POST", data).then(res => {
+      if (res.code === 0) {
+        Taro.atMessage({
+          message: "收藏成功",
+          type: "success"
+        });
+      } else if (res.code === 9) {
+        Taro.atMessage({
+          message: "你已经收藏过了",
+          type: "warning"
+        });
+      }
+    });
+  };
+  copyContent = content => {
+    Taro.setClipboardData({
+      data: content
+    })
+      .then(() => {
+        Taro.showToast({
+          title: "复制成功"
+        });
+        this.setState({
+          sheetOpened: false
+        });
+      })
+      .catch(() => {
+        Taro.showToast({
+          title: "复制失败"
+        });
+      });
   };
   render() {
     const { current, isLoading } = this.state;
     const { userClassPlan } = this.props.classInfo || [];
     return (
       <View>
+        <AtMessage />
         <View className="main-plan">
           <View className="plan-content">
             {isLoading ? (
@@ -82,49 +131,12 @@ export default class DailyPlan extends Component {
                   return (
                     <SwiperItem key={item.studyPlanDay} index={index}>
                       <View className="plan-title">
-                        第 {item.studyPlanDay} 天
+                        第{item.studyPlanDay}天
                       </View>
-                      {item.content}
+                      <View onClick={this.showSheet.bind(this, item)}>
+                        {item.content}
+                      </View>
                     </SwiperItem>
-                    // <SwiperItem
-                    //   index={index}
-                    //   key={index}
-                    //   // className={`plan-item ${current === index ? active : ""}`}
-                    //   className={[
-                    //     "plan-item",
-                    //     current === index ? "active" : ""
-                    //   ].join(" ")}>
-                    //   <View className="plan-title">
-                    //     {item.number
-                    //       ? this.showPlanDay(item.studyPlanDay) + "(二)"
-                    //       : this.showPlanDay(item.studyPlanDay) + "（一）"}
-                    //   </View>
-
-                    //   {item.show ? (
-                    //     <AtCard
-                    //       className="plan-card"
-                    //       onClick={this.preview.bind(this, item.image)}>
-                    //       {/* <Image className="full-plan" src={item.image} /> */}
-                    //       改的资料
-                    //     </AtCard>
-                    //   ) : (
-                    //     <AtCard className=" plan-card ">
-                    //       <View className=" cover">
-                    //         <View className="no-plan-note">点击下方按钮</View>
-                    //         <View className="no-plan-note">
-                    //           可领取第二份资料~
-                    //         </View>
-                    //         <View className="no-plan-note">
-                    //           <AtIcon
-                    //             value="arrow-down"
-                    //             size="49"
-                    //             color="#fff"
-                    //           />
-                    //         </View>
-                    //       </View>
-                    //     </AtCard>
-                    //   )}
-                    // </SwiperItem>
                   );
                 })}
               </Swiper>
@@ -135,3 +147,8 @@ export default class DailyPlan extends Component {
     );
   }
 }
+DailyPlan.defaultProps = {
+  className: "",
+  clazzId: 0
+};
+export default DailyPlan;

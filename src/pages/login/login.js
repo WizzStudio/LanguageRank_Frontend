@@ -3,6 +3,7 @@ import { View } from "@tarojs/components";
 import { AtButton } from "taro-ui";
 import "./login.scss";
 import { addUserRelation } from "../../utils/addUserRelation";
+import loginImg from "../../assets/img/login.png";
 export default class Login extends Component {
   bindGetUserInfo = e => {
     if (e.detail.userInfo) {
@@ -14,7 +15,6 @@ export default class Login extends Component {
         .then(res => {
           if (res.authSetting["scope.userInfo"]) {
             Taro.getUserInfo().then(userInfoRes => {
-              // console.log("userInfoRes", userInfoRes);
               this.handleLogin(userInfoRes.iv, userInfoRes.encryptedData);
             });
           }
@@ -56,13 +56,14 @@ export default class Login extends Component {
   };
   render() {
     return (
-      <View>
+      <View className="login-wrap">
+        {/* <Image className="login-img" src={loginImg} /> */}
         <View className="btn-wrap">
           <AtButton
             openType="getUserInfo"
             onGetUserInfo={this.bindGetUserInfo}
             type="primary">
-            授权信息
+            授权登陆
           </AtButton>
         </View>
       </View>
