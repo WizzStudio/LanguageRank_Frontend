@@ -32,12 +32,19 @@
     .content {
       margin: 20px 5px;
       white-space: pre-line;
-      font-size: 40px;
+      font-size: 30px;
     }
     .time {
       font-size: 30px;
       font-weight: 100;
     }
+  }
+  .no-cmt {
+    margin: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #4f5fc5;
   }
 }
 .cmt-list {

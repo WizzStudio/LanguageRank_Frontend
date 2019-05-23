@@ -23,13 +23,13 @@ class AuthRankList extends Component {
       });
     });
   }
-  handleNavigate(name, exponent, rankNum) {
-    Taro.navigateTo({
-      url: `/pages/detail/langIndex?rankIndex=${"auth"}&langName=${encodeURI(
-        name
-      )}&exponent=${exponent}&rankNum=${rankNum}`
-    });
-  }
+  // handleNavigate(name, exponent, rankNum) {
+  //   Taro.navigateTo({
+  //     url: `/pages/detail/langIndex?rankIndex=${"auth"}&langName=${encodeURI(
+  //       name
+  //     )}&exponent=${exponent}&rankNum=${rankNum}`
+  //   });
+  // }
 
   openIntro = () => {
     this.setState({
@@ -60,12 +60,12 @@ class AuthRankList extends Component {
           return (
             <View
               key={index}
-              onClick={this.handleNavigate.bind(
-                this,
-                rank.languageName,
-                rank.fixedFinalExponent,
-                index + 1
-              )}
+              // onClick={this.handleNavigate.bind(
+              //   this,
+              //   rank.languageName,
+              //   rank.fixedFinalExponent,
+              //   index + 1
+              // )}
               className="item-wrap">
               <AuthItem
                 langImg={rank.languageSymbol}
@@ -73,6 +73,7 @@ class AuthRankList extends Component {
                 heatNum={rank.fixedFinalExponent}
                 tend={rank.languageTend}
                 index={index}
+                type="auth"
               />
             </View>
           );

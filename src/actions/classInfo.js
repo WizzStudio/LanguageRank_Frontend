@@ -1,14 +1,9 @@
 import Taro from "@tarojs/taro";
 import {
-  ADD_CLASS,
   GET_USER_CLASS,
   GET_ALL_CLASS,
   JOIN_CLASS,
-  QUIT_CLASS,
-  GET_CLASS_PLAN,
   GET_USER_CLASS_PLAN,
-  GET_CLASS_FRIEND,
-  GET_CLASS_MEMBER,
   GET_CLASS_CMT,
   GET_CLASS_FAIL,
   GET_CLASS_MSG
@@ -54,16 +49,6 @@ export const ajaxJoinClass = data => {
   return fetchData(option, JOIN_CLASS);
 };
 
-//退出班级
-export const ajaxQuitClass = data => {
-  const option = {
-    url: "/quitclazz",
-    method: "POST",
-    data
-  };
-  return fetchData(option, QUIT_CLASS);
-};
-
 //获取用户班级学习计划
 export const ajaxGetUserClassPlan = data => {
   const option = {
@@ -72,20 +57,6 @@ export const ajaxGetUserClassPlan = data => {
     data
   };
   return fetchData(option, GET_USER_CLASS_PLAN);
-};
-
-//获取班级全部成员
-export const ajaxGetClassMember = data => {
-  const option = {
-    url: "/getclazzmember",
-    method: "POST",
-    data: {
-      userId,
-      clazzId: data.clazzId,
-      pageIndex: data.pageIndex
-    }
-  };
-  return fetchData(option, GET_CLASS_MEMBER);
 };
 
 //获取班级评论

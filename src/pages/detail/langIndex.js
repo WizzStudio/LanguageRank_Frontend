@@ -32,7 +32,7 @@ export default class LangIndex extends Component {
     };
   }
   componentDidMount() {
-    const { langName, rankIndex, rankNum, exponent } = this.$router.params;
+    const { langName, rankIndex, rankNum, exponent, tab } = this.$router.params;
     this.getLangTop(langName).then(res => {
       if (res.code === 0) {
         this.setState({
@@ -41,7 +41,8 @@ export default class LangIndex extends Component {
           languageFans: res.data.languageFans || "暂无",
           languageSymbol: res.data.languageSymbol,
           rankNum,
-          exponent
+          exponent,
+          currentTab: parseInt(tab)
         });
       }
     });
@@ -98,12 +99,13 @@ export default class LangIndex extends Component {
               {langName}&nbsp;&nbsp;&nbsp;
               <AtBadge value="HOT" className="badge" />
             </View>
-            {/* <View>
-              <AtRate value={langHome.languageDifficultyIndex} />
-            </View> */}
           </View>
           <View className="state">
-            <AtButton type="primary" size="small" onClick={this.toClassList}>
+            <AtButton
+              className="tostudy-btn"
+              type="primary"
+              size="normal"
+              onClick={this.toClassList}>
               我想学
             </AtButton>
           </View>
@@ -124,25 +126,6 @@ export default class LangIndex extends Component {
             <View className="tend-num">{languageFans}</View>
           </View>
         </View>
-        {/* <View className="wrap-title">好友在用</View>
-        <View className="avatar-wrap">
-          <View className="per-avatar">
-            <Image src="https://jdc.jd.com/img/200" />
-          </View>
-          <View className="per-avatar">
-            <Image src="https://jdc.jd.com/img/200" />
-          </View>
-          <View className="per-avatar">
-            <Image src="https://jdc.jd.com/img/200" />
-          </View>
-
-          <View className="per-avatar per-avatar-add">
-            <button open-type="share">
-              <AtIcon value="add" size="30" color="#4f5fc5" />
-            </button>
-          </View>
-        </View> */}
-        {/* <AtDivider /> */}
         <AtTabs
           current={currentTab}
           tabList={tabList}

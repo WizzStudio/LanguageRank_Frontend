@@ -1,6 +1,13 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtButton, AtMessage, AtDivider, AtTabs, AtTabsPane } from "taro-ui";
+import {
+  AtButton,
+  AtMessage,
+  AtDivider,
+  AtTabs,
+  AtTabsPane,
+  AtPagination
+} from "taro-ui";
 import myApi from "../../service/api";
 import checkToLogin from "../../utils/checkToLogin";
 import "./userRank.scss";
@@ -36,11 +43,10 @@ export default class UserRank extends Component {
       this.getPopRank(myUserId),
       this.getTodayPlan()
     ]).then(res => {
-      console.log("resPROMISE", res);
       const userRankInfo = res[0],
         hardRank = res[1],
         popRank = res[2],
-        todayPlan = res[3];
+        todayPlan = res[3].data.qrCode;
       let myHardRank = {},
         myPopRank = {};
       hardRank.members.forEach(item => {
@@ -116,8 +122,9 @@ export default class UserRank extends Component {
       clazzId
     };
     const res = await myApi("/getuserclazzstudyplantoday", "POST", data);
+    console.log("res", res);
     if (res.code === 0) {
-      return res.data;
+      return res;
     }
     return;
   };
@@ -139,6 +146,13 @@ export default class UserRank extends Component {
       worshippingUser: myUserId,
       worshippedUser: currUserId
     };
+    if (myUserId === currUserId) {
+      Taro.atMessage({
+        message: "不可以膜拜自己哦",
+        type: "warning"
+      });
+      return;
+    }
     myApi("/worship", "POST", data)
       .then(res => {
         console.log("膜拜成功");
@@ -149,14 +163,14 @@ export default class UserRank extends Component {
           });
         } else if (res.code === 6) {
           Taro.atMessage({
-            message: "你已经膜拜过TA了",
+            message: "一天只可以膜拜一次哦",
             type: "warning"
           });
         }
       })
       .catch(e => {
         Taro.atMessage({
-          message: "你已经膜拜过TA了",
+          message: "膜拜失败",
           type: "warning"
         });
       });
@@ -164,6 +178,27 @@ export default class UserRank extends Component {
   tabClick = value => {
     this.setState({
       currentTab: value
+    });
+  };
+
+  changeHardPage = params => {
+    this.getHardRank(myUserId, params.current).then(res => {
+      this.setState({
+        hardRank: res
+      });
+    });
+  };
+  changePopPage = params => {
+    this.getPopRank(myUserId, params.current).then(res => {
+      this.setState({
+        popRank: res
+      });
+    });
+  };
+  showImage = url => {
+    Taro.previewImage({
+      urls: [url],
+      current: url
     });
   };
   render() {
@@ -178,6 +213,8 @@ export default class UserRank extends Component {
       myPopRank,
       todayPlan
     } = this.state;
+    let hardTotal = hardRank.total,
+      popTotal = popRank.total;
     return (
       <View className="userRank">
         <AtMessage />
@@ -215,9 +252,13 @@ export default class UserRank extends Component {
             </View>
           </View>
         </View>
-        <View className="plan-wrap">
+        <View
+          className="plan-wrap"
+          onClick={this.showImage.bind(this, todayPlan)}>
           <Image src={todayPlan} className="plan-img" />
-          <View className="plan-text">长按二维码，获取今日学习资料</View>
+          <View className="plan-text">
+            点击预览图片，\n长按识别二维码，\n获取今日学习资料
+          </View>
         </View>
         <AtDivider />
         <AtTabs
@@ -268,6 +309,12 @@ export default class UserRank extends Component {
                   </View>
                 </View>
               ))}
+              <AtPagination
+                icon
+                total={hardTotal || 0}
+                pageSize={20}
+                onPageChange={this.changeHardPage}
+              />
             </View>
           </AtTabsPane>
           <AtTabsPane current={currentTab} index={1}>
@@ -284,7 +331,7 @@ export default class UserRank extends Component {
                   <Image className="avatar" src="https://jdc.jd.com/img/200" />
                 </View>
                 <View className="name">{myPopRank.nickName}</View>
-                <View className="total">{myPopRank.todayScore}</View>
+                <View className="total">{myPopRank.worship}人膜拜</View>
               </View>
               {popRank.members.map((item, index) => (
                 <View
@@ -303,6 +350,12 @@ export default class UserRank extends Component {
                   <View className="total">{item.worship}人膜拜</View>
                 </View>
               ))}
+              <AtPagination
+                icon
+                total={popTotal || 0}
+                pageSize={20}
+                onPageChange={this.changePopPage}
+              />
             </View>
           </AtTabsPane>
         </AtTabs>

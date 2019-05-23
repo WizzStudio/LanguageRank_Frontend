@@ -3,7 +3,6 @@ import { View } from "@tarojs/components";
 import { AtButton } from "taro-ui";
 import "./login.scss";
 import { addUserRelation } from "../../utils/addUserRelation";
-import loginImg from "../../assets/img/login.png";
 export default class Login extends Component {
   bindGetUserInfo = e => {
     if (e.detail.userInfo) {
@@ -57,7 +56,6 @@ export default class Login extends Component {
   render() {
     return (
       <View className="login-wrap">
-        {/* <Image className="login-img" src={loginImg} /> */}
         <View className="btn-wrap">
           <AtButton
             openType="getUserInfo"

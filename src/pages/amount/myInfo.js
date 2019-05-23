@@ -9,6 +9,7 @@ import checkToLogin from "../../utils/checkToLogin";
 const myUserId = getLoginInfo().userId;
 import myApi from "../../service/api";
 import addUserRelation from "../../utils/addUserRelation";
+import { isBrowser } from "nerv-utils";
 export default class MyInfo extends Component {
   config = {
     navigationBarTitleText: "HelloWorld Rank"
@@ -76,6 +77,12 @@ export default class MyInfo extends Component {
       case "attention":
         Taro.navigateTo({
           url: "/pages/amount/attention"
+        });
+        break;
+      case "scoreLottery":
+        Taro.showToast({
+          title: "正在开发中...",
+          icon: "none"
         });
         break;
       default:
@@ -205,7 +212,9 @@ export default class MyInfo extends Component {
                 <View className="name">积分商城</View>
               </View>
               <AtDivider />
-              <View className="per-action">
+              <View
+                className="per-action"
+                onClick={this.toPage.bind(this, "scoreLottery")}>
                 <AtIcon value="bell" size="30" color="#4f5fc5" />
                 <View className="name">积分抽奖</View>
               </View>
@@ -232,7 +241,9 @@ export default class MyInfo extends Component {
           <Text decode="{{true}}" space="{{true}}">
             \r\t\r\t | \r\t\r\t
           </Text>
-          <View className="question">问题反馈</View>
+          <View className="question">
+            <button open-type="feedback">问题反馈</button>
+          </View>
         </View>
       </View>
     );

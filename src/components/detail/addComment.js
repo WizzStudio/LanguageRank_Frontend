@@ -19,8 +19,25 @@ class AddComment extends Component {
     });
     return val;
   };
+  //检测是否全空 全空返回true
+  isBlank = str => {
+    if (str == "") {
+      return true;
+    }
+    var regu = "^[ ]+$";
+    var re = new RegExp(regu);
+    return re.test(str);
+  };
   updateCmt = () => {
-    const comment = this.state.inputValue;
+    let comment = this.state.inputValue;
+    const checkBlank = this.isBlank(comment);
+    if (checkBlank) {
+      Taro.atMessage({
+        message: "请填写评论",
+        type: "warning"
+      });
+      return;
+    }
     const { type, clazzId, langName } = this.props;
     let data = {},
       url = "";

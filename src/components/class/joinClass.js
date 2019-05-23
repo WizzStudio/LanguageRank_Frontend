@@ -30,19 +30,16 @@ class JoinClass extends Component {
       this.props.ajaxJoinClass(data).then(res => {
         if (res.code === 0) {
           Taro.atMessage({
-            message: "你已在当前班级",
+            message: "加入成功",
             type: "success"
           });
-          const { index } = this.props;
-          if (index != -2) {
-            this.props.onChangeAdd(index);
-            this.props.ajaxGetUserClass({ userId: myUserId });
-          }
-          if (this.props.type === "classList") {
-            Taro.navigateTo({
-              url: `/pages/class/classHome?clazzId=${clazzId}`
-            });
-          }
+          this.props.ajaxGetUserClass({ userId: myUserId }).then(res => {
+            if (res.code === 0 && this.props.type === "classList") {
+              Taro.navigateTo({
+                url: `/pages/class/classHome?clazzId=${clazzId}`
+              });
+            }
+          });
         } else if (res.code === 5) {
           Taro.atMessage({
             message: "你已经在该班级中了",
@@ -61,7 +58,7 @@ class JoinClass extends Component {
     return (
       <View>
         <AtMessage />
-        <AtButton type="primary" size="small">
+        <AtButton type="primary" size="small" onClick={this.userAddClass}>
           加入
         </AtButton>
       </View>
@@ -70,7 +67,5 @@ class JoinClass extends Component {
 }
 JoinClass.defaultProps = {
   clazzId: 0,
-  index: -2,
-  type: "",
-  onChangeAdd: () => {}
+  type: ""
 };

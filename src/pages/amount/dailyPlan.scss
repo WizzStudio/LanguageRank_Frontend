@@ -51,19 +51,17 @@ $color-brand: #4f5fc5;
 //   justify-content: center;
 //   align-items: center;
 // }
-.transfer-award {
-  height: 100px;
-  margin-top: 50px;
-  margin-bottom: 40px;
-}
-.get-award {
-  margin-bottom: 60px;
-}
 .swiper {
-  height: 400px;
+  height: 500px;
+}
+swiper-item {
+  background-color: #dcdcdc;
+  border-radius: 10px;
+  padding: 10px;
+  height: 90%;
 }
 .loading-wrap {
-  height: 400px;
+  height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;

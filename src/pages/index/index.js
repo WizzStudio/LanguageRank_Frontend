@@ -1,5 +1,5 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View, Button, Text } from "@tarojs/components";
+import { View } from "@tarojs/components";
 import { AtSegmentedControl, AtNoticebar } from "taro-ui";
 import AuthRankList from "../rank/authRankList";
 import DemandRankList from "../rank/demandRankList";
@@ -9,6 +9,8 @@ import { connect } from "@tarojs/redux";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
 import checkToLogin from "../../utils/checkToLogin";
 import { addUserRelation } from "../../utils/addUserRelation";
+import { getLoginInfo } from "../../utils/getlocalInfo";
+const myUserId = getLoginInfo().userId;
 @connect(
   ({ userInfo }) => ({
     userInfo
@@ -98,11 +100,9 @@ class Index extends Component {
   componentDidHide() {}
 
   onShareAppMessage = res => {
-    const loginInfo = Taro.getStorageSync("login");
-    const id = loginInfo.userid;
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
-      path: `/pages/index/index?userid=${id}`
+      path: `/pages/index/index?shareId=${myUserId}`
     };
   };
   render() {

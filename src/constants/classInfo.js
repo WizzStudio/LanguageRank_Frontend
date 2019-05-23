@@ -1,6 +1,5 @@
 export const GET_CLASS_FAIL = "GET_CLASS_FAIL";
 
-export const ADD_CLASS = "ADD_CLASS";
 export const GET_USER_CLASS = "GET_USER_CLASS";
 export const GET_ALL_CLASS = "GET_ALL_CLASS";
 export const JOIN_CLASS = "JOIN_CLASS";

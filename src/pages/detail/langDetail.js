@@ -1,6 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
-import { AtDivider, AtRate, AtIcon } from "taro-ui";
+import { AtDivider, AtRate, AtIcon, AtBadge } from "taro-ui";
 import "./langDetail.scss";
 import myApi from "../../service/api";
 export default class LangDetail extends Component {
@@ -62,8 +62,9 @@ export default class LangDetail extends Component {
                 </View>
                 <View className="name">
                   <View>{langName}</View>
-                  <View>
+                  <View className="difficult">
                     <AtRate value={langMore.language.languageDifficultyIndex} />
+                    <AtBadge value="难度" className="badge" />
                   </View>
                   <View className="new-intro">
                     始于{langMore.language.languageBeginTime}

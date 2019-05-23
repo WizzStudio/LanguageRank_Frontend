@@ -1,6 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtButton, AtPagination, AtTextarea } from "taro-ui";
+import { AtButton, AtPagination } from "taro-ui";
 import CommentItem from "./commentItem";
 import "./comment.scss";
 import { connect } from "@tarojs/redux";
@@ -29,7 +29,7 @@ class CmtList extends Component {
       btnMode: 1,
       cmtTotal: 0,
       commentList: [],
-      currPage: 0
+      currPage: 1
     };
   }
   componentDidMount() {
@@ -92,20 +92,23 @@ class CmtList extends Component {
     }
   };
   changeCmtPage = params => {
-    this.getCmtList(params.current, 1);
+    const { btnMode } = this.state;
+    this.getCmtList(params.current, btnMode);
   };
   changeCmtMode = type => {
     switch (type) {
       case "new":
         this.getCmtList(1, 1);
         this.setState({
-          btnMode: 1
+          btnMode: 1,
+          currPage: 1
         });
         return;
       case "old":
         this.getCmtList(1, 2);
         this.setState({
-          btnMode: 2
+          btnMode: 2,
+          currPage: 1
         });
         return;
       default:
@@ -113,7 +116,7 @@ class CmtList extends Component {
     }
   };
   render() {
-    const { commentList, btnMode, cmtTotal } = this.state;
+    const { commentList, btnMode, cmtTotal, currPage } = this.state;
     return (
       <View className="cmt-list">
         <View className="cmt-button">
@@ -134,18 +137,21 @@ class CmtList extends Component {
             </AtButton>
           </View>
         </View>
+        {cmtTotal === 0 && <View className="no-cmt">暂时没有评论</View>}
         {commentList.map(item => (
           <View key={item.floor}>
             <CommentItem perCmt={item} />
           </View>
         ))}
-        <AtPagination
-          icon
-          total={cmtTotal}
-          pageSize={20}
-          // current={1}
-          onPageChange={this.changeCmtPage}
-        />
+        {cmtTotal !== 0 && (
+          <AtPagination
+            icon
+            total={cmtTotal}
+            pageSize={20}
+            current={currPage}
+            onPageChange={this.changeCmtPage}
+          />
+        )}
       </View>
     );
   }

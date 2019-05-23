@@ -67,7 +67,9 @@
       height: 200px;
     }
     .plan-text {
+      margin-left: 20px;
       font-weight: 500;
+      white-space: pre-wrap;
     }
   }
 
@@ -78,6 +80,7 @@
       align-items: center;
       height: 130px;
       padding: 15px;
+      font-size: 30px;
       .title {
         font-size: 26px;
         color: #4f5fc5;
@@ -101,13 +104,16 @@
         flex: 2;
       }
       .fist-img {
-        width: 40px;
+        width: 60px;
         height: 40px;
       }
     }
     .selected-item {
       background-color: #c7c7c7;
       border-radius: 10px;
+      color: #4f5fc5;
+      font-weight: 600;
+      font-size: 40px;
     }
   }
 }

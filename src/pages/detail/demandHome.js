@@ -27,7 +27,7 @@ export default class DemandHome extends Component {
     ]).then(res => {
       if (res[0].code === 0) {
         this.setState({
-          posi: res[0].data.languagePostList
+          posi: res[0].data
         });
       }
       if (res[1].code === 0) {
@@ -145,12 +145,6 @@ export default class DemandHome extends Component {
   refKChart = node => (this.kChart = node);
   refBarChart = node => (this.barChart = node);
   refPieChart = node => (this.pieChart = node);
-  onShareAppMessage = res => {
-    return {
-      title: "进入小程序了解当下最流行、最赚钱的编程语言",
-      path: "/pages/index/index"
-    };
-  };
   render() {
     const { posi } = this.state || [];
     return (

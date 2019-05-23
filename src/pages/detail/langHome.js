@@ -56,7 +56,21 @@ class LangHome extends Component {
     this.lineChart.refresh(chartData);
   };
   refLineChart = node => (this.lineChart = node);
-
+  copyContent = content => {
+    Taro.setClipboardData({
+      data: content
+    })
+      .then(() => {
+        Taro.showToast({
+          title: "已复制链接"
+        });
+      })
+      .catch(() => {
+        Taro.showToast({
+          title: "复制失败"
+        });
+      });
+  };
   render() {
     const { langHome } = this.state;
     return (
@@ -85,7 +99,23 @@ class LangHome extends Component {
         <AtDivider />
         <View>
           <View className="wrap-title">github热门项目</View>
-          <View className="history">{langHome.languageDevelopmentHistory}</View>
+          {langHome.githubPopularProjectList.map(item => (
+            <View className="github" key={item.projectLink}>
+              <View className="top-wrap">
+                <Image className="left" src={item.projectImage} />
+                <View className="right">
+                  <View className="name">{item.projectName}</View>
+                  <View className="tag">@{item.projectTag}</View>
+                </View>
+              </View>
+              <View className="brief">{item.projectBriefIntroduction}</View>
+              <View
+                className="link"
+                onClick={this.copyContent.bind(this, item.projectLink)}>
+                {item.projectLink}
+              </View>
+            </View>
+          ))}
         </View>
         <View className="to-detail-wrap">
           <View

@@ -46,7 +46,11 @@ export default class ClassList extends Component {
       }
     });
   }
-
+  componentDidUpdate = prevProps => {
+    if (prevProps.classInfo.userClassId != this.props.classInfo.userClassId) {
+      this.checkIsAdded(this.props.classInfo.allClass);
+    }
+  };
   checkIsAdded = allClass => {
     const { userClassId } = this.props.classInfo;
     let isAddedArr = [];
@@ -57,14 +61,6 @@ export default class ClassList extends Component {
         isAddedArr[index] = true;
       }
     });
-    this.setState({
-      isAddedArr
-    });
-  };
-  changeAddStatu = index => {
-    let isAddedArr = [];
-    isAddedArr[index] = true;
-    console.log("index", index, this.state.isAddedArr);
     this.setState({
       isAddedArr
     });
@@ -100,7 +96,6 @@ export default class ClassList extends Component {
                 <JoinClass
                   clazzId={item.clazzId}
                   index={index}
-                  onChangeAdd={this.changeAddStatu}
                   type="classList"
                 />
               )}

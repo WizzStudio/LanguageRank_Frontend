@@ -55,7 +55,7 @@ class DailyPlan extends Component {
     }).then(res => {
       console.log("res", res);
       if (res.tapIndex === 0) {
-        this.copyContent(item.link);
+        this.copyContent(item.link + "提取码：" + item.extractedCode);
       } else if (res.tapIndex === 1) {
         this.collectPlan(item);
       }
@@ -118,8 +118,8 @@ class DailyPlan extends Component {
                 className="swiper"
                 indicatorColor="#999"
                 indicatorActiveColor="#333"
-                previousMargin="50px"
-                nextMargin="50px"
+                previousMargin="35px"
+                nextMargin="35px"
                 current={current}
                 onChange={this.handleSwiper}
                 indicatorDots>
@@ -135,7 +135,7 @@ class DailyPlan extends Component {
                         <View className="brief">{item.briefIntroduction}</View>
                         <View className="content">{item.content}</View>
                         <View className="codeStr">
-                          提取码：{"item.content"}
+                          提取码：{item.extractedCode}
                         </View>
                         <View className="text-copy">
                           (点击复制链接，浏览器打开)

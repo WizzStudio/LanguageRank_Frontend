@@ -25,18 +25,31 @@ export default class ClassIndex extends Component {
   constructor() {
     super();
     this.state = {
-      timeSel: ""
+      timeSel: 0
     };
   }
   componentDidMount() {
     const data = {
       userId: myUserId
     };
+    this.getRemindTime();
     this.props.ajaxGetUserClass(data).then(res => {});
   }
   toClassList = () => {
     Taro.navigateTo({
       url: "/pages/class/classList"
+    });
+  };
+  getRemindTime = () => {
+    const data = {
+      userId: myUserId
+    };
+    myApi("/getpunchcardremindertime", "POST", data).then(res => {
+      if (res.code === 0) {
+        this.setState({
+          timeSel: res.data.reminderTime
+        });
+      }
     });
   };
   toClassHome = clazzId => {
@@ -46,7 +59,7 @@ export default class ClassIndex extends Component {
   };
   onTimeChange = e => {
     console.log("ePICK", e);
-    let res = JSON.parse(e.detail.value);
+    let res = parseInt(e.detail.value);
     let timeSel = res === 0 ? res : res + 7;
     this.setState({
       timeSel

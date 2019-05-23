@@ -69,8 +69,16 @@ $color-brand: #4f5fc5;
   background-color: white;
   .about {
     text-decoration: underline;
+    font-size: 36px;
   }
   .question {
     text-decoration: underline;
+  }
+  button::after {
+    border: none;
+  }
+  button {
+    background-color: #fff;
+    padding: 0;
   }
 }

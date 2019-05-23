@@ -4,7 +4,7 @@ export function addUserRelation(that, ownId) {
   console.log("that", that.$router);
   const params = that.$router.params;
   if (params) {
-    const userOne = params.userid;
+    const userOne = params.shareId || 0;
     const userTwo = ownId || Taro.getStorageSync("login").userId;
     const data = {
       userOne,

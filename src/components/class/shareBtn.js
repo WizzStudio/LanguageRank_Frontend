@@ -3,14 +3,18 @@ import { View } from "@tarojs/components";
 import { AtButton } from "taro-ui";
 import shareImg from "../../assets/img/share.png";
 import "./shareBtn.scss";
-export default class ShareBtn extends Component {
+class ShareBtn extends Component {
   render() {
     return (
       <View className="share-wrap">
-        <button open-type="share">
+        <button open-type="share" data-param={this.props.param}>
           <Image className="share-img" src={shareImg} />
         </button>
       </View>
     );
   }
 }
+ShareBtn.defaultProps = {
+  param: ""
+};
+export default ShareBtn;
