@@ -6,13 +6,16 @@ import {
   AtDivider,
   AtTabs,
   AtTabsPane,
-  AtPagination
+  AtPagination,
+  AtIcon
 } from "taro-ui";
 import myApi from "../../service/api";
 import checkToLogin from "../../utils/checkToLogin";
 import "./userRank.scss";
 import fistImg from "../../assets/img/fist.png";
+import CanvasAchieve from "../../components/canvasPost/canvasAchieve";
 const myUserId = Taro.getStorageSync("login").userId;
+const basicInfo = Taro.getStorageSync("basicInfo");
 export default class UserRank extends Component {
   config = {
     navigationBarTitleText: "好友排行"
@@ -28,7 +31,8 @@ export default class UserRank extends Component {
       hardRank: {},
       todayPlan: "",
       myHardRank: {},
-      myPopRank: {}
+      myPopRank: {},
+      isShowCanvas: false
     };
   }
   componentWillMount() {
@@ -122,7 +126,6 @@ export default class UserRank extends Component {
       clazzId
     };
     const res = await myApi("/getuserclazzstudyplantoday", "POST", data);
-    console.log("res", res);
     if (res.code === 0) {
       return res;
     }
@@ -132,21 +135,29 @@ export default class UserRank extends Component {
   changeCurrUser = userId => {
     this.getAllUserRank(userId).then(res => {
       if (res) {
-        this.setState({
-          userRankInfo: res,
-          currUserId: userId
-        });
+        this.setState(
+          {
+            userRankInfo: res,
+            currUserId: userId
+          },
+          () => {
+            Taro.pageScrollTo({
+              scrollTop: 0,
+              duration: 200
+            });
+          }
+        );
       }
     });
   };
   //膜拜他人
-  worshipOther = (currUserId = this.state.currUserId) => {
-    // const { currUserId } = this.state;
+  worshipOther = toUserId => {
     const data = {
       worshippingUser: myUserId,
-      worshippedUser: currUserId
+      worshippedUser: toUserId
     };
-    if (myUserId === currUserId) {
+    console.log("worshippedUser", toUserId);
+    if (myUserId === toUserId) {
       Taro.atMessage({
         message: "不可以膜拜自己哦",
         type: "warning"
@@ -155,11 +166,10 @@ export default class UserRank extends Component {
     }
     myApi("/worship", "POST", data)
       .then(res => {
-        console.log("膜拜成功");
         if (res.code === 0) {
           Taro.atMessage({
             message: "膜拜成功",
-            type: "info"
+            type: "success"
           });
         } else if (res.code === 6) {
           Taro.atMessage({
@@ -201,6 +211,16 @@ export default class UserRank extends Component {
       current: url
     });
   };
+  openCanvas = () => {
+    this.setState({
+      isShowCanvas: true
+    });
+  };
+  closeCanvas = () => {
+    this.setState({
+      isShowCanvas: false
+    });
+  };
   render() {
     const tabList = [{ title: "勤奋排行" }, { title: "人气排行" }];
     const {
@@ -211,154 +231,177 @@ export default class UserRank extends Component {
       hardRank,
       myHardRank,
       myPopRank,
-      todayPlan
+      todayPlan,
+      isShowCanvas
     } = this.state;
     let hardTotal = hardRank.total,
       popTotal = popRank.total;
     return (
       <View className="userRank">
         <AtMessage />
-        <View className="title-wrap">
-          <View className="avatar-wrap">
-            <Image className="avatar" src="https://jdc.jd.com/img/200" />
-          </View>
-          <View className="right-score">总积分：{userRankInfo.totalScore}</View>
-          <View className="card-wrap">
-            <View className="per-item">
-              <View className="name">连续打卡</View>
-              <View className="num">
-                {userRankInfo.uninterruptedStudyPlanDay}
-              </View>
-            </View>
-            <View className="per-item">
-              <View className="name">总计打卡</View>
-              <View className="num">{userRankInfo.totalPunchCardDay}</View>
-            </View>
-            <View className="per-item">
-              <View className="name">获得积分</View>
-              <View className="num">{userRankInfo.todayScore}</View>
-            </View>
-          </View>
-          <View className="btn-wrap">
-            {currUserId !== myUserId && (
-              <View className="envy">
-                <AtButton type="primary" onClick={this.worshipOther}>
-                  膜拜TA
-                </AtButton>
-              </View>
-            )}
-            <View className="achieve">
-              <AtButton type="primary">生成成就卡</AtButton>
-            </View>
-          </View>
-        </View>
-        <View
-          className="plan-wrap"
-          onClick={this.showImage.bind(this, todayPlan)}>
-          <Image src={todayPlan} className="plan-img" />
-          <View className="plan-text">
-            点击预览图片，\n长按识别二维码，\n获取今日学习资料
-          </View>
-        </View>
-        <AtDivider />
-        <AtTabs
-          current={currentTab}
-          tabList={tabList}
-          onClick={this.tabClick.bind(this)}>
-          <AtTabsPane current={currentTab} index={0}>
-            <View className="member-list">
-              <View className="member-item">
-                <View className="rank title">排名</View>
-                <View className="avatar-wrap title" />
-                <View className="name title">用户</View>
-                <View className="total title">积分</View>
-                <View className="title">膜拜</View>
-              </View>
-              <View className="member-item">
-                <View className="rank">我</View>
-                <View className="avatar-wrap">
-                  <Image className="avatar" src="https://jdc.jd.com/img/200" />
-                </View>
-                <View className="name">{myHardRank.nickName}</View>
-                <View className="total">{myHardRank.todayScore}</View>
-                <View>
-                  <Image src={fistImg} className="fist-img" />
-                </View>
-              </View>
-              {hardRank.members.map((item, index) => (
-                <View
-                  className={`member-item ${item.userId === currUserId &&
-                    "selected-item"}`}
-                  key={item.nickName}
-                  onClick={this.changeCurrUser.bind(this, item.userId)}>
-                  <View className="rank">{index + 1}</View>
-                  <View className="avatar-wrap">
-                    <Image
-                      className="avatar"
-                      src="https://jdc.jd.com/img/200"
-                    />
-                  </View>
-                  <View className="name">{item.nickName}</View>
-                  <View className="total">{item.todayScore}</View>
-                  <View>
-                    <Image
-                      src={fistImg}
-                      className="fist-img"
-                      onClick={this.worshipOther.bind(this, item.userId)}
-                    />
-                  </View>
-                </View>
-              ))}
-              <AtPagination
-                icon
-                total={hardTotal || 0}
-                pageSize={20}
-                onPageChange={this.changeHardPage}
+        {isShowCanvas ? (
+          <View className="share-bg">
+            <View className="close-canvas">
+              <AtIcon
+                value="close-circle"
+                size="40"
+                color="#FFF"
+                onClick={this.closeCanvas}
               />
             </View>
-          </AtTabsPane>
-          <AtTabsPane current={currentTab} index={1}>
-            <View className="member-list">
-              <View className="member-item">
-                <View className="rank title">排名</View>
-                <View className="avatar-wrap title" />
-                <View className="name title">用户</View>
-                <View className="total title">膜拜数</View>
-              </View>
-              <View className="member-item">
-                <View className="rank">我</View>
-                <View className="avatar-wrap">
-                  <Image className="avatar" src="https://jdc.jd.com/img/200" />
-                </View>
-                <View className="name">{myPopRank.nickName}</View>
-                <View className="total">{myPopRank.worship}人膜拜</View>
-              </View>
-              {popRank.members.map((item, index) => (
-                <View
-                  className={`member-item ${item.userId === currUserId &&
-                    "selected-item"}`}
-                  key={item.nickName}
-                  onClick={this.changeCurrUser.bind(this, item.userId)}>
-                  <View className="rank">{index + 1}</View>
-                  <View className="avatar-wrap">
-                    <Image
-                      className="avatar"
-                      src="https://jdc.jd.com/img/200"
-                    />
-                  </View>
-                  <View className="name">{item.nickName}</View>
-                  <View className="total">{item.worship}人膜拜</View>
-                </View>
-              ))}
-              <AtPagination
-                icon
-                total={popTotal || 0}
-                pageSize={20}
-                onPageChange={this.changePopPage}
+            <View className="share-wrap">
+              <CanvasAchieve
+                nickName={basicInfo.nickName}
+                avatar={basicInfo.avatar}
+                dayNum={userRankInfo.totalPunchCardDay}
               />
             </View>
-          </AtTabsPane>
-        </AtTabs>
+          </View>
+        ) : (
+          <View>
+            <View className="title-wrap">
+              <View className="avatar-wrap">
+                <Image className="avatar" src={userRankInfo.avatarUrl} />
+              </View>
+              <View className="right-score">
+                总积分：{userRankInfo.totalScore}
+              </View>
+              <View className="card-wrap">
+                <View className="per-item">
+                  <View className="name">连续打卡</View>
+                  <View className="num">
+                    {userRankInfo.uninterruptedStudyPlanDay}
+                  </View>
+                </View>
+                <View className="per-item">
+                  <View className="name">总计打卡</View>
+                  <View className="num">{userRankInfo.totalPunchCardDay}</View>
+                </View>
+                <View className="per-item">
+                  <View className="name">获得积分</View>
+                  <View className="num">{userRankInfo.todayScore}</View>
+                </View>
+              </View>
+              <View className="btn-wrap">
+                {currUserId !== myUserId && (
+                  <View className="envy">
+                    <AtButton
+                      type="primary"
+                      onClick={this.worshipOther.bind(this, currUserId)}>
+                      膜拜TA
+                    </AtButton>
+                  </View>
+                )}
+                <View className="achieve">
+                  <AtButton type="primary" onClick={this.openCanvas}>
+                    生成成就卡
+                  </AtButton>
+                </View>
+              </View>
+            </View>
+            <View
+              className="plan-wrap"
+              onClick={this.showImage.bind(this, todayPlan)}>
+              <Image src={todayPlan} className="plan-img" />
+              <View className="plan-text">
+                点击预览图片，\n长按识别二维码，\n获取今日学习资料
+              </View>
+            </View>
+            <AtDivider />
+            <AtTabs
+              current={currentTab}
+              tabList={tabList}
+              onClick={this.tabClick.bind(this)}>
+              <AtTabsPane current={currentTab} index={0}>
+                <View className="member-list">
+                  <View className="member-item">
+                    <View className="rank title">排名</View>
+                    <View className="avatar-wrap title" />
+                    <View className="name title">用户</View>
+                    <View className="total title">积分</View>
+                    <View className="title">膜拜</View>
+                  </View>
+                  <View className="member-item">
+                    <View className="rank">我</View>
+                    <View className="avatar-wrap">
+                      <Image className="avatar" src={myHardRank.avatarUrl} />
+                    </View>
+                    <View className="name">{myHardRank.nickName}</View>
+                    <View className="total">{myHardRank.todayScore}</View>
+                    {/* <View>
+                      <Image src={fistImg} className="fist-img" />
+                    </View> */}
+                  </View>
+                  {hardRank.members.map((item, index) => (
+                    <View
+                      className={`member-item ${item.userId === currUserId &&
+                        "selected-item"}`}
+                      key={item.nickName}
+                      onClick={this.changeCurrUser.bind(this, item.userId)}>
+                      <View className="rank">{index + 1}</View>
+                      <View className="avatar-wrap">
+                        <Image className="avatar" src={item.avatarUrl} />
+                      </View>
+                      <View className="name">{item.nickName}</View>
+                      <View className="total">{item.todayScore}</View>
+                      <View>
+                        <Image
+                          src={fistImg}
+                          className="fist-img"
+                          onClick={this.worshipOther.bind(this, item.userId)}
+                        />
+                      </View>
+                    </View>
+                  ))}
+                  <AtPagination
+                    icon
+                    total={hardTotal || 0}
+                    pageSize={20}
+                    onPageChange={this.changeHardPage}
+                  />
+                </View>
+              </AtTabsPane>
+              <AtTabsPane current={currentTab} index={1}>
+                <View className="member-list">
+                  <View className="member-item">
+                    <View className="rank title">排名</View>
+                    <View className="avatar-wrap title" />
+                    <View className="name title">用户</View>
+                    <View className="total title">膜拜数</View>
+                  </View>
+                  <View className="member-item">
+                    <View className="rank">我</View>
+                    <View className="avatar-wrap">
+                      <Image className="avatar" src={myPopRank.avatarUrl} />
+                    </View>
+                    <View className="name">{myPopRank.nickName}</View>
+                    <View className="total">{myPopRank.worship}人膜拜</View>
+                  </View>
+                  {popRank.members.map((item, index) => (
+                    <View
+                      className={`member-item ${item.userId === currUserId &&
+                        "selected-item"}`}
+                      key={item.nickName}
+                      onClick={this.changeCurrUser.bind(this, item.userId)}>
+                      <View className="rank">{index + 1}</View>
+                      <View className="avatar-wrap">
+                        <Image className="avatar" src={item.avatarUrl} />
+                      </View>
+                      <View className="name">{item.nickName}</View>
+                      <View className="total">{item.worship}人膜拜</View>
+                    </View>
+                  ))}
+                  <AtPagination
+                    icon
+                    total={popTotal || 0}
+                    pageSize={20}
+                    onPageChange={this.changePopPage}
+                  />
+                </View>
+              </AtTabsPane>
+            </AtTabs>
+          </View>
+        )}
       </View>
     );
   }

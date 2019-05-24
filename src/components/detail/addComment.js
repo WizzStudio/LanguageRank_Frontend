@@ -87,7 +87,6 @@ class AddComment extends Component {
         <AtMessage />
         <View className="input-top" />
         <View className="input-wrap">
-          {/* <View className="input"> */}
           <AtInput
             type="text"
             maxLength="999"

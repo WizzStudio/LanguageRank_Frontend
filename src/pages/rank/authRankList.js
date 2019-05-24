@@ -23,13 +23,6 @@ class AuthRankList extends Component {
       });
     });
   }
-  // handleNavigate(name, exponent, rankNum) {
-  //   Taro.navigateTo({
-  //     url: `/pages/detail/langIndex?rankIndex=${"auth"}&langName=${encodeURI(
-  //       name
-  //     )}&exponent=${exponent}&rankNum=${rankNum}`
-  //   });
-  // }
 
   openIntro = () => {
     this.setState({
@@ -58,15 +51,7 @@ class AuthRankList extends Component {
       <View>
         {rankList.map((rank, index) => {
           return (
-            <View
-              key={index}
-              // onClick={this.handleNavigate.bind(
-              //   this,
-              //   rank.languageName,
-              //   rank.fixedFinalExponent,
-              //   index + 1
-              // )}
-              className="item-wrap">
+            <View key={index} className="item-wrap">
               <AuthItem
                 langImg={rank.languageSymbol}
                 langName={rank.languageName}

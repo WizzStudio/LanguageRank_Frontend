@@ -87,7 +87,7 @@ class LangHome extends Component {
         {langHome.company.map((item, index) => (
           <View className="heat-company" key={index}>
             <View className="icon">
-              <Image src={item.companySymbol} className="logo" />
+              <Image src={item.companySymbol} className="com-logo" />
             </View>
             <View className="name">{item.companyName}</View>
             <View className="detail">

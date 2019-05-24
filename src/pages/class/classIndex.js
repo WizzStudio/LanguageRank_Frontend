@@ -1,11 +1,11 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Picker } from "@tarojs/components";
 import "./classIndex.scss";
-import testImg from "../../assets/img/canvasAuth.png";
 import { AtMessage } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserClass } from "../../actions/classInfo";
 import { getLoginInfo } from "../../utils/getlocalInfo";
+import checkToLogin from "../../utils/checkToLogin";
 import myApi from "../../service/api";
 const myUserId = getLoginInfo().userId;
 @connect(
@@ -27,6 +27,9 @@ export default class ClassIndex extends Component {
     this.state = {
       timeSel: 0
     };
+  }
+  componentWillMount() {
+    checkToLogin();
   }
   componentDidMount() {
     const data = {

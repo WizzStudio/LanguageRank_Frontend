@@ -14,3 +14,46 @@
     white-space: pre-wrap;
   }
 }
+$color-brand: #4f5fc5;
+
+.plan-title {
+  color: $color-brand;
+  font-weight: bold;
+  font-size: 1.3em;
+  margin: 0px auto 10px auto;
+  display: flex;
+  justify-content: center;
+}
+.content {
+  background-color: #dcdcdc;
+  border-radius: 10px;
+  align-self: flex-start;
+  padding: 10px;
+  flex: 8;
+  height: 90%;
+}
+.arror {
+  flex: 1;
+}
+.content-wrap {
+  font-size: 30px;
+  .brief {
+    font-size: 40px;
+    font-weight: 700;
+    margin: 10px 0;
+  }
+  .codeStr {
+    margin: 10px 0;
+    font-size: 25px;
+  }
+  .text-copy {
+    font-weight: 300;
+    font-size: 20px;
+  }
+}
+.loading-wrap {
+  height: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

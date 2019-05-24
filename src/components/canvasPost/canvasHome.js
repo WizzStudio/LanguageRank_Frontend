@@ -2,14 +2,14 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Button, Image } from "@tarojs/components";
 import { AtButton } from "taro-ui";
 import { TaroCanvasDrawer } from "taro-plugin-canvas"; // npm 引入方式
-
-import canvasAuth from "../../assets/img/canvasAuth.png";
 import load from "../../assets/img/load.png";
 import "./canvasPost.scss";
-class ShareCanvasRank extends Component {
+const canvasHomeImg =
+  "http://qiniu.ben286.top/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190524215927.png";
+// import canvasHomeImg from "../../assets/img/canvasHome.png";
+class CanvasHome extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       // 绘图配置文件
       isShow: false,
@@ -22,37 +22,35 @@ class ShareCanvasRank extends Component {
       // TaroCanvasDrawer 组件状态
       canvasStatus: false,
       rssConfig: {
-        width: 750,
-        height: 400,
-        backgroundColor: "#ccc",
+        width: 650,
+        height: 1000,
+        backgroundColor: "#EDEDED",
         debug: true,
         blocks: [
-          {
-            x: 0,
-            y: 0,
-            width: 750,
-            height: 400,
-            paddingLeft: 0,
-            paddingRight: 0,
-            borderWidth: 0,
-            // borderColor: '#ccc',
-            // backgroundColor: "#ccc",
-            borderRadius: 0
-          }
+          //   {
+          //     x: 0,
+          //     y: 0,
+          //     width: 650,
+          //     height: 1000,
+          //     paddingLeft: 0,
+          //     paddingRight: 0,
+          //     borderWidth: 0,
+          //     borderColor: "#ccc",
+          //     backgroundColor: "#ccc",
+          //     borderRadius: 0
+          //   }
         ],
         texts: [],
         images: [
           {
-            url: canvasAuth,
-            width: 750,
+            url: canvasHomeImg,
+            width: 650,
+            opacity: 1,
             height: 1000,
             y: 0,
             x: 0,
             borderRadius: 12,
-            zIndex: 1
-            // borderRadius: 150
-            // borderWidth: 10,
-            // borderColor: 'red',
+            zIndex: 99
           }
         ],
         lines: [
@@ -91,49 +89,53 @@ class ShareCanvasRank extends Component {
     }
   }
   componentDidMount() {
-    console.log("this.props", this.props);
     this.canvasDrawFunc();
   }
 
   // 调用绘画 => canvasStatus 置为true、同时设置config
   canvasDrawFunc = (config = this.state.rssConfig) => {
-    // const { authRank } = this.props.rankList;
-    const { rankListData } = this.props;
-    rankListData.map((rank, index) => {
-      if (index <= 4) {
-        config.texts.push({
-          x: 230,
-          y: 330 + index * 100,
-          text: rank.languageName,
-          fontSize: 40,
-          color: "#fff",
-          opacity: 1,
-          baseLine: "middle",
-          lineHeight: 48,
-          lineNum: 2,
-          textAlign: "left",
-          width: 580,
-          zIndex: 999
-        });
-        let showNum = rank.fixedFinalExponent
-          ? rank.fixedFinalExponent
-          : rank.employeeFinalExponent;
-
-        config.texts.push({
-          x: 510,
-          y: 330 + index * 100,
-          text: showNum,
-          fontSize: 40,
-          color: "#fff",
-          opacity: 1,
-          baseLine: "middle",
-          lineHeight: 48,
-          lineNum: 2,
-          textAlign: "left",
-          width: 580,
-          zIndex: 999
-        });
-      }
+    const { nickName, avatar, clazzName } = this.props;
+    console.log("this.props", this.props);
+    config.texts.push({
+      x: 400,
+      y: 150,
+      text: nickName + "邀请你加入",
+      fontSize: 30,
+      color: "#000",
+      opacity: 1,
+      baseLine: "middle",
+      lineHeight: 48,
+      lineNum: 2,
+      textAlign: "center",
+      width: 580,
+      zIndex: 999
+    });
+    config.texts.push({
+      x: 350,
+      y: 340,
+      text: clazzName,
+      fontSize: 50,
+      color: "#000",
+      opacity: 1,
+      baseLine: "middle",
+      lineHeight: 48,
+      lineNum: 2,
+      textAlign: "center",
+      width: 480,
+      zIndex: 999,
+      fontWeight: "bold"
+    });
+    config.images.push({
+      url: avatar,
+      width: 120,
+      height: 120,
+      y: 100,
+      x: 90,
+      zIndex: 99,
+      opacity: 1,
+      borderRadius: 200
+      // borderWidth: 10,
+      // borderColor: 'red',
     });
     this.setState({
       canvasStatus: true,
@@ -249,7 +251,9 @@ class ShareCanvasRank extends Component {
     );
   }
 }
-ShareCanvasRank.defaultProps = {
-  rankListData: []
+CanvasHome.defaultProps = {
+  nickName: "",
+  avatar: "",
+  clazzName: ""
 };
-export default ShareCanvasRank;
+export default CanvasHome;

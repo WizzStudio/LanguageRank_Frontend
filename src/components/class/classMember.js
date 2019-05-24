@@ -22,7 +22,6 @@ class ClassMember extends Component {
     }
   }
   getClassMember = (pageIndex = 1) => {
-    console.log("this.props", this.props);
     const { clazzId } = this.props;
     const data = {
       userId: myUserId,

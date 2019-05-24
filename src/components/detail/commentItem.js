@@ -5,7 +5,7 @@ import "./comment.scss";
 export default class CommentItem extends Component {
   constructor() {}
   render() {
-    const { floor, userId, comment, saveTime, nickName, avatarUrl } =
+    const { floor, comment, saveTime, nickName, avatarUrl } =
       this.props.perCmt || "";
     let saveTimeRes = saveTime
       ? saveTime.slice(0, 10) + " " + saveTime.slice(11, 18)
@@ -13,7 +13,7 @@ export default class CommentItem extends Component {
     return (
       <View className="comment-wrap">
         <View className="avatar-wrap">
-          <Image className="avatar" src="https://jdc.jd.com/img/200" />
+          <Image className="avatar" src={avatarUrl} />
         </View>
         <View className="content-wrap">
           <View className="title">

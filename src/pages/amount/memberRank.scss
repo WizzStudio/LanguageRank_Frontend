@@ -20,6 +20,11 @@
   }
   .member-list {
     margin: 20px auto;
+    .title {
+      color: #4f5fc5;
+      font-size: 30px;
+      font-weight: 300;
+    }
     .member-item {
       display: flex;
       align-items: center;

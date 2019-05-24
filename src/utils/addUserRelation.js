@@ -3,8 +3,8 @@ import myApi from "../service/api";
 export function addUserRelation(that, ownId) {
   console.log("that", that.$router);
   const params = that.$router.params;
-  if (params) {
-    const userOne = params.shareId || 0;
+  if (params && params.shareId) {
+    const userOne = params.shareId;
     const userTwo = ownId || Taro.getStorageSync("login").userId;
     const data = {
       userOne,

@@ -1,11 +1,12 @@
-import Taro, { Component, getStorageSync } from "@tarojs/taro";
+import Taro, { Component } from "@tarojs/taro";
 import { View, Swiper, SwiperItem } from "@tarojs/components";
-import { AtActivityIndicator, AtMessage } from "taro-ui";
-import "./dailyPlan.scss";
+import { AtActivityIndicator, AtMessage, AtIcon } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserClassPlan } from "../../actions/classInfo";
 import { getLoginInfo } from "../../utils/getlocalInfo";
 import myApi from "../../service/api";
+import "./dailyPlan.scss";
+import "./attention.scss";
 const myUserId = getLoginInfo().userId;
 @connect(
   ({ classInfo }) => ({
@@ -22,8 +23,7 @@ class DailyPlan extends Component {
     super();
     this.state = {
       current: 0,
-      isLoading: true,
-      allPlan: []
+      isLoading: true
     };
   }
   componentDidMount() {
@@ -38,7 +38,8 @@ class DailyPlan extends Component {
     this.props.ajaxGetUserClassPlan(data).then(res => {
       if (res.code === 0) {
         this.setState({
-          isLoading: false
+          isLoading: false,
+          current: this.props.classInfo.userClassPlan.length - 1
         });
       }
     });
@@ -47,6 +48,23 @@ class DailyPlan extends Component {
     this.setState({
       current: e.detail.current
     });
+  };
+  changeSwiper = type => {
+    const { current } = this.state;
+    switch (type) {
+      case "left":
+        this.setState({
+          current: current - 1
+        });
+        break;
+      case "right":
+        this.setState({
+          current: current + 1
+        });
+        break;
+      default:
+        break;
+    }
   };
   showSheet = item => {
     Taro.showActionSheet({
@@ -115,31 +133,67 @@ class DailyPlan extends Component {
               </View>
             ) : (
               <Swiper
-                className="swiper"
                 indicatorColor="#999"
-                indicatorActiveColor="#333"
-                previousMargin="35px"
-                nextMargin="35px"
+                indicatorActiveColor="#4f5fc5"
+                // previousMargin="35px"
+                // nextMargin="35px"
                 current={current}
                 onChange={this.handleSwiper}
                 indicatorDots>
                 {userClassPlan.map((item, index) => {
                   return (
-                    <SwiperItem key={item.studyPlanDay} index={index}>
-                      <View className="plan-title">
-                        第{item.studyPlanDay}天
+                    <SwiperItem
+                      className="swiper-wrap"
+                      key={item.studyPlanDay}
+                      index={index}>
+                      <View className="arror">
+                        {current === 0 ? (
+                          <AtIcon value="chevron-left" size="30" color="#999" />
+                        ) : (
+                          <AtIcon
+                            value="chevron-left"
+                            size="30"
+                            color="#4f5fc5"
+                            onClick={this.changeSwiper.bind(this, "left")}
+                          />
+                        )}
                       </View>
-                      <View
-                        className="content-wrap"
-                        onClick={this.showSheet.bind(this, item)}>
-                        <View className="brief">{item.briefIntroduction}</View>
-                        <View className="content">{item.content}</View>
-                        <View className="codeStr">
-                          提取码：{item.extractedCode}
+
+                      <View className="content">
+                        <View className="plan-title">
+                          第{item.studyPlanDay}天
                         </View>
-                        <View className="text-copy">
-                          (点击复制链接，浏览器打开)
+                        <View
+                          className="content-wrap"
+                          onClick={this.showSheet.bind(this, item)}>
+                          <View className="brief">
+                            {item.briefIntroduction}
+                          </View>
+                          <View className="content">{item.content}</View>
+                          <View className="codeStr">
+                            提取码：{item.extractedCode}
+                          </View>
+                          <View className="text-copy">
+                            (点击复制链接，浏览器打开)
+                          </View>
                         </View>
+                      </View>
+
+                      <View className="arror">
+                        {current + 1 === userClassPlan.length ? (
+                          <AtIcon
+                            value="chevron-right"
+                            size="30"
+                            color="#999"
+                          />
+                        ) : (
+                          <AtIcon
+                            onClick={this.changeSwiper.bind(this, "right")}
+                            value="chevron-right"
+                            size="30"
+                            color="#4f5fc5"
+                          />
+                        )}
                       </View>
                     </SwiperItem>
                   );

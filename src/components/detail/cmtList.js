@@ -27,7 +27,7 @@ class CmtList extends Component {
     this.state = {
       inputValue: "",
       btnMode: 1,
-      cmtTotal: 0,
+      cmtTotal: 1,
       commentList: [],
       currPage: 1
     };
@@ -137,7 +137,9 @@ class CmtList extends Component {
             </AtButton>
           </View>
         </View>
-        {cmtTotal === 0 && <View className="no-cmt">暂时没有评论</View>}
+        {cmtTotal === 0 && (
+          <View className="no-cmt">此处的评论有点秃，需要你的火力支援!</View>
+        )}
         {commentList.map(item => (
           <View key={item.floor}>
             <CommentItem perCmt={item} />

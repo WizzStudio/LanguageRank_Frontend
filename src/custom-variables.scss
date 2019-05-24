@@ -16,4 +16,12 @@ $color-brand: #4f5fc5;
   left: 40% !important;
 }
 
+swiper {
+  height: 450px;
+}
+swiper-item {
+  display: flex;
+  align-items: center;
+}
+
 @import "~taro-ui/dist/style/index.scss";

@@ -30,4 +30,14 @@
       font-size: 30px;
     }
   }
+  .no-collect {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    .noImg {
+      width: 500px;
+      height: 500px;
+    }
+  }
 }

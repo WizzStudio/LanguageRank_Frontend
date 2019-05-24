@@ -31,9 +31,9 @@ export default class MyInfo extends Component {
   }
   componentDidMount() {
     this.checkLogin();
-    this.ajaxGetIngo();
+    this.ajaxGetInfo();
   }
-  ajaxGetIngo = async () => {
+  ajaxGetInfo = async () => {
     const data = {
       userId: myUserId
     };
@@ -46,18 +46,26 @@ export default class MyInfo extends Component {
     return res;
   };
   checkLogin = () => {
-    if (Taro.getStorageSync("login")) {
-      if (Taro.getStorageSync("basicInfo")) {
-        const basicInfo = Taro.getStorageSync("basicInfo");
-        this.setState({
-          isLogin: true,
-          basicInfo: basicInfo
-        });
-      }
+    if (
+      Taro.getStorageSync("login") &&
+      Taro.getStorageSync("basicInfo") &&
+      Taro.getStorageSync("version")
+    ) {
+      const basicInfo = Taro.getStorageSync("basicInfo");
+      this.setState({
+        isLogin: true,
+        basicInfo: basicInfo
+      });
     } else {
+      this.toLogin();
     }
   };
   toPage = type => {
+    const { isLogin } = this.state;
+    if (!isLogin) {
+      this.toLogin();
+      return;
+    }
     switch (type) {
       case "myAward":
         Taro.navigateTo({
@@ -95,7 +103,11 @@ export default class MyInfo extends Component {
       title: "登陆即可查看奖励"
     });
   };
-
+  toLogin = () => {
+    Taro.navigateTo({
+      url: "/pages/login/login"
+    });
+  };
   //特加测试的东西
   bindGetUserInfo = e => {
     if (e.detail.userInfo) {
@@ -121,6 +133,7 @@ export default class MyInfo extends Component {
   };
   handleLogin = (iv, encryptedData) => {
     Taro.login().then(res => {
+      console.log("login返回的结果", res);
       if (res.code) {
         Taro.request({
           url: "https://pgrk.wizzstudio.com/login",
@@ -172,10 +185,7 @@ export default class MyInfo extends Component {
                 <AtAvatar circle={true} size="large" image={logo} />
               </View>
               <View className="intro-right">
-                <AtButton
-                  openType="getUserInfo"
-                  onGetUserInfo={this.bindGetUserInfo}
-                  type="secondary">
+                <AtButton onClick={this.toLogin} type="secondary">
                   点击登陆
                 </AtButton>
               </View>
@@ -236,6 +246,7 @@ export default class MyInfo extends Component {
           type="primary">
           授权登陆
         </AtButton>
+        <AtButton onClick={this.toLogin}>跳转登陆页</AtButton>
         <View className="footer">
           <View className="about">关于我们</View>
           <Text decode="{{true}}" space="{{true}}">

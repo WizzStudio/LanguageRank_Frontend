@@ -39,15 +39,16 @@
       font-weight: 100;
     }
   }
+}
+.cmt-list {
   .no-cmt {
-    margin: 40px;
+    margin: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #4f5fc5;
+    font-weight: 200;
   }
-}
-.cmt-list {
   .cmt-button {
     margin: 20px auto;
     display: flex;

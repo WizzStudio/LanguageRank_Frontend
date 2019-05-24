@@ -1,19 +1,28 @@
-$color-brand: #4f5fc5;
-
 .plan-title {
-  color: $color-brand;
+  color: #4f5fc5;
   font-weight: bold;
   font-size: 1.3em;
   margin: 0px auto 10px auto;
   display: flex;
   justify-content: center;
 }
+.content {
+  background-color: #dcdcdc;
+  border-radius: 10px;
+  align-self: flex-start;
+  padding: 10px;
+  flex: 8;
+  height: 90%;
+}
+.arror {
+  flex: 1;
+}
 .content-wrap {
   font-size: 30px;
   .brief {
     font-size: 40px;
     font-weight: 700;
-    margin: 20px 0;
+    margin: 10px 0;
   }
   .codeStr {
     margin: 10px 0;
@@ -24,44 +33,8 @@ $color-brand: #4f5fc5;
     font-size: 20px;
   }
 }
-// .plan-card {
-//   height: 800px !important;
-//   background-color: #fff;
-//   border: 12px solid #4f5fc5 !important;
-//   // box-shadow: (20px 20px 20px #dcdcdc, -20px -20px 20px #dcdcdc);
-//   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-//   // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-// }
-// .full-plan {
-//   height: 550px;
-//   width: 100%;
-//   margin: 0;
-//   padding: 0;
-// }
-// .cover {
-//   background: rgba(0, 0, 0, 0.3);
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// }
-// .no-plan-note {
-//   font-size: 40px;
-//   color: #fff;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-// }
-.swiper {
-  height: 500px;
-}
-swiper-item {
-  background-color: #dcdcdc;
-  border-radius: 10px;
-  padding: 10px;
-  height: 90%;
-}
 .loading-wrap {
-  height: 500px;
+  height: 450px;
   display: flex;
   justify-content: center;
   align-items: center;

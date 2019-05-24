@@ -1,15 +1,15 @@
 import Taro, { Component } from "@tarojs/taro";
-import { View, Button, Image } from "@tarojs/components";
+import { View, Image } from "@tarojs/components";
 import { AtButton } from "taro-ui";
 import { TaroCanvasDrawer } from "taro-plugin-canvas"; // npm 引入方式
-
-import canvasAuth from "../../assets/img/canvasAuth.png";
 import load from "../../assets/img/load.png";
 import "./canvasPost.scss";
-class ShareCanvasRank extends Component {
+const canvasAchieveImg =
+  "http://qiniu.ben286.top/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190524215917.png";
+// import canvasAchieveImg from "../../assets/img/canvasAchieve.png";
+class CanvasAchieve extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       // 绘图配置文件
       isShow: false,
@@ -22,30 +22,18 @@ class ShareCanvasRank extends Component {
       // TaroCanvasDrawer 组件状态
       canvasStatus: false,
       rssConfig: {
-        width: 750,
-        height: 400,
-        backgroundColor: "#ccc",
+        width: 650,
+        height: 1000,
+        backgroundColor: "#EDEDED",
         debug: true,
-        blocks: [
-          {
-            x: 0,
-            y: 0,
-            width: 750,
-            height: 400,
-            paddingLeft: 0,
-            paddingRight: 0,
-            borderWidth: 0,
-            // borderColor: '#ccc',
-            // backgroundColor: "#ccc",
-            borderRadius: 0
-          }
-        ],
+        blocks: [],
         texts: [],
         images: [
           {
-            url: canvasAuth,
-            width: 750,
+            url: canvasAchieveImg,
+            width: 650,
             height: 1000,
+            opacity: 1,
             y: 0,
             x: 0,
             borderRadius: 12,
@@ -97,43 +85,46 @@ class ShareCanvasRank extends Component {
 
   // 调用绘画 => canvasStatus 置为true、同时设置config
   canvasDrawFunc = (config = this.state.rssConfig) => {
-    // const { authRank } = this.props.rankList;
-    const { rankListData } = this.props;
-    rankListData.map((rank, index) => {
-      if (index <= 4) {
-        config.texts.push({
-          x: 230,
-          y: 330 + index * 100,
-          text: rank.languageName,
-          fontSize: 40,
-          color: "#fff",
-          opacity: 1,
-          baseLine: "middle",
-          lineHeight: 48,
-          lineNum: 2,
-          textAlign: "left",
-          width: 580,
-          zIndex: 999
-        });
-        let showNum = rank.fixedFinalExponent
-          ? rank.fixedFinalExponent
-          : rank.employeeFinalExponent;
-
-        config.texts.push({
-          x: 510,
-          y: 330 + index * 100,
-          text: showNum,
-          fontSize: 40,
-          color: "#fff",
-          opacity: 1,
-          baseLine: "middle",
-          lineHeight: 48,
-          lineNum: 2,
-          textAlign: "left",
-          width: 580,
-          zIndex: 999
-        });
-      }
+    const { nickName, avatar, dayNum } = this.props;
+    config.images.push({
+      url: avatar,
+      width: 150,
+      height: 150,
+      color: "#000",
+      x: 270,
+      y: 100,
+      zIndex: 99,
+      opacity: 1,
+      borderRadius: 200
+    });
+    config.texts.push({
+      x: 250,
+      y: 320,
+      text: nickName,
+      fontSize: 30,
+      color: "#000",
+      opacity: 1,
+      baseLine: "middle",
+      lineHeight: 48,
+      lineNum: 2,
+      textAlign: "middle",
+      width: 580,
+      zIndex: 999
+    });
+    config.texts.push({
+      x: 250,
+      y: 400,
+      text: "已打卡" + dayNum + "天",
+      fontSize: 40,
+      color: "#000",
+      opacity: 1,
+      fontWeight: "bold",
+      baseLine: "middle",
+      lineHeight: 48,
+      lineNum: 2,
+      textAlign: "middle",
+      width: 580,
+      zIndex: 999
     });
     this.setState({
       canvasStatus: true,
@@ -249,7 +240,9 @@ class ShareCanvasRank extends Component {
     );
   }
 }
-ShareCanvasRank.defaultProps = {
-  rankListData: []
+CanvasAchieve.defaultProps = {
+  nickName: "",
+  avatar: "",
+  dayNum: 0
 };
-export default ShareCanvasRank;
+export default CanvasAchieve;
