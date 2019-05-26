@@ -9,7 +9,6 @@ import {
   AtForm,
   AtIcon
 } from "taro-ui";
-import "./classHome.scss";
 import CmtList from "../../components/detail/cmtList";
 import ClassMember from "../../components/class/classMember";
 import AddComment from "../../components/detail/addComment";
@@ -23,8 +22,9 @@ import { getClassMsg, ajaxGetUserClass } from "../../actions/classInfo";
 import { connect } from "@tarojs/redux";
 import { getLoginInfo } from "../../utils/getlocalInfo";
 import checkToLogin from "../../utils/checkToLogin";
-const myUserId = getLoginInfo().userId;
-const basicInfo = Taro.getStorageSync("basicInfo");
+import "./classHome.scss";
+let myUserId;
+let basicInfo;
 @connect(
   ({ classInfo }) => ({ classInfo }),
   dispatch => ({
@@ -48,18 +48,20 @@ export default class ClassHome extends Component {
       isAdded: false,
       isPunched: true,
       clazzId: 0,
-      isShowCanvas: false
+      isShowCanvas: false,
+      classMsgState: {}
     };
   }
-  componentWillMount() {
-    checkToLogin();
-  }
-  componentDidUpdate = prevProps => {
-    if (prevProps.classInfo.userClassId != this.props.classInfo.userClassId) {
-      this.checkIsAdded();
-    }
-  };
+  componentWillMount() {}
+  // componentDidUpdate = prevProps => {
+  //   if (prevProps.classInfo.userClassId != this.props.classInfo.userClassId) {
+  //     this.checkIsAdded();
+  //   }
+  // };
   componentDidMount() {
+    // checkToLogin();
+    myUserId = getLoginInfo().userId;
+    basicInfo = Taro.getStorageSync("basicInfo");
     const param = this.$router.params || "";
     if (param) {
       const { clazzId } = param;
@@ -70,7 +72,8 @@ export default class ClassHome extends Component {
       this.getClassMessage(clazzId).then(res => {
         if (res.code === 0) {
           this.setState({
-            isPunched: res.data.isPunchCard
+            isPunched: res.data.isPunchCard,
+            classMsgState: res.data
           });
         }
       });
@@ -97,13 +100,15 @@ export default class ClassHome extends Component {
   };
   changeAddTrue = () => {
     this.setState({
-      isAdded: true
+      isAdded: true,
+      isPunched: false
     });
   };
   getClassMessage = clazzId => {
     const dataMsg = {
       clazzId
     };
+    console.log("msg接口发送的dataMsg", dataMsg);
     return this.props.getClassMsg(dataMsg);
   };
 
@@ -126,8 +131,9 @@ export default class ClassHome extends Component {
       clazzId,
       formId
     };
+    console.log("打卡发送的data", data);
     myApi("/punchcard", "POST", data).then(res => {
-      console.log("res", res);
+      console.log("打卡返回的res", res);
       if (res.code === 0) {
         Taro.showToast({
           title: "打卡成功"
@@ -160,7 +166,6 @@ export default class ClassHome extends Component {
       itemList: ["生成邀请卡", "退出班级"],
       itemColor: "#4f5fc5"
     }).then(res => {
-      console.log("res", res);
       if (res.tapIndex === 0) {
         this.openCanvas();
       } else if (res.tapIndex === 1) {
@@ -174,7 +179,9 @@ export default class ClassHome extends Component {
       userId: myUserId,
       clazzId
     };
+    console.log("退出班级发送的data", data);
     myApi("/quitclazz", "POST", data).then(res => {
+      console.log("退出班级收到的res", res);
       if (res.code === 0) {
         Taro.showToast({
           title: "退出成功"
@@ -191,11 +198,9 @@ export default class ClassHome extends Component {
     this.cmtNode.getCmtList();
   };
   onShareAppMessage = res => {
-    const { clazzId } = this.state;
-    console.log("res", res);
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
-      path: `/pages/class/classHome?clazzId=${clazzId}&shareId=${myUserId}`
+      path: `/pages/index/index?shareId=${myUserId}`
     };
   };
   openCanvas = () => {
@@ -209,7 +214,7 @@ export default class ClassHome extends Component {
     });
   };
   render() {
-    const tabList = [{ title: "讨论" }, { title: "成员" }];
+    const tabList = [{ title: "讨论" }, { title: "成员" }, { title: "好友" }];
     const {
       currentTab,
       isAdded,
@@ -217,8 +222,7 @@ export default class ClassHome extends Component {
       ruleOpened,
       isShowCanvas
     } = this.state;
-    console.log("basicInfo", basicInfo);
-    const { classMsg } = this.props.classInfo || [];
+    const classMsg = this.state.classMsgState;
     return (
       <View>
         {isShowCanvas ? (
@@ -293,7 +297,7 @@ export default class ClassHome extends Component {
                         type="primary"
                         size="normal"
                         onClick={this.toUserRank}>
-                        查看排行
+                        查看今日排行
                       </AtButton>
                     </View>
                     <View className="punch-rule" onClick={this.openRule}>
@@ -349,16 +353,16 @@ export default class ClassHome extends Component {
               <View>
                 <View className="intro-title">打卡规则</View>
                 <View className="intro-content">
-                  1、打卡积分的用途 \n①去积分商城兑换海量好礼
-                  \n②参与排行，与好友pk\n 2、积分获取规则
+                  【1、打卡积分的用途】 \n①去积分商城兑换海量好礼
+                  \n②参与排行，与好友pk\n 【2、积分获取规则】
                   \n连续第N天打卡成功，当天获得10×N个积分。\n 例如：\n
                   连续第1天12点前打卡，当天获得10分，累计10分。\n
                   连续第2天12点前打卡，当天获得20分，累计30分。\n
                   连续第3天12点前打卡，当天获得30分，累计60分。\n ......\n
                   某天12点之后打卡，当天奖励正常积分数的一半。\n
                   中断打卡后，当天奖励重新从10分开始计算，总积分累计。\n
-                  4、收集膜拜奖励 每获得一个好友膜拜奖10分 \n
-                  5、奖励上限:每人每天最多可获得300分\n
+                  【3、收集膜拜奖励 每获得一个好友膜拜奖10分】 \n
+                  【4、奖励上限:每人每天最多可获得300分】\n
                 </View>
                 <View className="intro-close">
                   <AtButton type="primary" onClick={this.closeRule.bind(this)}>
@@ -375,13 +379,17 @@ export default class ClassHome extends Component {
                 <CmtList typeCmt="class" clazzId={clazzId} ref={this.refCmt} />
               </AtTabsPane>
               <AtTabsPane current={currentTab} index={1}>
-                <ClassMember clazzId={clazzId} />
+                <ClassMember clazzId={clazzId} type="class" />
+              </AtTabsPane>
+              <AtTabsPane current={currentTab} index={2}>
+                <ClassMember clazzId={clazzId} type="friend" />
               </AtTabsPane>
             </AtTabs>
             {currentTab === 0 ? (
               <AddComment
                 type="class"
                 clazzId={clazzId}
+                isAdded={isAdded}
                 onRefresh={this.updateCmt}
               />
             ) : (

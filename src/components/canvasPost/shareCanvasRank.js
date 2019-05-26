@@ -2,10 +2,10 @@ import Taro, { Component } from "@tarojs/taro";
 import { View, Button, Image } from "@tarojs/components";
 import { AtButton } from "taro-ui";
 import { TaroCanvasDrawer } from "taro-plugin-canvas"; // npm 引入方式
-
-import canvasAuth from "../../assets/img/canvasAuth.png";
 import load from "../../assets/img/load.png";
 import "./canvasPost.scss";
+const canvasAuth = "https://pgrk.wizzstudio.com/image/fixedrank.png";
+const canvasDemand = "https://pgrk.wizzstudio.com/image/employeerank.png";
 class ShareCanvasRank extends Component {
   constructor(props) {
     super(props);
@@ -43,7 +43,7 @@ class ShareCanvasRank extends Component {
         texts: [],
         images: [
           {
-            url: canvasAuth,
+            url: props.type === "auth" ? canvasAuth : canvasDemand,
             width: 750,
             height: 1000,
             y: 0,
@@ -250,6 +250,7 @@ class ShareCanvasRank extends Component {
   }
 }
 ShareCanvasRank.defaultProps = {
-  rankListData: []
+  rankListData: [],
+  type: ""
 };
 export default ShareCanvasRank;

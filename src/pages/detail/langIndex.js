@@ -14,6 +14,7 @@ import LangHome from "./langHome";
 import DemandHome from "./demandHome";
 import CmtList from "../../components/detail/cmtList";
 import AddComment from "../../components/detail/addComment";
+let myUserId;
 export default class LangIndex extends Component {
   config = {
     navigationBarTitleText: "语言热度详情"
@@ -32,6 +33,7 @@ export default class LangIndex extends Component {
     };
   }
   componentDidMount() {
+    myUserId = Taro.getStorageSync("login").userId;
     const { langName, rankIndex, rankNum, exponent, tab } = this.$router.params;
     this.getLangTop(langName).then(res => {
       if (res.code === 0) {
@@ -58,7 +60,7 @@ export default class LangIndex extends Component {
   onShareAppMessage = res => {
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
-      path: "/pages/index/index"
+      path: `/pages/index/index?shareId=${myUserId}`
     };
   };
   tabClick = value => {
@@ -150,6 +152,7 @@ export default class LangIndex extends Component {
               type={rankIndex}
               langName={langName}
               onRefresh={this.updateCmt}
+              isAdded={true}
             />
           </View>
         )}

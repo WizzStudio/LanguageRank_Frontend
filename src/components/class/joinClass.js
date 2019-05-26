@@ -4,7 +4,6 @@ import { AtButton, AtMessage } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { ajaxJoinClass, ajaxGetUserClass } from "../../actions/classInfo";
 import { getLoginInfo } from "../../utils/getlocalInfo";
-const myUserId = getLoginInfo().userId;
 @connect(
   classInfo => ({
     classInfo
@@ -33,7 +32,10 @@ class JoinClass extends Component {
             message: "加入成功",
             type: "success"
           });
-          this.props.ajaxGetUserClass({ userId: myUserId }).then(res => {
+          this.props.ajaxGetUserClass({ userId }).then(res => {
+            if (res.code === 0 && this.props.type === "classHome") {
+              this.props.onChangeAdd();
+            }
             if (res.code === 0 && this.props.type === "classList") {
               Taro.navigateTo({
                 url: `/pages/class/classHome?clazzId=${clazzId}`
@@ -67,5 +69,6 @@ class JoinClass extends Component {
 }
 JoinClass.defaultProps = {
   clazzId: 0,
-  type: ""
+  type: "",
+  onChangeAdd: () => {}
 };

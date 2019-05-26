@@ -19,26 +19,55 @@ function setChartData(chart, data) {
         },
         axisLabel: {
           interval: 0,
-          rotate: 320
+          rotate: 320,
+          textStyle: {
+            fontSize: "14",
+            rich: {}
+          }
         }
       }
     ],
     yAxis: [
       {
         type: "value",
+        scale: true,
         axisLabel: {
           formatter: "{value}k"
+        },
+        axisLabel: {
+          show: true,
+          textStyle: {
+            fontSize: "14",
+            rich: {}
+          }
         }
       }
     ],
-    series: []
+    series: [
+      {
+        label: {
+          normal: {
+            textStyle: {
+              fontSize: "14",
+              color: "#000",
+              rich: {}
+            }
+          }
+        }
+      }
+    ]
   };
   if (data && data.dimensions && data.measures) {
     option.xAxis[0].data = data.dimensions.data;
     option.series = data.measures.map(item => {
       return {
         ...item,
-        type: "bar"
+        type: "bar",
+        itemStyle: {
+          normal: {
+            barBorderRadius: [6, 6, 0, 0]
+          }
+        }
       };
     });
   }

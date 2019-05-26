@@ -16,6 +16,7 @@ export default async function myApi(url, method = "GET", data = {}) {
     const res = response.data;
     return res;
   } catch (e) {
+    Taro.hideLoading();
     Taro.showToast({
       title: "加载失败"
     });

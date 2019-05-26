@@ -5,7 +5,7 @@ import { TaroCanvasDrawer } from "taro-plugin-canvas"; // npm 引入方式
 import load from "../../assets/img/load.png";
 import "./canvasPost.scss";
 const canvasAchieveImg =
-  "http://qiniu.ben286.top/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190524215917.png";
+  "https://pgrk.wizzstudio.com/image/achievementCard.jpg";
 // import canvasAchieveImg from "../../assets/img/canvasAchieve.png";
 class CanvasAchieve extends Component {
   constructor(props) {
@@ -91,14 +91,14 @@ class CanvasAchieve extends Component {
       width: 150,
       height: 150,
       color: "#000",
-      x: 270,
+      x: 260,
       y: 100,
       zIndex: 99,
       opacity: 1,
-      borderRadius: 200
+      borderRadius: 20
     });
     config.texts.push({
-      x: 250,
+      x: 335,
       y: 320,
       text: nickName,
       fontSize: 30,
@@ -107,12 +107,12 @@ class CanvasAchieve extends Component {
       baseLine: "middle",
       lineHeight: 48,
       lineNum: 2,
-      textAlign: "middle",
+      textAlign: "center",
       width: 580,
       zIndex: 999
     });
     config.texts.push({
-      x: 250,
+      x: 335,
       y: 400,
       text: "已打卡" + dayNum + "天",
       fontSize: 40,
@@ -122,7 +122,7 @@ class CanvasAchieve extends Component {
       baseLine: "middle",
       lineHeight: 48,
       lineNum: 2,
-      textAlign: "middle",
+      textAlign: "center",
       width: 580,
       zIndex: 999
     });

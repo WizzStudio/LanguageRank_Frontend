@@ -16,8 +16,8 @@ export default class Attention extends Component {
       <View className="attention">
         <Image src={codeImg} className="sub-img" onClick={this.showImage} />
         <View className="text-bottom">
-          点击预览图片，\n长按扫描二维码，\n关注公众号，\n
-          了解编程语言最新热点资讯，\n掌握雇主最新动态。
+          点击预览图片，长按扫描二维码，\n或搜索公众号：HelloWorld Rank \n
+          关注公众号，\n了解编程语言最新热点资讯，\n掌握雇主最新动态。
         </View>
       </View>
     );

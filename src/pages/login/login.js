@@ -6,6 +6,9 @@ import logo from "../../assets/img/logo.png";
 import "./login.scss";
 import { addUserRelation } from "../../utils/addUserRelation";
 export default class Login extends Component {
+  config = {
+    navigationBarTitleText: "HelloWorld Rank"
+  };
   bindGetUserInfo = e => {
     Taro.showLoading({
       title: "正在登录..."
@@ -38,18 +41,12 @@ export default class Login extends Component {
                   Taro.setStorageSync("version", {
                     ver: "2.0"
                   });
-                  // Taro.setStorage("login", {
-                  //   userId: loginRes.data.userId,
-                  //   openId: loginRes.data.openId,
-                  //   session_key: loginRes.data.session_key
-                  // }).then(() => {
-                  //   Taro.setStorage("version", {
-                  //     ver: "2.0"
-                  //   });
-                  // });
-                  addUserRelation(this, loginRes.data.userId);
+                  const shareId = this.$router.params.shareId || 0;
+                  console.log("login页面即将去addUSer的shareId", shareId);
+                  if (shareId) {
+                    addUserRelation(shareId, loginRes.data.userId);
+                  }
                   Taro.hideLoading();
-                  // Taro.navigateBack();
                   Taro.switchTab({
                     url: "/pages/index/index"
                   });

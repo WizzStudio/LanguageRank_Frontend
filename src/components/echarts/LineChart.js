@@ -3,8 +3,11 @@ import * as echarts from "../ec-canvas/echarts";
 // import * as echarts from "./ec-canvas/echarts.min.js";
 
 function setChartData(chart, data) {
+  console.log("data", data);
+  let max = Math.max.apply(null, data.measures[0].data);
+  let min = Math.min.apply(null, data.measures[0].data);
   let option = {
-    color: ["#3398DB"],
+    color: ["#4f5fc5"],
     xAxis: [
       {
         type: "category",
@@ -14,25 +17,54 @@ function setChartData(chart, data) {
         },
         axisLabel: {
           interval: 0,
-          rotate: 320
+          rotate: 320,
+          textStyle: {
+            fontSize: "14",
+            rich: {}
+          }
         }
       }
     ],
     yAxis: [
       {
         type: "value",
-        max: 100,
-        min: 0
+        min: min,
+        max: max,
+        // scale: true,
+        // interval: 20,
+        axisTick: {
+          alignWithLabel: true
+        },
+        axisLabel: {
+          show: true,
+          textStyle: {
+            fontSize: "10",
+            rich: {}
+          }
+        }
       }
     ],
-    series: []
+    series: [
+      {
+        label: {
+          normal: {
+            textStyle: {
+              fontSize: "12",
+              color: "#000",
+              rich: {}
+            }
+          }
+        }
+      }
+    ]
   };
   if (data && data.dimensions && data.measures) {
     option.xAxis[0].data = data.dimensions.data;
     option.series = data.measures.map(item => {
       return {
         ...item,
-        type: "line"
+        type: "line",
+        smooth: true
       };
     });
   }

@@ -1,6 +1,5 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtButton } from "taro-ui";
 import shareImg from "../../assets/img/share.png";
 import "./shareBtn.scss";
 class ShareBtn extends Component {

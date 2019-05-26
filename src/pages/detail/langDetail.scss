@@ -201,7 +201,7 @@ $color-brand: #4f5fc5;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #a6a6a6;
+  color: #000;
   font-size: 32px;
   .demand-posi-name {
     display: flex;
@@ -295,8 +295,8 @@ at-button {
 }
 .tostudy-btn {
   // width: 50% !important;
-  height: 90px;
-  line-height: 90px;
+  height: 80px;
+  line-height: 80px;
   font-size: 35px;
   width: 160px;
 }

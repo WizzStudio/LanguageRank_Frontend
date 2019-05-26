@@ -10,7 +10,7 @@ import {
 } from "../constants/classInfo";
 import fetchData from "../service/createAction";
 import { getLoginInfo } from "../utils/getlocalInfo";
-const userId = getLoginInfo().userId || "";
+
 //处理错误情况
 export const getClassFail = data => {
   return {
@@ -71,6 +71,7 @@ export const ajaxGetClassCmt = data => {
 
 //查看班级基本信息
 export const getClassMsg = data => {
+  const userId = getLoginInfo().userId || "";
   const option = {
     url: "/getclazzmessage",
     method: "POST",

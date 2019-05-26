@@ -3,6 +3,7 @@ import { View, Image } from "@tarojs/components";
 import { AtDivider, AtRate, AtIcon, AtBadge } from "taro-ui";
 import "./langDetail.scss";
 import myApi from "../../service/api";
+let myUserId;
 export default class LangDetail extends Component {
   config = {
     navigationBarTitleText: "语言介绍"
@@ -23,7 +24,9 @@ export default class LangDetail extends Component {
   }
   componentWillMount() {}
   componentDidMount() {
+    myUserId = Taro.getStorageSync("login").userId;
     let { langName } = this.$router.params;
+    console.log("router中的langName", langName);
     this.getLangDetail(langName);
   }
   getLangDetail = langName => {
@@ -40,14 +43,14 @@ export default class LangDetail extends Component {
       }
     });
   };
-  onShareAppMessage = () => {
+  onShareAppMessage = res => {
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
-      path: "/pages/index/index"
+      path: `/pages/index/index?shareId=${myUserId}`
     };
   };
   render() {
-    const { langMore, langName } = this.state;
+    const { langMore } = this.state;
     return (
       <View>
         {langMore ? (
@@ -61,7 +64,8 @@ export default class LangDetail extends Component {
                   />
                 </View>
                 <View className="name">
-                  <View>{langName}</View>
+                  {/* <View>{langName}</View> */}
+                  <View>{langMore.language.languageName}</View>
                   <View className="difficult">
                     <AtRate value={langMore.language.languageDifficultyIndex} />
                     <AtBadge value="难度" className="badge" />
@@ -81,7 +85,9 @@ export default class LangDetail extends Component {
             </View>
             <AtDivider />
             <View className="wrap-content">
-              <View className="wrap-title">{langName}可以用来做</View>
+              <View className="wrap-title">
+                {langMore.language.languageName}可以用来做
+              </View>
               <View className="app">
                 {Object.keys(langMore.languageUse || {}).map((key, index) => (
                   <View className="wrap-item" key={index}>
@@ -95,7 +101,9 @@ export default class LangDetail extends Component {
             </View>
             <AtDivider />
             <View className="wrap-content">
-              <View className="wrap-title">{langName}的优缺点</View>
+              <View className="wrap-title">
+                {langMore.language.languageName}的优缺点
+              </View>
               <View className="ad-disad">
                 {langMore.languageAdvantage.map((item, index) => (
                   <View key={index} className="row-wrap">
@@ -121,7 +129,9 @@ export default class LangDetail extends Component {
             </View>
             <AtDivider />
             <View className="wrap-content">
-              <View className="wrap-title">{langName}应用领域</View>
+              <View className="wrap-title">
+                {langMore.language.languageName}应用领域
+              </View>
               <View className="app">
                 {Object.keys(langMore.languageApplicationFields).map(
                   (key, index) => (
@@ -140,7 +150,9 @@ export default class LangDetail extends Component {
             </View>
             <AtDivider />
             <View className="wrap-content">
-              <View className="wrap-title">{langName}的顶级雇主</View>
+              <View className="wrap-title">
+                {langMore.language.languageName}的顶级雇主
+              </View>
               <View className="app">
                 {langMore.companyList.map((item, index) => (
                   <View className="wrap-item" key={index}>

@@ -1,13 +1,16 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View } from "@tarojs/components";
-import { AtDivider, AtButton } from "taro-ui";
+import { AtDivider } from "taro-ui";
 import myApi from "../../service/api";
+import ShareBtn from "../../components/class/shareBtn";
 import "./memberRank.scss";
 import { getLoginInfo, getBasicInfo } from "../../utils/getlocalInfo";
+let myUserId, myNickName;
 
-const myUserId = getLoginInfo().userId;
-const myNickName = getBasicInfo().nickName;
 export default class MemberRank extends Component {
+  config = {
+    navigationBarTitleText: "好友排行"
+  };
   constructor() {
     super();
     this.state = {
@@ -17,6 +20,8 @@ export default class MemberRank extends Component {
     };
   }
   componentDidMount() {
+    myUserId = getLoginInfo().userId;
+    myNickName = getBasicInfo().nickName;
     this.getFriendRank();
   }
   getFriendRank = () => {
@@ -31,7 +36,6 @@ export default class MemberRank extends Component {
           (rankNum = index + 1), (total = item.totalScore);
         }
       });
-      console.log("total", total);
       this.setState({
         friRank: res.data,
         rankNum,
@@ -39,10 +43,11 @@ export default class MemberRank extends Component {
       });
     });
   };
-  toAwardStore = () => {
-    Taro.navigateTo({
-      url: "/pages/amount/myAward"
-    });
+  onShareAppMessage = () => {
+    return {
+      title: "进入小程序了解当下最流行、最赚钱的编程语言",
+      path: `/pages/index/index?shareId=${myUserId}`
+    };
   };
   render() {
     const { friRank, rankNum, total } = this.state;
@@ -52,11 +57,10 @@ export default class MemberRank extends Component {
         <View className="nickname">{myNickName}</View>
         <View className="title">
           <View className="rank">第{rankNum}名</View>
-          <View className="score">本周获得{total}分</View>
-          <View className="score-btn">
-            <AtButton size="small" type="primary" onClick={this.toAwardStore}>
-              积分兑换
-            </AtButton>
+          <View className="score">已获得{total}分</View>
+          <View className="score-wrap">
+            <View className="add-note">邀请好友</View>
+            <ShareBtn />
           </View>
         </View>
         <AtDivider />
@@ -67,9 +71,9 @@ export default class MemberRank extends Component {
             <View className="name">用户</View>
             <View className="total">积分</View>
           </View>
-          {friRank.map(item => (
+          {friRank.map((item, index) => (
             <View className="member-item" key={item.nickName}>
-              <View className="rank">1</View>
+              <View className="rank">{index + 1}</View>
               <View className="avatar-wrap">
                 <Image className="avatar" src={item.avatarUrl} />
               </View>
@@ -77,6 +81,9 @@ export default class MemberRank extends Component {
               <View className="total">{item.totalScore}</View>
             </View>
           ))}
+          <View className="note-add">
+            为保护您的隐私，小程序不会获取你的好友列表，想要和更多的好友一起pk排行，快点击上方邀请好友一起打卡吧！
+          </View>
         </View>
       </View>
     );

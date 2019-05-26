@@ -4,7 +4,7 @@ import { AtInput, AtButton, AtMessage } from "taro-ui";
 import "./addComment.scss";
 import { getLoginInfo } from "../../utils/getlocalInfo";
 import myApi from "../../service/api";
-const userId = getLoginInfo().userId || "";
+let userId;
 
 class AddComment extends Component {
   constructor() {
@@ -12,6 +12,9 @@ class AddComment extends Component {
     this.state = {
       inputValue: ""
     };
+  }
+  componentDidMount() {
+    userId = getLoginInfo().userId || "";
   }
   handleInputChange = val => {
     this.setState({
@@ -38,7 +41,14 @@ class AddComment extends Component {
       });
       return;
     }
-    const { type, clazzId, langName } = this.props;
+    const { type, clazzId, langName, isAdded } = this.props;
+    if (isAdded === false) {
+      Taro.atMessage({
+        message: "加入班级后方可评论",
+        type: "warning"
+      });
+      return;
+    }
     let data = {},
       url = "";
     switch (type) {
@@ -82,6 +92,7 @@ class AddComment extends Component {
     });
   };
   render() {
+    const { isAdded } = this.props;
     return (
       <View>
         <AtMessage />
@@ -90,13 +101,19 @@ class AddComment extends Component {
           <AtInput
             type="text"
             maxLength="999"
-            placeholder="我有问题想问"
+            placeholder={isAdded ? "我有问题想问" : "加入班级后即可评论"}
             value={this.state.inputValue}
             onChange={this.handleInputChange.bind(this)}
           />
-          <AtButton type="primary" size="small" onClick={this.updateCmt}>
-            提交
-          </AtButton>
+          {isAdded ? (
+            <AtButton type="primary" size="small" onClick={this.updateCmt}>
+              提交
+            </AtButton>
+          ) : (
+            <AtButton type="primary" size="small" disabled>
+              提交
+            </AtButton>
+          )}
         </View>
       </View>
     );
@@ -106,6 +123,7 @@ AddComment.defaultProps = {
   type: "",
   langName: "",
   clazzId: "",
+  isAdded: true,
   onRefresh: () => {}
 };
 export default AddComment;

@@ -6,7 +6,7 @@ import "./myCollect.scss";
 import { getLoginInfo } from "../../utils/getlocalInfo";
 import ShareBtn from "../../components/class/shareBtn";
 import noCollectionImg from "../../assets/img/no-collection.png";
-const myUserId = getLoginInfo().userId;
+let myUserId;
 export default class MyCollect extends Component {
   config = {
     navigationBarTitleText: "我的收藏"
@@ -18,6 +18,7 @@ export default class MyCollect extends Component {
     };
   }
   componentDidMount() {
+    myUserId = getLoginInfo().userId;
     this.getCollection();
   }
   getCollection = () => {
@@ -25,7 +26,6 @@ export default class MyCollect extends Component {
       userId: myUserId
     };
     myApi("/getcollection", "POST", data).then(res => {
-      console.log("res", res);
       this.setState({
         collectList: res.data
       });
@@ -36,7 +36,6 @@ export default class MyCollect extends Component {
       itemList: ["复制", "取消收藏"],
       itemColor: "#4f5fc5"
     }).then(res => {
-      console.log("res", res);
       if (res.tapIndex === 0) {
         this.copyContent(item.link + "提取码：" + item.extractedCode);
       } else if (res.tapIndex === 1) {
@@ -68,7 +67,6 @@ export default class MyCollect extends Component {
   onShareAppMessage = res => {
     const loginInfo = Taro.getStorageSync("login");
     const id = loginInfo.userid;
-    let clazzId = res.target.dataset.param;
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
       path: `/pages/index/index?shareId=${id}`
@@ -97,6 +95,9 @@ export default class MyCollect extends Component {
         {collectList.length === 0 && (
           <View className="no-collect">
             <Image className="noImg" src={noCollectionImg} />
+            <View className="no-collect-note">
+              快去猿圈加入班级，\n收藏你的学习链接吧！
+            </View>
           </View>
         )}
         {collectList.map(item => (

@@ -20,6 +20,14 @@ function setChartData(chart, data) {
             shadowOffsetX: 0,
             shadowColor: "rgba(0, 0, 0, 0.5)"
           }
+        },
+        label: {
+          normal: {
+            textStyle: {
+              fontSize: "14",
+              rich: {}
+            }
+          }
         }
       }
     ]

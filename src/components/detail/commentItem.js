@@ -8,7 +8,7 @@ export default class CommentItem extends Component {
     const { floor, comment, saveTime, nickName, avatarUrl } =
       this.props.perCmt || "";
     let saveTimeRes = saveTime
-      ? saveTime.slice(0, 10) + " " + saveTime.slice(11, 18)
+      ? saveTime.slice(0, 10) + " " + saveTime.slice(11, 19)
       : "";
     return (
       <View className="comment-wrap">

@@ -6,7 +6,7 @@ import "./classList.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetAllClass, ajaxGetUserClass } from "../../actions/classInfo";
 import { getLoginInfo } from "../../utils/getlocalInfo";
-const myUserId = getLoginInfo().userId;
+let myUserId;
 @connect(
   ({ classInfo }) => ({
     classInfo
@@ -22,7 +22,7 @@ const myUserId = getLoginInfo().userId;
 )
 export default class ClassList extends Component {
   config = {
-    navigationBarTitleText: "圈内项目"
+    navigationBarTitleText: "班级列表"
   };
   constructor() {
     super();
@@ -31,6 +31,7 @@ export default class ClassList extends Component {
     };
   }
   componentDidMount() {
+    myUserId = getLoginInfo().userId;
     this.props.ajaxGetAllClass().then(res => {
       if (res.code === 0) {
         if (this.props.classInfo.userClassId) {
@@ -66,6 +67,7 @@ export default class ClassList extends Component {
     });
   };
   toClassHome = clazzId => {
+    console.log("从查看进入班级主页传的clazzId", clazzId);
     Taro.navigateTo({
       url: `/pages/class/classHome?clazzId=${clazzId}`
     });

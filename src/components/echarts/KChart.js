@@ -24,23 +24,34 @@ function setChartData(chart, data) {
       data: [],
       axisLabel: {
         interval: 0,
-        rotate: 320
+        rotate: 320,
+        textStyle: {
+          fontSize: "14",
+          rich: {}
+        }
       }
     },
     yAxis: {
       axisLabel: {
-        formatter: "{value}k"
+        formatter: "{value}k",
+        textStyle: {
+          fontSize: "14",
+          rich: {}
+        }
       }
     },
     series: [
       {
-        itemStyle: {
+        label: {
           normal: {
-            color: "#ff0000",
-            borderWidth: 1,
-            opacity: 1
+            textStyle: {
+              fontSize: "14",
+              color: "#000",
+              rich: {}
+            }
           }
-        }
+        },
+        itemStyle: {}
       }
     ]
   };
@@ -49,7 +60,14 @@ function setChartData(chart, data) {
     option.series = data.measures.map(item => {
       return {
         ...item,
-        type: "k"
+        type: "k",
+        itemStyle: {
+          normal: {
+            borderWidth: 2,
+            barWidth: 2,
+            opacity: 1
+          }
+        }
       };
     });
   }

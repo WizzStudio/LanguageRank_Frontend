@@ -23,5 +23,8 @@ swiper-item {
   display: flex;
   align-items: center;
 }
+.at-pagination {
+  margin: 30px 40px !important;
+}
 
 @import "~taro-ui/dist/style/index.scss";

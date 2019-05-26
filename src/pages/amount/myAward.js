@@ -4,7 +4,7 @@ import "./myAward.scss";
 import { AtDivider, AtButton, AtMessage } from "taro-ui";
 import myApi from "../../service/api";
 import { getLoginInfo } from "../../utils/getlocalInfo";
-const myUserId = getLoginInfo().userId;
+let myUserId;
 export default class MyAward extends Component {
   config = {
     navigationBarTitleText: "积分商城"
@@ -18,6 +18,7 @@ export default class MyAward extends Component {
     };
   }
   componentDidMount() {
+    myUserId = getLoginInfo().userId;
     this.getAwardStore();
   }
   getAwardStore = () => {
@@ -88,8 +89,9 @@ export default class MyAward extends Component {
     return (
       <View>
         <AtMessage />
-        <View className="pre-award-title">总积分:{myTotalScore}</View>
-        <View className="pre-award-title">剩余积分:{myAvailableScore}</View>
+        <View className="pre-award-title">
+          总积分:{myTotalScore}\t\t|\t\t 剩余积分:{myAvailableScore}
+        </View>
         <View className="my-award award-wrap" key={index}>
           {awardStoreList.map((item, index) => (
             <View key={item.awardId} className="per-award">

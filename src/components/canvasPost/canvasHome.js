@@ -4,8 +4,7 @@ import { AtButton } from "taro-ui";
 import { TaroCanvasDrawer } from "taro-plugin-canvas"; // npm 引入方式
 import load from "../../assets/img/load.png";
 import "./canvasPost.scss";
-const canvasHomeImg =
-  "http://qiniu.ben286.top/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190524215927.png";
+const canvasHomeImg = "https://pgrk.wizzstudio.com/image/invitationCard.jpg";
 // import canvasHomeImg from "../../assets/img/canvasHome.png";
 class CanvasHome extends Component {
   constructor(props) {
@@ -96,10 +95,35 @@ class CanvasHome extends Component {
   canvasDrawFunc = (config = this.state.rssConfig) => {
     const { nickName, avatar, clazzName } = this.props;
     console.log("this.props", this.props);
+    config.images.push({
+      url: avatar,
+      width: 120,
+      height: 120,
+      y: 100,
+      x: 90,
+      zIndex: 99,
+      opacity: 1,
+      borderRadius: 20,
+      color: "#000"
+    });
     config.texts.push({
       x: 400,
       y: 150,
-      text: nickName + "邀请你加入",
+      text: nickName,
+      fontSize: 30,
+      color: "#000",
+      opacity: 1,
+      baseLine: "middle",
+      lineHeight: 48,
+      lineNum: 2,
+      textAlign: "center",
+      width: 580,
+      zIndex: 999
+    });
+    config.texts.push({
+      x: 400,
+      y: 200,
+      text: "邀请你加入",
       fontSize: 30,
       color: "#000",
       opacity: 1,
@@ -125,18 +149,7 @@ class CanvasHome extends Component {
       zIndex: 999,
       fontWeight: "bold"
     });
-    config.images.push({
-      url: avatar,
-      width: 120,
-      height: 120,
-      y: 100,
-      x: 90,
-      zIndex: 99,
-      opacity: 1,
-      borderRadius: 200
-      // borderWidth: 10,
-      // borderColor: 'red',
-    });
+
     this.setState({
       canvasStatus: true,
       config: config

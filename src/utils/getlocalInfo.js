@@ -1,6 +1,9 @@
 import Taro from "@tarojs/taro";
 export function getLoginInfo() {
-  if (!Taro.getStorageSync("basicInfo")) {
+  if (!Taro.getStorageSync("login")) {
+    Taro.redirectTo({
+      url: "/pages/login/login"
+    });
     return "";
   } else {
     const loginInfo = Taro.getStorageSync("login");
@@ -10,6 +13,9 @@ export function getLoginInfo() {
 
 export function getBasicInfo() {
   if (!Taro.getStorageSync("basicInfo")) {
+    Taro.redirectTo({
+      url: "/pages/login/login"
+    });
     return "";
   } else {
     const basicInfo = Taro.getStorageSync("basicInfo");

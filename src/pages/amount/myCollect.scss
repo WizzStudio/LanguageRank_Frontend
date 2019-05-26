@@ -34,10 +34,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    height: 400px;
+    flex-direction: column;
     .noImg {
-      width: 500px;
-      height: 500px;
+      width: 300px;
+      height: 300px;
+    }
+    .no-collect-note {
+      white-space: pre-line;
     }
   }
 }

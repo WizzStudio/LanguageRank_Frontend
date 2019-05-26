@@ -77,7 +77,7 @@ class AuthRankList extends Component {
               />
             </View>
             <View className="share-wrap">
-              <ShareCanvasRank rankListData={rankList} />
+              <ShareCanvasRank type="auth" rankListData={rankList} />
             </View>
           </View>
         ) : (

@@ -29,11 +29,12 @@ class CmtList extends Component {
       btnMode: 1,
       cmtTotal: 1,
       commentList: [],
-      currPage: 1
+      currPage: 1,
+      cmtPageSize: 20
     };
   }
   componentDidMount() {
-    this.getCmtList(1, 1);
+    // this.getCmtList(1, 1);
   }
   componentDidUpdate(prevProps) {
     if (
@@ -65,7 +66,8 @@ class CmtList extends Component {
           this.setState({
             commentList: this.props.cmtInfo.authCmt.commentList,
             cmtTotal: this.props.cmtInfo.authCmt.total,
-            currPage: this.props.cmtInfo.authCmt.pageIndex
+            currPage: this.props.cmtInfo.authCmt.pageIndex,
+            cmtPageSize: this.props.cmtInfo.authCmt.pageISize
           });
         });
         return;
@@ -74,7 +76,8 @@ class CmtList extends Component {
           this.setState({
             commentList: this.props.cmtInfo.demandCmt.commentList,
             cmtTotal: this.props.cmtInfo.demandCmt.total,
-            currPage: this.props.cmtInfo.demandCmt.pageIndex
+            currPage: this.props.cmtInfo.demandCmt.pageIndex,
+            cmtPageSize: this.props.cmtInfo.demandCmt.pageISize
           });
         });
         return;
@@ -83,7 +86,8 @@ class CmtList extends Component {
           this.setState({
             commentList: this.props.cmtInfo.classCmt.commentList,
             cmtTotal: this.props.cmtInfo.classCmt.total,
-            currPage: this.props.cmtInfo.classCmt.pageIndex
+            currPage: this.props.cmtInfo.classCmt.pageIndex,
+            cmtPageSize: this.props.cmtInfo.classCmt.pageISize
           });
         });
         return;
@@ -116,7 +120,13 @@ class CmtList extends Component {
     }
   };
   render() {
-    const { commentList, btnMode, cmtTotal, currPage } = this.state;
+    const {
+      commentList,
+      btnMode,
+      cmtTotal,
+      currPage,
+      cmtPageSize
+    } = this.state;
     return (
       <View className="cmt-list">
         <View className="cmt-button">
@@ -149,8 +159,9 @@ class CmtList extends Component {
           <AtPagination
             icon
             total={cmtTotal}
-            pageSize={20}
+            pageSize={cmtPageSize}
             current={currPage}
+            className="pagination"
             onPageChange={this.changeCmtPage}
           />
         )}

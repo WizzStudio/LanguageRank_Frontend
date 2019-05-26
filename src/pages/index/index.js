@@ -8,9 +8,8 @@ import "./index.scss";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserAllInfo } from "../../actions/useInfo";
 import checkToLogin from "../../utils/checkToLogin";
-import { addUserRelation } from "../../utils/addUserRelation";
 import { getLoginInfo } from "../../utils/getlocalInfo";
-const myUserId = getLoginInfo().userId;
+let myUserId;
 @connect(
   ({ userInfo }) => ({
     userInfo
@@ -33,66 +32,22 @@ class Index extends Component {
       isViewedJoinMyApplet: false
     };
   }
-  componentWillMount() {
-    checkToLogin();
-  }
+  componentWillMount() {}
   componentDidMount() {
-    // if (Taro.getStorageSync("basicInfo")) {
-    //   Taro.getSetting().then(res => {
-    //     if (res.authSetting["scope.userInfo"]) {
-    //       Taro.getUserInfo().then(userInfoRes => {
-    //         // console.log("userInfoRes", userInfoRes);
-    //         this.handleLogin(userInfoRes.iv, userInfoRes.encryptedData);
-    //       });
-    //     }
-    //   });
-    // }
+    const params = this.$router.params || {};
+    console.log("this.$router", this.$router);
+    if (params && params.shareId) {
+      checkToLogin(params.shareId);
+    } else {
+      checkToLogin();
+    }
+    myUserId = getLoginInfo().userId;
   }
   handleClick(value) {
     this.setState({
       current: value
     });
   }
-
-  checkLogin = () => {
-    if (Taro.getStorageSync("basicInfo")) {
-      this.setState({
-        isLogin: true
-      });
-      const loginInfo = Taro.getStorageSync("login");
-      const basicInfo = Taro.getStorageSync("basicInfo");
-      this.props.ajaxGetUserAllInfo(loginInfo.userid);
-      this.setState({
-        basicInfo: basicInfo
-      });
-    } else {
-    }
-  };
-  handleLogin = (iv, encryptedData) => {
-    Taro.login().then(res => {
-      if (res.code) {
-        Taro.request({
-          url: "https://pgrk.wizzstudio.com/login",
-          method: "POST",
-          data: {
-            code: res.code,
-            iv,
-            encryptedData
-          }
-        }).then(loginRes => {
-          console.log("loginRes", loginRes);
-          if (loginRes.data.code === 0) {
-            const data = loginRes.data.data;
-            Taro.setStorageSync("login", {
-              userId: data.userId,
-              openId: data.openId,
-              session_key: data.session_key
-            });
-          }
-        });
-      }
-    });
-  };
   componentWillUnmount() {}
 
   componentDidShow() {}

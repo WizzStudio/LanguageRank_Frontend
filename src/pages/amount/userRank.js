@@ -10,12 +10,11 @@ import {
   AtIcon
 } from "taro-ui";
 import myApi from "../../service/api";
-import checkToLogin from "../../utils/checkToLogin";
 import "./userRank.scss";
 import fistImg from "../../assets/img/fist.png";
 import CanvasAchieve from "../../components/canvasPost/canvasAchieve";
-const myUserId = Taro.getStorageSync("login").userId;
-const basicInfo = Taro.getStorageSync("basicInfo");
+let myUserId = Taro.getStorageSync("login").userId;
+let basicInfo;
 export default class UserRank extends Component {
   config = {
     navigationBarTitleText: "好友排行"
@@ -35,10 +34,10 @@ export default class UserRank extends Component {
       isShowCanvas: false
     };
   }
-  componentWillMount() {
-    checkToLogin();
-  }
+  componentWillMount() {}
   componentDidMount() {
+    myUserId = Taro.getStorageSync("login").userId;
+    basicInfo = Taro.getStorageSync("basicInfo");
     const { params } = this.$router || "";
     const { clazzId } = params;
     Promise.all([
@@ -51,18 +50,18 @@ export default class UserRank extends Component {
         hardRank = res[1],
         popRank = res[2],
         todayPlan = res[3].data.qrCode;
-      let myHardRank = {},
-        myPopRank = {};
-      hardRank.members.forEach(item => {
-        if (item.userId === myUserId) {
-          myHardRank = item;
-        }
-      });
-      popRank.members.forEach(item => {
-        if (item.userId === myUserId) {
-          myPopRank = item;
-        }
-      });
+      let myHardRank = hardRank.me,
+        myPopRank = popRank.me;
+      // hardRank.members.forEach(item => {
+      //   if (item.userId === myUserId) {
+      //     myHardRank = item;
+      //   }
+      // });
+      // popRank.members.forEach(item => {
+      //   if (item.userId === myUserId) {
+      //     myPopRank = item;
+      //   }
+      // });
       this.setState({
         clazzId,
         userRankInfo,
@@ -143,7 +142,7 @@ export default class UserRank extends Component {
           () => {
             Taro.pageScrollTo({
               scrollTop: 0,
-              duration: 200
+              duration: 0
             });
           }
         );
@@ -156,7 +155,6 @@ export default class UserRank extends Component {
       worshippingUser: myUserId,
       worshippedUser: toUserId
     };
-    console.log("worshippedUser", toUserId);
     if (myUserId === toUserId) {
       Taro.atMessage({
         message: "不可以膜拜自己哦",
@@ -170,6 +168,15 @@ export default class UserRank extends Component {
           Taro.atMessage({
             message: "膜拜成功",
             type: "success"
+          });
+          Promise.all([
+            this.getHardRank(myUserId),
+            this.getPopRank(myUserId)
+          ]).then(res => {
+            this.setState({
+              hardRank: res[0],
+              popRank: res[1]
+            });
           });
         } else if (res.code === 6) {
           Taro.atMessage({
@@ -235,7 +242,11 @@ export default class UserRank extends Component {
       isShowCanvas
     } = this.state;
     let hardTotal = hardRank.total,
-      popTotal = popRank.total;
+      popTotal = popRank.total,
+      hardPageSize = hardRank.pageSize,
+      popPageSize = popRank.pageSize,
+      hardPageIndex = hardRank.pageIndex,
+      popPageIndex = popRank.pageIndex;
     return (
       <View className="userRank">
         <AtMessage />
@@ -314,7 +325,7 @@ export default class UserRank extends Component {
               onClick={this.tabClick.bind(this)}>
               <AtTabsPane current={currentTab} index={0}>
                 <View className="member-list">
-                  <View className="member-item">
+                  <View className="member-item  member-item-title">
                     <View className="rank title">排名</View>
                     <View className="avatar-wrap title" />
                     <View className="name title">用户</View>
@@ -327,23 +338,34 @@ export default class UserRank extends Component {
                       <Image className="avatar" src={myHardRank.avatarUrl} />
                     </View>
                     <View className="name">{myHardRank.nickName}</View>
-                    <View className="total">{myHardRank.todayScore}</View>
-                    {/* <View>
-                      <Image src={fistImg} className="fist-img" />
-                    </View> */}
+                    <View className="total" />
+                    <View />
                   </View>
                   {hardRank.members.map((item, index) => (
                     <View
                       className={`member-item ${item.userId === currUserId &&
                         "selected-item"}`}
-                      key={item.nickName}
-                      onClick={this.changeCurrUser.bind(this, item.userId)}>
-                      <View className="rank">{index + 1}</View>
-                      <View className="avatar-wrap">
+                      key={item.nickName}>
+                      <View
+                        className="rank"
+                        onClick={this.changeCurrUser.bind(this, item.userId)}>
+                        {(hardPageIndex - 1) * hardPageSize + index + 1}
+                      </View>
+                      <View
+                        className="avatar-wrap"
+                        onClick={this.changeCurrUser.bind(this, item.userId)}>
                         <Image className="avatar" src={item.avatarUrl} />
                       </View>
-                      <View className="name">{item.nickName}</View>
-                      <View className="total">{item.todayScore}</View>
+                      <View
+                        className="name"
+                        onClick={this.changeCurrUser.bind(this, item.userId)}>
+                        {item.nickName}
+                      </View>
+                      <View
+                        className="total"
+                        onClick={this.changeCurrUser.bind(this, item.userId)}>
+                        {item.todayScore}
+                      </View>
                       <View>
                         <Image
                           src={fistImg}
@@ -356,7 +378,7 @@ export default class UserRank extends Component {
                   <AtPagination
                     icon
                     total={hardTotal || 0}
-                    pageSize={20}
+                    pageSize={hardPageSize}
                     onPageChange={this.changeHardPage}
                   />
                 </View>
@@ -383,7 +405,9 @@ export default class UserRank extends Component {
                         "selected-item"}`}
                       key={item.nickName}
                       onClick={this.changeCurrUser.bind(this, item.userId)}>
-                      <View className="rank">{index + 1}</View>
+                      <View className="rank">
+                        {(popPageIndex - 1) * popPageSize + index + 1}
+                      </View>
                       <View className="avatar-wrap">
                         <Image className="avatar" src={item.avatarUrl} />
                       </View>
@@ -394,7 +418,7 @@ export default class UserRank extends Component {
                   <AtPagination
                     icon
                     total={popTotal || 0}
-                    pageSize={20}
+                    pageSize={popPageSize}
                     onPageChange={this.changePopPage}
                   />
                 </View>

@@ -3,11 +3,19 @@ import {
   GET_USER_FAIL,
   GET_USER_PLAN,
   ADD_USER_PLAN,
-  GET_USER_AWARD
+  GET_USER_AWARD,
+  GET_USER_SCORE
 } from "../constants/userInfo";
 
 export default function userInfo(state = [], action) {
   switch (action.type) {
+    case GET_USER_SCORE:
+      return {
+        ...state,
+        userScore: {
+          ...action.payload
+        }
+      };
     case GET_USER_ALLINFO:
       return {
         ...state,

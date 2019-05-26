@@ -7,7 +7,8 @@ import { getLoginInfo } from "../../utils/getlocalInfo";
 import myApi from "../../service/api";
 import "./dailyPlan.scss";
 import "./attention.scss";
-const myUserId = getLoginInfo().userId;
+let myUserId;
+
 @connect(
   ({ classInfo }) => ({
     classInfo
@@ -27,6 +28,7 @@ class DailyPlan extends Component {
     };
   }
   componentDidMount() {
+    myUserId = getLoginInfo().userId;
     this.getUserPlan();
   }
   getUserPlan = () => {
@@ -133,13 +135,14 @@ class DailyPlan extends Component {
               </View>
             ) : (
               <Swiper
-                indicatorColor="#999"
-                indicatorActiveColor="#4f5fc5"
                 // previousMargin="35px"
                 // nextMargin="35px"
                 current={current}
                 onChange={this.handleSwiper}
-                indicatorDots>
+                // indicatorDots
+                // indicatorColor="#999"
+                // indicatorActiveColor="#4f5fc5"
+              >
                 {userClassPlan.map((item, index) => {
                   return (
                     <SwiperItem

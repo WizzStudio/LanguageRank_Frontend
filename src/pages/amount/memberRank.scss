@@ -5,6 +5,7 @@
     font-weight: 300;
     display: flex;
     justify-content: center;
+    color: #dcdcdc;
   }
   .nickname {
     color: #4f5fc5;
@@ -14,9 +15,18 @@
   }
   .title {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     font-size: 30px;
+    height: 60px;
+    .score-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .add-note {
+        margin-right: 10px;
+      }
+    }
   }
   .member-list {
     margin: 20px auto;
@@ -48,6 +58,13 @@
       .total {
         flex: 2;
       }
+    }
+    .note-add {
+      font-weight: 100;
+      font-size: 20px;
+      white-space: pre-line;
+      margin: 30px 70px;
+      color: #dcdcdc;
     }
   }
 }

@@ -7,7 +7,7 @@ import { ajaxGetUserClass } from "../../actions/classInfo";
 import { getLoginInfo } from "../../utils/getlocalInfo";
 import checkToLogin from "../../utils/checkToLogin";
 import myApi from "../../service/api";
-const myUserId = getLoginInfo().userId;
+let myUserId;
 @connect(
   ({ classInfo }) => ({
     classInfo
@@ -29,7 +29,8 @@ export default class ClassIndex extends Component {
     };
   }
   componentWillMount() {
-    checkToLogin();
+    // checkToLogin();
+    myUserId = getLoginInfo().userId;
   }
   componentDidMount() {
     const data = {
@@ -61,7 +62,6 @@ export default class ClassIndex extends Component {
     });
   };
   onTimeChange = e => {
-    console.log("ePICK", e);
     let res = parseInt(e.detail.value);
     let timeSel = res === 0 ? res : res + 7;
     this.setState({
@@ -71,7 +71,9 @@ export default class ClassIndex extends Component {
       userId: myUserId,
       reminderTime: timeSel
     };
+    console.log("修改时间发送的data", data);
     myApi("/updatepunchcardremindertime", "POST", data).then(res => {
+      console.log("修改时间收到的res", res);
       if (res.code === 0) {
         Taro.atMessage({
           message: "修改成功",

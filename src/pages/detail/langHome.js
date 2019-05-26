@@ -33,14 +33,16 @@ class LangHome extends Component {
   navigateToDetail = () => {
     const { langNameProp } = this.props;
     Taro.navigateTo({
-      url: "/pages/detail/langDetail?langName=" + encodeURI(langNameProp)
+      // url: "/pages/detail/langDetail?langName=" + encodeURI(langNameProp)
+      url: `/pages/detail/langDetail?langName=${langNameProp}`
     });
   };
   initChart = langHome => {
     let dataX = [],
       dataY = [];
     langHome.exponentOfLastSevenDays.map(item => {
-      dataX.push(item.updateTime);
+      let time = item.updateTime.substring(5, 10);
+      dataX.push(time);
       dataY.push(item.fixedFinalExponent);
     });
     const chartData = {

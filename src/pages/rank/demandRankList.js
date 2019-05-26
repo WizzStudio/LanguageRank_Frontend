@@ -76,7 +76,7 @@ export default class DemandRankList extends Component {
               />
             </View>
             <View className="share-wrap">
-              <ShareCanvasRank rankListData={demandRank} />
+              <ShareCanvasRank type="demand" rankListData={demandRank} />
             </View>
           </View>
         ) : (
