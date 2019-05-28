@@ -22,7 +22,6 @@ export default class ClassDetail extends Component {
     };
     myApi("/getclazzstudyplan", "POST", data).then(res => {
       if (res.code === 0) {
-        console.log("res.data", res.data);
         this.setState({
           classPlan: res.data
         });

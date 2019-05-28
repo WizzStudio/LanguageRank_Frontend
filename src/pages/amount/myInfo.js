@@ -4,13 +4,8 @@ import { AtAvatar, AtToast, AtDivider, AtButton, AtIcon } from "taro-ui";
 import "./myInfo.scss";
 import Notice from "../../components/rank/notice";
 import logo from "../../assets/img/logo.png";
-import { getLoginInfo } from "../../utils/getlocalInfo";
-import checkToLogin from "../../utils/checkToLogin";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserScore } from "../../actions/useInfo";
-
-let myUserId;
-import myApi from "../../service/api";
 @connect(
   ({ userInfo }) => ({
     userInfo
@@ -39,8 +34,6 @@ export default class MyInfo extends Component {
   }
   componentWillMount() {}
   componentDidMount() {
-    myUserId = getLoginInfo().userId;
-    // checkToLogin();
     this.confirmLogin();
     this.ajaxGetInfo();
   }
@@ -54,6 +47,7 @@ export default class MyInfo extends Component {
     }
   }
   ajaxGetInfo = () => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const data = {
       userId: myUserId
     };

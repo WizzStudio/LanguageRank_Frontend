@@ -33,11 +33,11 @@ export default class UserRank extends Component {
       myPopRank: {},
       isShowCanvas: false
     };
+    this.myRankInfo = {};
   }
-  componentWillMount() {}
   componentDidMount() {
-    myUserId = Taro.getStorageSync("login").userId;
-    basicInfo = Taro.getStorageSync("basicInfo");
+    let myUserId = Taro.getStorageSync("login").userId;
+
     const { params } = this.$router || "";
     const { clazzId } = params;
     Promise.all([
@@ -52,16 +52,7 @@ export default class UserRank extends Component {
         todayPlan = res[3].data.qrCode;
       let myHardRank = hardRank.me,
         myPopRank = popRank.me;
-      // hardRank.members.forEach(item => {
-      //   if (item.userId === myUserId) {
-      //     myHardRank = item;
-      //   }
-      // });
-      // popRank.members.forEach(item => {
-      //   if (item.userId === myUserId) {
-      //     myPopRank = item;
-      //   }
-      // });
+      this.myRankInfo = userRankInfo;
       this.setState({
         clazzId,
         userRankInfo,
@@ -119,6 +110,7 @@ export default class UserRank extends Component {
   };
   //查看百度网盘链接
   getTodayPlan = async () => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const { clazzId } = this.$router.params;
     const data = {
       userId: myUserId,
@@ -151,6 +143,7 @@ export default class UserRank extends Component {
   };
   //膜拜他人
   worshipOther = toUserId => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const data = {
       worshippingUser: myUserId,
       worshippedUser: toUserId
@@ -199,6 +192,7 @@ export default class UserRank extends Component {
   };
 
   changeHardPage = params => {
+    let myUserId = Taro.getStorageSync("login").userId;
     this.getHardRank(myUserId, params.current).then(res => {
       this.setState({
         hardRank: res
@@ -206,6 +200,7 @@ export default class UserRank extends Component {
     });
   };
   changePopPage = params => {
+    let myUserId = Taro.getStorageSync("login").userId;
     this.getPopRank(myUserId, params.current).then(res => {
       this.setState({
         popRank: res
@@ -229,6 +224,8 @@ export default class UserRank extends Component {
     });
   };
   render() {
+    let myUserId = Taro.getStorageSync("login").userId;
+    let basicInfo = Taro.getStorageSync("basicInfo");
     const tabList = [{ title: "勤奋排行" }, { title: "人气排行" }];
     const {
       currentTab,
@@ -264,7 +261,8 @@ export default class UserRank extends Component {
               <CanvasAchieve
                 nickName={basicInfo.nickName}
                 avatar={basicInfo.avatar}
-                dayNum={userRankInfo.totalPunchCardDay}
+                dayNum={this.myRankInfo.totalPunchCardDay}
+                type="achieve"
               />
             </View>
           </View>

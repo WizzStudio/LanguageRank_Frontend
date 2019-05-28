@@ -101,6 +101,9 @@ class LangHome extends Component {
         <AtDivider />
         <View>
           <View className="wrap-title">github热门项目</View>
+          {langHome.githubPopularProjectList.length === 0 && (
+            <View className="no-github">暂无相关热门项目</View>
+          )}
           {langHome.githubPopularProjectList.map(item => (
             <View className="github" key={item.projectLink}>
               <View className="top-wrap">

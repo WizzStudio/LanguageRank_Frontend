@@ -162,6 +162,13 @@ $color-brand: #4f5fc5;
     white-space: pre-line;
   }
 }
+.no-github {
+  font-weight: 100;
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .to-detail-wrap {
   display: flex;
   justify-content: flex-end;

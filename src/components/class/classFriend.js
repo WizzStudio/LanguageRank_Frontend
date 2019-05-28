@@ -1,74 +1,61 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
-import { AtPagination } from "taro-ui";
 import "./classMember.scss";
 import myApi from "../../service/api";
 import { getLoginInfo } from "../../utils/getlocalInfo";
 let myUserId;
-class ClassMember extends Component {
+class ClassFriend extends Component {
   constructor() {
     super();
     this.state = {
-      members: [],
-      total: 0,
-      pageSize: 20,
-      pageIndex: 1
+      friends: []
     };
   }
   componentDidMount() {
     myUserId = getLoginInfo().userId;
     const { clazzId } = this.props;
     if (clazzId) {
-      this.getClassMember();
+      this.getFriend();
     }
   }
-  shouldComponentUpdate(nextProps) {}
   componentDidUpdate(prevProps) {
     if (this.props.clazzId !== prevProps.clazzId) {
-      this.getClassMember();
+      this.getFriend();
     } else if (this.props.isAdded != prevProps.isAdded) {
       if (prevProps.isAdded != -1) {
-        this.getClassMember();
+        this.getFriend();
       }
     } else if (
       this.props.isPunched != prevProps.isPunched &&
       this.props.isPunched != 0
     ) {
       if (prevProps.isPunched != -1) {
-        this.getClassMember();
+        this.getFriend();
       }
     }
   }
-  getClassMember = (pageIndex = 1) => {
+  getFriend = () => {
     const { clazzId } = this.props;
     const data = {
       userId: myUserId,
-      clazzId,
-      pageIndex
+      clazzId
     };
-    myApi("/getclazzmember", "POST", data).then(res => {
-      if (res.code === 0) {
-        this.setState({
-          members: res.data.members,
-          total: res.data.total,
-          pageSize: res.data.pageSize,
-          pageIndex: res.data.pageIndex
-        });
-      }
+    myApi("/getspecialclazzmember", "POST", data).then(res => {
+      this.setState({
+        friends: res.data
+      });
     });
   };
-  changeMemberPage = params => {
-    this.getClassMember(params.current);
-  };
   render() {
-    const { members, total, pageSize, pageIndex } = this.state;
+    const { friends } = this.state;
     return (
       <View className="member-list">
-        {members.map((item, index) => (
+        {friends.length === 0 && (
+          <View className="no-friend-note">当前班级中暂无您的好友</View>
+        )}
+        {friends.map((item, index) => (
           <View className="member-item" key={item.userId}>
-            <View className="rank">
-              {(pageIndex - 1) * pageSize + index + 1}
-            </View>
+            <View className="rank">{index + 1}</View>
             <View className="avatar-wrap">
               <Image className="avatar" src={item.avatarUrl} />
             </View>
@@ -78,19 +65,11 @@ class ClassMember extends Component {
             </View>
           </View>
         ))}
-        <AtPagination
-          icon
-          total={total}
-          pageSize={pageSize}
-          onPageChange={this.changeMemberPage}
-        />
       </View>
     );
   }
 }
-ClassMember.defaultProps = {
-  clazzId: "",
-  isAdded: false,
-  isPunched: false
+ClassFriend.defaultProps = {
+  clazzId: ""
 };
-export default ClassMember;
+export default ClassFriend;

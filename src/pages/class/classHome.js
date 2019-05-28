@@ -11,22 +11,22 @@ import {
 } from "taro-ui";
 import CmtList from "../../components/detail/cmtList";
 import ClassMember from "../../components/class/classMember";
+import ClassFriend from "../../components/class/classFriend";
 import AddComment from "../../components/detail/addComment";
 import DailyPlan from "../amount/dailyPlan";
 import JoinClass from "../../components/class/joinClass";
 import myApi from "../../service/api";
 import more from "../../assets/img/more.png";
 import ShareBtn from "../../components/class/shareBtn";
-import CanvasHome from "../../components/canvasPost/canvasHome";
+import CanvasAchieve from "../../components/canvasPost/canvasAchieve";
 import { getClassMsg, ajaxGetUserClass } from "../../actions/classInfo";
 import { connect } from "@tarojs/redux";
 import { getLoginInfo } from "../../utils/getlocalInfo";
-import checkToLogin from "../../utils/checkToLogin";
 import "./classHome.scss";
 let myUserId;
 let basicInfo;
 @connect(
-  ({ classInfo }) => ({ classInfo }),
+  ({ classInfo, cmtInfo }) => ({ classInfo, cmtInfo }),
   dispatch => ({
     getClassMsg(data) {
       return dispatch(getClassMsg(data));
@@ -45,19 +45,13 @@ export default class ClassHome extends Component {
     this.state = {
       currentTab: 0,
       ruleOpened: false,
-      isAdded: false,
-      isPunched: true,
+      isAdded: -1,
+      isPunched: -1,
       clazzId: 0,
       isShowCanvas: false,
       classMsgState: {}
     };
   }
-  componentWillMount() {}
-  // componentDidUpdate = prevProps => {
-  //   if (prevProps.classInfo.userClassId != this.props.classInfo.userClassId) {
-  //     this.checkIsAdded();
-  //   }
-  // };
   componentDidMount() {
     // checkToLogin();
     myUserId = getLoginInfo().userId;
@@ -72,7 +66,34 @@ export default class ClassHome extends Component {
       this.getClassMessage(clazzId).then(res => {
         if (res.code === 0) {
           this.setState({
-            isPunched: res.data.isPunchCard,
+            isPunched: res.data.isPunchCard ? 1 : 0,
+            classMsgState: res.data
+          });
+        }
+      });
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const { clazzId } = this.$router.params;
+    if (this.props.classInfo.userClassId != prevProps.classInfo.userClassId) {
+      this.checkIsAdded();
+      this.getClassMessage(clazzId).then(res => {
+        if (res.code === 0) {
+          let { isAdded } = this.state;
+          this.setState({
+            isPunched: res.data.isPunchCard ? 1 : 0,
+            classMsgState: res.data
+          });
+        }
+      });
+    }
+    if (
+      this.props.cmtInfo.classCmt &&
+      this.props.cmtInfo.classCmt.total != prevProps.cmtInfo.classCmt.total
+    ) {
+      this.getClassMessage(clazzId).then(res => {
+        if (res.code === 0) {
+          this.setState({
             classMsgState: res.data
           });
         }
@@ -81,34 +102,34 @@ export default class ClassHome extends Component {
   }
   checkIsAdded = () => {
     const { clazzId } = this.$router.params;
+    const userId = Taro.getStorageSync("login").userId || "";
     if (!this.props.classInfo.userClassId) {
       const data = {
-        userId: myUserId
+        userId
       };
       this.props.ajaxGetUserClass(data);
     }
     const { userClassId } = this.props.classInfo;
     if (userClassId.indexOf(parseInt(clazzId)) == -1) {
       this.setState({
-        isAdded: false
+        isAdded: 0
       });
     } else {
       this.setState({
-        isAdded: true
+        isAdded: 1
       });
     }
   };
   changeAddTrue = () => {
     this.setState({
-      isAdded: true,
-      isPunched: false
+      isAdded: 1,
+      isPunched: 0
     });
   };
   getClassMessage = clazzId => {
     const dataMsg = {
       clazzId
     };
-    console.log("msg接口发送的dataMsg", dataMsg);
     return this.props.getClassMsg(dataMsg);
   };
 
@@ -126,22 +147,26 @@ export default class ClassHome extends Component {
   punchToUserRank = e => {
     const { formId } = e.detail;
     const { clazzId } = this.state;
+    const userId = Taro.getStorageSync("login").userId || "";
     const data = {
-      userId: myUserId,
+      // userId: myUserId,
+      userId,
       clazzId,
       formId
     };
-    console.log("打卡发送的data", data);
     myApi("/punchcard", "POST", data).then(res => {
-      console.log("打卡返回的res", res);
       if (res.code === 0) {
         Taro.showToast({
           title: "打卡成功"
         });
-        this.setState({
-          isPunched: true
-        });
-        this.toUserRank();
+        this.setState(
+          {
+            isPunched: 1
+          },
+          () => {
+            this.toUserRank();
+          }
+        );
       }
     });
   };
@@ -169,26 +194,37 @@ export default class ClassHome extends Component {
       if (res.tapIndex === 0) {
         this.openCanvas();
       } else if (res.tapIndex === 1) {
+        this.isToQuitClass();
+      }
+    });
+  };
+  isToQuitClass = () => {
+    Taro.showModal({
+      title: "退出班级",
+      content: "退出班级将清空之前的学习记录，确定要退出吗",
+      confirmText: "确认",
+      confirmColor: "#4f5fc5"
+    }).then(res => {
+      if (res.confirm) {
         this.quitClass();
       }
     });
   };
   quitClass = () => {
     const { clazzId } = this.state;
+    const userId = Taro.getStorageSync("login").userId || "";
     let data = {
-      userId: myUserId,
+      userId,
       clazzId
     };
-    console.log("退出班级发送的data", data);
     myApi("/quitclazz", "POST", data).then(res => {
-      console.log("退出班级收到的res", res);
       if (res.code === 0) {
         Taro.showToast({
           title: "退出成功"
         });
-        this.props.ajaxGetUserClass({ userId: myUserId });
+        this.props.ajaxGetUserClass({ userId });
         this.setState({
-          isAdded: false
+          isAdded: 0
         });
       }
     });
@@ -220,9 +256,11 @@ export default class ClassHome extends Component {
       isAdded,
       clazzId,
       ruleOpened,
-      isShowCanvas
+      isShowCanvas,
+      isPunched
     } = this.state;
     const classMsg = this.state.classMsgState;
+    let basicInfo = Taro.getStorageSync("basicInfo");
     return (
       <View>
         {isShowCanvas ? (
@@ -236,10 +274,11 @@ export default class ClassHome extends Component {
               />
             </View>
             <View className="share-wrap">
-              <CanvasHome
+              <CanvasAchieve
                 nickName={basicInfo.nickName}
                 avatar={basicInfo.avatar}
                 clazzName={classMsg.clazzName}
+                type="home"
               />
             </View>
           </View>
@@ -290,7 +329,11 @@ export default class ClassHome extends Component {
             {isAdded ? (
               isPunched ? (
                 <View>
-                  <DailyPlan className={classMsg.clazzName} clazzId={clazzId} />
+                  <DailyPlan
+                    canvas={isShowCanvas}
+                    className={classMsg.clazzName}
+                    clazzId={clazzId}
+                  />
                   <View className="content-wrap">
                     <View className="punch-btn">
                       <AtButton
@@ -379,10 +422,20 @@ export default class ClassHome extends Component {
                 <CmtList typeCmt="class" clazzId={clazzId} ref={this.refCmt} />
               </AtTabsPane>
               <AtTabsPane current={currentTab} index={1}>
-                <ClassMember clazzId={clazzId} type="class" />
+                <ClassMember
+                  isAdded={isAdded}
+                  isPunched={isPunched}
+                  clazzId={clazzId}
+                  type="class"
+                  canvas={isShowCanvas}
+                />
               </AtTabsPane>
               <AtTabsPane current={currentTab} index={2}>
-                <ClassMember clazzId={clazzId} type="friend" />
+                <ClassFriend
+                  isAdded={isAdded}
+                  isPunched={isPunched}
+                  clazzId={clazzId}
+                />
               </AtTabsPane>
             </AtTabs>
             {currentTab === 0 ? (

@@ -35,7 +35,6 @@ class Index extends Component {
   componentWillMount() {}
   componentDidMount() {
     const params = this.$router.params || {};
-    console.log("this.$router", this.$router);
     if (params && params.shareId) {
       checkToLogin(params.shareId);
     } else {

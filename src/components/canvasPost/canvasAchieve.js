@@ -6,7 +6,7 @@ import load from "../../assets/img/load.png";
 import "./canvasPost.scss";
 const canvasAchieveImg =
   "https://pgrk.wizzstudio.com/image/achievementCard.jpg";
-// import canvasAchieveImg from "../../assets/img/canvasAchieve.png";
+const canvasHomeImg = "https://pgrk.wizzstudio.com/image/invitationCard.jpg";
 class CanvasAchieve extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +30,7 @@ class CanvasAchieve extends Component {
         texts: [],
         images: [
           {
-            url: canvasAchieveImg,
+            url: props.type === "home" ? canvasHomeImg : canvasAchieveImg,
             width: 650,
             height: 1000,
             opacity: 1,
@@ -79,53 +79,110 @@ class CanvasAchieve extends Component {
     }
   }
   componentDidMount() {
-    console.log("this.props", this.props);
     this.canvasDrawFunc();
   }
 
   // 调用绘画 => canvasStatus 置为true、同时设置config
   canvasDrawFunc = (config = this.state.rssConfig) => {
-    const { nickName, avatar, dayNum } = this.props;
-    config.images.push({
-      url: avatar,
-      width: 150,
-      height: 150,
-      color: "#000",
-      x: 260,
-      y: 100,
-      zIndex: 99,
-      opacity: 1,
-      borderRadius: 20
-    });
-    config.texts.push({
-      x: 335,
-      y: 320,
-      text: nickName,
-      fontSize: 30,
-      color: "#000",
-      opacity: 1,
-      baseLine: "middle",
-      lineHeight: 48,
-      lineNum: 2,
-      textAlign: "center",
-      width: 580,
-      zIndex: 999
-    });
-    config.texts.push({
-      x: 335,
-      y: 400,
-      text: "已打卡" + dayNum + "天",
-      fontSize: 40,
-      color: "#000",
-      opacity: 1,
-      fontWeight: "bold",
-      baseLine: "middle",
-      lineHeight: 48,
-      lineNum: 2,
-      textAlign: "center",
-      width: 580,
-      zIndex: 999
-    });
+    const { nickName, avatar, dayNum, clazzName, type } = this.props;
+    if (type == "home") {
+      config.images.push({
+        url: avatar,
+        width: 140,
+        height: 140,
+        x: 100,
+        y: 120,
+        zIndex: 99,
+        opacity: 1,
+        borderRadius: 20,
+        color: "#000"
+      });
+      config.texts.push({
+        x: 400,
+        y: 150,
+        text: nickName,
+        fontSize: 30,
+        color: "#000",
+        opacity: 1,
+        baseLine: "middle",
+        lineHeight: 48,
+        lineNum: 2,
+        textAlign: "center",
+        width: 580,
+        zIndex: 999
+      });
+      config.texts.push({
+        x: 400,
+        y: 200,
+        text: "邀请你加入",
+        fontSize: 30,
+        color: "#000",
+        opacity: 1,
+        baseLine: "middle",
+        lineHeight: 48,
+        lineNum: 2,
+        textAlign: "center",
+        width: 580,
+        zIndex: 999
+      });
+      config.texts.push({
+        x: 350,
+        y: 340,
+        text: clazzName,
+        fontSize: 50,
+        color: "#000",
+        opacity: 1,
+        baseLine: "middle",
+        lineHeight: 48,
+        lineNum: 2,
+        textAlign: "center",
+        width: 480,
+        zIndex: 999,
+        fontWeight: "bold"
+      });
+    } else {
+      config.images.push({
+        url: avatar,
+        width: 150,
+        height: 150,
+        color: "#000",
+        x: 260,
+        y: 100,
+        zIndex: 99,
+        opacity: 1,
+        borderRadius: 20
+      });
+      config.texts.push({
+        x: 335,
+        y: 320,
+        text: nickName,
+        fontSize: 30,
+        color: "#000",
+        opacity: 1,
+        baseLine: "middle",
+        lineHeight: 48,
+        lineNum: 2,
+        textAlign: "center",
+        width: 580,
+        zIndex: 999
+      });
+      config.texts.push({
+        x: 335,
+        y: 400,
+        text: "已打卡" + dayNum + "天",
+        fontSize: 40,
+        color: "#000",
+        opacity: 1,
+        fontWeight: "bold",
+        baseLine: "middle",
+        lineHeight: 48,
+        lineNum: 2,
+        textAlign: "center",
+        width: 580,
+        zIndex: 999
+      });
+    }
+
     this.setState({
       canvasStatus: true,
       config: config
@@ -243,6 +300,8 @@ class CanvasAchieve extends Component {
 CanvasAchieve.defaultProps = {
   nickName: "",
   avatar: "",
-  dayNum: 0
+  dayNum: 0,
+  clazzName: "",
+  type: ""
 };
 export default CanvasAchieve;

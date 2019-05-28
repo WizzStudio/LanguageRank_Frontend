@@ -19,7 +19,6 @@ export default class Login extends Component {
         avatar: e.detail.userInfo.avatarUrl
       });
       Taro.login().then(res => {
-        console.log("调用taroLogin返回", res);
         if (res.code) {
           const userCode = res.code;
           Taro.getUserInfo()
@@ -29,9 +28,7 @@ export default class Login extends Component {
                 iv: userInfoRes.iv,
                 encryptedData: userInfoRes.encryptedData
               };
-              console.log("发给后端login的data", data);
               myApi("/login", "POST", data).then(loginRes => {
-                console.log("后端返回的res", loginRes);
                 if (loginRes.code === 0) {
                   Taro.setStorageSync("login", {
                     userId: loginRes.data.userId,
@@ -39,10 +36,9 @@ export default class Login extends Component {
                     session_key: loginRes.data.session_key
                   });
                   Taro.setStorageSync("version", {
-                    ver: "2.0"
+                    ver: "2.1"
                   });
                   const shareId = this.$router.params.shareId || 0;
-                  console.log("login页面即将去addUSer的shareId", shareId);
                   if (shareId) {
                     addUserRelation(shareId, loginRes.data.userId);
                   }
@@ -60,7 +56,10 @@ export default class Login extends Component {
               });
             })
             .catch(e => {
-              console.log("调用getUserInfo失败的返回", e);
+              Taro.hideLoading();
+              Taro.showToast({
+                title: "登录失败，请检查网络环境后重新登录"
+              });
             });
         } else {
           Taro.hideLoading();

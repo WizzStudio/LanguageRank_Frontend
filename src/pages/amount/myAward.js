@@ -4,7 +4,6 @@ import "./myAward.scss";
 import { AtDivider, AtButton, AtMessage } from "taro-ui";
 import myApi from "../../service/api";
 import { getLoginInfo } from "../../utils/getlocalInfo";
-let myUserId;
 export default class MyAward extends Component {
   config = {
     navigationBarTitleText: "积分商城"
@@ -18,10 +17,10 @@ export default class MyAward extends Component {
     };
   }
   componentDidMount() {
-    myUserId = getLoginInfo().userId;
     this.getAwardStore();
   }
   getAwardStore = () => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const data = {
       userId: myUserId
     };
@@ -34,10 +33,11 @@ export default class MyAward extends Component {
     });
   };
   exchangeAward = (awardId, score) => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const { myAvailableScore } = this.state;
     if (myAvailableScore < score) {
       Taro.atMessage({
-        message: "积分不够",
+        message: "积分不够哦，快去打卡获取积分吧~",
         type: "warning"
       });
       return;

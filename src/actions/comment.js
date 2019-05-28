@@ -5,8 +5,6 @@ import {
   GET_CLASS_CMT
 } from "../constants/comment";
 import fetchData from "../service/createAction";
-import { getLoginInfo } from "../utils/getlocalInfo";
-const userId = getLoginInfo().userId || "";
 
 //权威榜评论
 export const getAuthCmt = data => {

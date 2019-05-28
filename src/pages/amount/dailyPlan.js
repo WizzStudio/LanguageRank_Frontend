@@ -3,11 +3,9 @@ import { View, Swiper, SwiperItem } from "@tarojs/components";
 import { AtActivityIndicator, AtMessage, AtIcon } from "taro-ui";
 import { connect } from "@tarojs/redux";
 import { ajaxGetUserClassPlan } from "../../actions/classInfo";
-import { getLoginInfo } from "../../utils/getlocalInfo";
 import myApi from "../../service/api";
 import "./dailyPlan.scss";
 import "./attention.scss";
-let myUserId;
 
 @connect(
   ({ classInfo }) => ({
@@ -28,10 +26,22 @@ class DailyPlan extends Component {
     };
   }
   componentDidMount() {
-    myUserId = getLoginInfo().userId;
-    this.getUserPlan();
+    let myUserId = Taro.getStorageSync("login").userId;
+    const clazzId = this.props.clazzId;
+    if (clazzId) {
+      this.getUserPlan();
+    }
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.clazzId !== prevProps.clazzId) {
+      this.getUserPlan();
+    }
+    if (this.props.canvas !== prevProps.canvas) {
+      this.getUserPlan();
+    }
   }
   getUserPlan = () => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const clazzId = this.props.clazzId;
     const data = {
       userId: myUserId,
@@ -41,7 +51,9 @@ class DailyPlan extends Component {
       if (res.code === 0) {
         this.setState({
           isLoading: false,
-          current: this.props.classInfo.userClassPlan.length - 1
+          current:
+            this.props.classInfo.userClassPlan &&
+            this.props.classInfo.userClassPlan.length - 1
         });
       }
     });
@@ -82,6 +94,7 @@ class DailyPlan extends Component {
     });
   };
   collectPlan = item => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const { clazzId, className } = this.props;
     const data = {
       userId: myUserId,
@@ -134,15 +147,7 @@ class DailyPlan extends Component {
                 />
               </View>
             ) : (
-              <Swiper
-                // previousMargin="35px"
-                // nextMargin="35px"
-                current={current}
-                onChange={this.handleSwiper}
-                // indicatorDots
-                // indicatorColor="#999"
-                // indicatorActiveColor="#4f5fc5"
-              >
+              <Swiper current={current} onChange={this.handleSwiper}>
                 {userClassPlan.map((item, index) => {
                   return (
                     <SwiperItem

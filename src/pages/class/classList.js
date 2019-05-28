@@ -104,6 +104,7 @@ export default class ClassList extends Component {
             </View>
           </View>
         ))}
+        <View className="note-add">更多班级正在火速创建中...</View>
       </View>
     );
   }

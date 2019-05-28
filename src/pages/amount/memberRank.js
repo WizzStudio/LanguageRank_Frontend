@@ -25,6 +25,7 @@ export default class MemberRank extends Component {
     this.getFriendRank();
   }
   getFriendRank = () => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const data = {
       userId: myUserId
     };
@@ -44,16 +45,18 @@ export default class MemberRank extends Component {
     });
   };
   onShareAppMessage = () => {
+    let myUserId = Taro.getStorageSync("login").userId;
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
       path: `/pages/index/index?shareId=${myUserId}`
     };
   };
   render() {
+    myNickName = getBasicInfo().nickName;
     const { friRank, rankNum, total } = this.state;
     return (
       <View className="memberRank">
-        <View className="top">每晚24：00更新</View>
+        {/* <View className="top">每晚24：00更新</View> */}
         <View className="nickname">{myNickName}</View>
         <View className="title">
           <View className="rank">第{rankNum}名</View>

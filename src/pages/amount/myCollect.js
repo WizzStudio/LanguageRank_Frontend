@@ -6,7 +6,6 @@ import "./myCollect.scss";
 import { getLoginInfo } from "../../utils/getlocalInfo";
 import ShareBtn from "../../components/class/shareBtn";
 import noCollectionImg from "../../assets/img/no-collection.png";
-let myUserId;
 export default class MyCollect extends Component {
   config = {
     navigationBarTitleText: "我的收藏"
@@ -18,10 +17,10 @@ export default class MyCollect extends Component {
     };
   }
   componentDidMount() {
-    myUserId = getLoginInfo().userId;
     this.getCollection();
   }
   getCollection = () => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const data = {
       userId: myUserId
     };
@@ -44,6 +43,7 @@ export default class MyCollect extends Component {
     });
   };
   cancelCollection = (clazzId, studyPlanDay) => {
+    let myUserId = Taro.getStorageSync("login").userId;
     const data = {
       userId: myUserId,
       clazzId,

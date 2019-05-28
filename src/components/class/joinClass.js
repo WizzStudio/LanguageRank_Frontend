@@ -32,10 +32,8 @@ class JoinClass extends Component {
             message: "加入成功",
             type: "success"
           });
+          //打卡成功后更新store中的用户班级 触发classHome中的检测到更新。
           this.props.ajaxGetUserClass({ userId }).then(res => {
-            if (res.code === 0 && this.props.type === "classHome") {
-              this.props.onChangeAdd();
-            }
             if (res.code === 0 && this.props.type === "classList") {
               Taro.navigateTo({
                 url: `/pages/class/classHome?clazzId=${clazzId}`

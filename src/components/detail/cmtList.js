@@ -34,7 +34,10 @@ class CmtList extends Component {
     };
   }
   componentDidMount() {
-    // this.getCmtList(1, 1);
+    const { clazzId } = this.props;
+    if (clazzId) {
+      this.getCmtList(1, 1);
+    }
   }
   componentDidUpdate(prevProps) {
     if (
@@ -143,7 +146,7 @@ class CmtList extends Component {
               type={btnMode === 2 ? "primary" : "secondary"}
               size="small"
               onClick={this.changeCmtMode.bind(this, "old")}>
-              最先
+              最早
             </AtButton>
           </View>
         </View>
