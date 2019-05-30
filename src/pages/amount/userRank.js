@@ -13,11 +13,12 @@ import myApi from "../../service/api";
 import "./userRank.scss";
 import fistImg from "../../assets/img/fist.png";
 import CanvasAchieve from "../../components/canvasPost/canvasAchieve";
-let myUserId = Taro.getStorageSync("login").userId;
+import cutStr from "../../utils/cutStr";
+let myUserId;
 let basicInfo;
 export default class UserRank extends Component {
   config = {
-    navigationBarTitleText: "好友排行"
+    navigationBarTitleText: "今日排行"
   };
   constructor() {
     super();
@@ -25,7 +26,7 @@ export default class UserRank extends Component {
       currentTab: 0,
       clazzId: 0,
       userRankInfo: {},
-      currUserId: myUserId,
+      currUserId: 0,
       popRank: {},
       hardRank: {},
       todayPlan: "",
@@ -36,8 +37,8 @@ export default class UserRank extends Component {
     this.myRankInfo = {};
   }
   componentDidMount() {
-    let myUserId = Taro.getStorageSync("login").userId;
-
+    myUserId = Taro.getStorageSync("login").userId;
+    basicInfo = Taro.getStorageSync("basicInfo");
     const { params } = this.$router || "";
     const { clazzId } = params;
     Promise.all([
@@ -60,7 +61,8 @@ export default class UserRank extends Component {
         popRank,
         todayPlan,
         myHardRank,
-        myPopRank
+        myPopRank,
+        currUserId: myUserId
       });
     });
   }
@@ -224,8 +226,6 @@ export default class UserRank extends Component {
     });
   };
   render() {
-    let myUserId = Taro.getStorageSync("login").userId;
-    let basicInfo = Taro.getStorageSync("basicInfo");
     const tabList = [{ title: "勤奋排行" }, { title: "人气排行" }];
     const {
       currentTab,
@@ -292,7 +292,7 @@ export default class UserRank extends Component {
                 </View>
               </View>
               <View className="btn-wrap">
-                {currUserId !== myUserId && (
+                {currUserId && currUserId !== myUserId && (
                   <View className="envy">
                     <AtButton
                       type="primary"
@@ -357,7 +357,7 @@ export default class UserRank extends Component {
                       <View
                         className="name"
                         onClick={this.changeCurrUser.bind(this, item.userId)}>
-                        {item.nickName}
+                        {cutStr(item.nickName)}
                       </View>
                       <View
                         className="total"
@@ -377,6 +377,7 @@ export default class UserRank extends Component {
                     icon
                     total={hardTotal || 0}
                     pageSize={hardPageSize}
+                    current={hardPageIndex}
                     onPageChange={this.changeHardPage}
                   />
                 </View>
@@ -409,7 +410,7 @@ export default class UserRank extends Component {
                       <View className="avatar-wrap">
                         <Image className="avatar" src={item.avatarUrl} />
                       </View>
-                      <View className="name">{item.nickName}</View>
+                      <View className="name">{cutStr(item.nickName)}</View>
                       <View className="total">{item.worship}人膜拜</View>
                     </View>
                   ))}
@@ -417,6 +418,7 @@ export default class UserRank extends Component {
                     icon
                     total={popTotal || 0}
                     pageSize={popPageSize}
+                    current={popPageIndex}
                     onPageChange={this.changePopPage}
                   />
                 </View>

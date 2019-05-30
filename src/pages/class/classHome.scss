@@ -1,5 +1,9 @@
 .classHome {
   padding: 40px;
+  .lesson-detail {
+    display: inline-block;
+    vertical-align: middle;
+  }
   .title-wrap {
     display: flex;
     justify-content: flex-start;

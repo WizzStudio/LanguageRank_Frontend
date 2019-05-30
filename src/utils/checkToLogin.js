@@ -2,6 +2,7 @@ import Taro from "@tarojs/taro";
 import myApi from "../service/api";
 import { addUserRelation } from "./addUserRelation";
 const againLogin = shareId => {
+  console.log("进入againLogin");
   Taro.login().then(res => {
     if (res.code) {
       const userCode = res.code;
@@ -14,13 +15,14 @@ const againLogin = shareId => {
           };
           myApi("/login", "POST", data).then(loginRes => {
             if (loginRes.code === 0) {
+              console.log("重新登陆成功");
               Taro.setStorageSync("login", {
                 userId: loginRes.data.userId,
                 openId: loginRes.data.openId,
                 session_key: loginRes.data.session_key
               });
               Taro.setStorageSync("version", {
-                ver: "2.0"
+                ver: "2.1"
               });
               if (shareId) {
                 addUserRelation(shareId, loginRes.data.userId);
@@ -60,6 +62,7 @@ export default function checkToLogin(shareId = 0) {
   const version = Taro.getStorageSync("version") || null;
   if (!version) {
     Taro.hideLoading();
+    console.log("version", version);
     Taro.redirectTo({
       url: `/pages/login/login?shareId=${shareId}`
     });
@@ -88,6 +91,7 @@ export default function checkToLogin(shareId = 0) {
         }
       },
       fail: function() {
+        console.log("登录态过期");
         againLogin(shareId);
       }
     });

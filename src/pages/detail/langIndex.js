@@ -1,13 +1,6 @@
 import Taro, { Component } from "@tarojs/taro";
 import { View, Image } from "@tarojs/components";
-import {
-  AtBadge,
-  AtTabs,
-  AtTabsPane,
-  AtDivider,
-  AtButton,
-  AtMessage
-} from "taro-ui";
+import { AtBadge, AtTabs, AtTabsPane, AtButton, AtMessage } from "taro-ui";
 import "./langDetail.scss";
 import myApi from "../../service/api";
 import LangHome from "./langHome";
@@ -15,6 +8,7 @@ import DemandHome from "./demandHome";
 import CmtList from "../../components/detail/cmtList";
 import AddComment from "../../components/detail/addComment";
 let myUserId;
+
 export default class LangIndex extends Component {
   config = {
     navigationBarTitleText: "语言热度详情"
@@ -88,7 +82,10 @@ export default class LangIndex extends Component {
       rankNum,
       exponent
     } = this.state;
-    const tabList = [{ title: "语言热度详情" }, { title: "评论" }];
+    const tabList = [
+      { title: rankIndex === "auth" ? "语言热度详情" : "雇主需求详情" },
+      { title: "评论" }
+    ];
     return (
       <View className="wrap-content">
         <AtMessage />

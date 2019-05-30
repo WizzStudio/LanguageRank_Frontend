@@ -3,6 +3,7 @@ import { View, Image } from "@tarojs/components";
 import "./classMember.scss";
 import myApi from "../../service/api";
 import { getLoginInfo } from "../../utils/getlocalInfo";
+import cutStr from "../../utils/cutStr";
 let myUserId;
 class ClassFriend extends Component {
   constructor() {
@@ -59,7 +60,7 @@ class ClassFriend extends Component {
             <View className="avatar-wrap">
               <Image className="avatar" src={item.avatarUrl} />
             </View>
-            <View className="name">{item.nickName}</View>
+            <View className="name">{cutStr(item.nickName)}</View>
             <View className="total">
               连续打卡{item.uninterruptedStudyPlanDay}天
             </View>

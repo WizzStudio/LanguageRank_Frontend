@@ -3,6 +3,7 @@ import { View, Image } from "@tarojs/components";
 import { AtPagination } from "taro-ui";
 import "./classMember.scss";
 import myApi from "../../service/api";
+import cutStr from "../../utils/cutStr";
 import { getLoginInfo } from "../../utils/getlocalInfo";
 let myUserId;
 class ClassMember extends Component {
@@ -72,7 +73,7 @@ class ClassMember extends Component {
             <View className="avatar-wrap">
               <Image className="avatar" src={item.avatarUrl} />
             </View>
-            <View className="name">{item.nickName}</View>
+            <View className="name">{cutStr(item.nickName)}</View>
             <View className="total">
               连续打卡{item.uninterruptedStudyPlanDay}天
             </View>
@@ -82,6 +83,7 @@ class ClassMember extends Component {
           icon
           total={total}
           pageSize={pageSize}
+          current={pageIndex}
           onPageChange={this.changeMemberPage}
         />
       </View>

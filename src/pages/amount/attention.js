@@ -4,6 +4,9 @@ import "./attention.scss";
 const codeImg =
   "http://qiniu.ben286.top/HelloWorld%20Rank%E6%B6%88%E6%81%AF%E5%8A%A9%E6%89%8B%E5%85%AC%E4%BC%97%E5%8F%B7%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg";
 export default class Attention extends Component {
+  config = {
+    navigationBarTitleText: "关注公众号"
+  };
   showImage = () => {
     Taro.previewImage({
       urls: [codeImg],

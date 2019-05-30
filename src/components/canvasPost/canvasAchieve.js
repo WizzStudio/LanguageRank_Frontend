@@ -133,7 +133,7 @@ class CanvasAchieve extends Component {
         color: "#000",
         opacity: 1,
         baseLine: "middle",
-        lineHeight: 48,
+        lineHeight: 60,
         lineNum: 2,
         textAlign: "center",
         width: 480,

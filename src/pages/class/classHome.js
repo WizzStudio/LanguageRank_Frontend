@@ -38,7 +38,7 @@ let basicInfo;
 )
 export default class ClassHome extends Component {
   config = {
-    navigationBarTitleText: "猿圈"
+    navigationBarTitleText: "班级主页"
   };
   constructor() {
     super();
@@ -53,7 +53,6 @@ export default class ClassHome extends Component {
     };
   }
   componentDidMount() {
-    // checkToLogin();
     myUserId = getLoginInfo().userId;
     basicInfo = Taro.getStorageSync("basicInfo");
     const param = this.$router.params || "";
@@ -77,6 +76,7 @@ export default class ClassHome extends Component {
     const { clazzId } = this.$router.params;
     if (this.props.classInfo.userClassId != prevProps.classInfo.userClassId) {
       this.checkIsAdded();
+      console.log("第一次进入", this.props, prevProps);
       this.getClassMessage(clazzId).then(res => {
         if (res.code === 0) {
           let { isAdded } = this.state;
@@ -87,18 +87,20 @@ export default class ClassHome extends Component {
         }
       });
     }
-    if (
-      this.props.cmtInfo.classCmt &&
-      this.props.cmtInfo.classCmt.total != prevProps.cmtInfo.classCmt.total
-    ) {
-      this.getClassMessage(clazzId).then(res => {
-        if (res.code === 0) {
-          this.setState({
-            classMsgState: res.data
-          });
-        }
-      });
-    }
+    // if (
+    //   this.props.cmtInfo.classCmt &&
+    //   this.props.cmtInfo.classCmt.total != prevProps.cmtInfo.classCmt.total
+    //   // this.props.cmtInfo.classCmt != prevProps.cmtInfo.classCmt
+    // ) {
+    //   console.log("第二次进入", this.props, prevProps);
+    //   this.getClassMessage(clazzId).then(res => {
+    //     if (res.code === 0) {
+    //       this.setState({
+    //         classMsgState: res.data
+    //       });
+    //     }
+    //   });
+    // }
   }
   checkIsAdded = () => {
     const { clazzId } = this.$router.params;
@@ -260,7 +262,7 @@ export default class ClassHome extends Component {
       isPunched
     } = this.state;
     const classMsg = this.state.classMsgState;
-    let basicInfo = Taro.getStorageSync("basicInfo");
+    // let basicInfo = Taro.getStorageSync("basicInfo");
     return (
       <View>
         {isShowCanvas ? (
@@ -292,12 +294,14 @@ export default class ClassHome extends Component {
                 <View className="title-name">
                   <View className="content">
                     {classMsg.clazzName}
-                    <AtButton
-                      type="secondary"
-                      size="small"
-                      onClick={this.toClassDetail}>
-                      课程详情
-                    </AtButton>
+                    <View className="lesson-detail">
+                      <AtButton
+                        type="secondary"
+                        size="small"
+                        onClick={this.toClassDetail}>
+                        课程详情
+                      </AtButton>
+                    </View>
                   </View>
                 </View>
                 <View className="title-state">
