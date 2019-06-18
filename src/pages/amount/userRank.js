@@ -27,14 +27,19 @@ export default class UserRank extends Component {
       clazzId: 0,
       userRankInfo: {},
       currUserId: 0,
-      popRank: {},
-      hardRank: {},
+      popRank: {
+        members: []
+      },
+      hardRank: {
+        members: []
+      },
       todayPlan: "",
       myHardRank: {},
       myPopRank: {},
       isShowCanvas: false
     };
     this.myRankInfo = {};
+    this.clazzName = this.$router.params.clazzName;
   }
   componentDidMount() {
     myUserId = Taro.getStorageSync("login").userId;
@@ -199,6 +204,10 @@ export default class UserRank extends Component {
       this.setState({
         hardRank: res
       });
+      Taro.pageScrollTo({
+        scrollTop: 450,
+        duration: 0
+      });
     });
   };
   changePopPage = params => {
@@ -206,6 +215,10 @@ export default class UserRank extends Component {
     this.getPopRank(myUserId, params.current).then(res => {
       this.setState({
         popRank: res
+      });
+      Taro.pageScrollTo({
+        scrollTop: 450,
+        duration: 0
       });
     });
   };
@@ -225,6 +238,14 @@ export default class UserRank extends Component {
       isShowCanvas: false
     });
   };
+  onShareAppMessage = () => {
+    let myUserId = Taro.getStorageSync("login").userId;
+    return {
+      title: "进入小程序了解当下最流行、最赚钱的编程语言",
+      path: `/pages/index/index?shareId=${myUserId}`
+    };
+  };
+
   render() {
     const tabList = [{ title: "勤奋排行" }, { title: "人气排行" }];
     const {
@@ -271,10 +292,12 @@ export default class UserRank extends Component {
             <View className="title-wrap">
               <View className="avatar-wrap">
                 <Image className="avatar" src={userRankInfo.avatarUrl} />
+                <View className="title-clazzName">{this.clazzName}</View>
               </View>
               <View className="right-score">
                 总积分：{userRankInfo.totalScore}
               </View>
+
               <View className="card-wrap">
                 <View className="per-item">
                   <View className="name">连续打卡</View>
@@ -320,7 +343,8 @@ export default class UserRank extends Component {
             <AtTabs
               current={currentTab}
               tabList={tabList}
-              onClick={this.tabClick.bind(this)}>
+              onClick={this.tabClick.bind(this)}
+              swipeable={false}>
               <AtTabsPane current={currentTab} index={0}>
                 <View className="member-list">
                   <View className="member-item  member-item-title">

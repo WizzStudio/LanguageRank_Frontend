@@ -128,7 +128,8 @@ export default class LangIndex extends Component {
         <AtTabs
           current={currentTab}
           tabList={tabList}
-          onClick={this.tabClick.bind(this)}>
+          onClick={this.tabClick.bind(this)}
+          swipeable={false}>
           <AtTabsPane current={currentTab} index={0}>
             {rankIndex == "auth" && (
               <LangHome langHomeData={langHome} langNameProp={langName} />

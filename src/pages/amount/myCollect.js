@@ -64,12 +64,11 @@ export default class MyCollect extends Component {
       }
     });
   };
-  onShareAppMessage = res => {
-    const loginInfo = Taro.getStorageSync("login");
-    const id = loginInfo.userid;
+  onShareAppMessage = () => {
+    let myUserId = Taro.getStorageSync("login").userId;
     return {
       title: "进入小程序了解当下最流行、最赚钱的编程语言",
-      path: `/pages/index/index?shareId=${id}`
+      path: `/pages/index/index?shareId=${myUserId}`
     };
   };
   copyContent = content => {

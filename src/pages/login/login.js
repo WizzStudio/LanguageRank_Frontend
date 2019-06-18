@@ -9,6 +9,14 @@ export default class Login extends Component {
   config = {
     navigationBarTitleText: "HelloWorld Rank"
   };
+  constructor() {
+    super();
+    this.shareId = 0;
+  }
+  componentDidMount() {
+    this.shareId = this.$router.params.shareId;
+    console.log("thisDID", this);
+  }
   bindGetUserInfo = e => {
     Taro.showLoading({
       title: "正在登录..."
@@ -39,6 +47,7 @@ export default class Login extends Component {
                     ver: "2.1"
                   });
                   const shareId = this.$router.params.shareId || 0;
+                  console.log("this", this);
                   if (shareId) {
                     addUserRelation(shareId, loginRes.data.userId);
                   }

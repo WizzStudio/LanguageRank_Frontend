@@ -18,7 +18,8 @@ export default async function myApi(url, method = "GET", data = {}) {
   } catch (e) {
     Taro.hideLoading();
     Taro.showToast({
-      title: "加载失败"
+      title: "加载失败，请查看网络环境",
+      icon: "none"
     });
   }
 }

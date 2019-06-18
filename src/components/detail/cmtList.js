@@ -99,8 +99,31 @@ class CmtList extends Component {
     }
   };
   changeCmtPage = params => {
+    const { typeCmt } = this.props || "";
     const { btnMode } = this.state;
     this.getCmtList(params.current, btnMode);
+    switch (typeCmt) {
+      case "auth":
+        Taro.pageScrollTo({
+          scrollTop: 200,
+          duration: 0
+        });
+        break;
+      case "demand":
+        Taro.pageScrollTo({
+          scrollTop: 200,
+          duration: 0
+        });
+        break;
+      case "class":
+        Taro.pageScrollTo({
+          scrollTop: 500,
+          duration: 0
+        });
+        break;
+      default:
+        break;
+    }
   };
   changeCmtMode = type => {
     switch (type) {
@@ -176,6 +199,7 @@ class CmtList extends Component {
 CmtList.defaultProps = {
   typeCmt: "",
   langName: "",
-  clazzId: ""
+  clazzId: "",
+  onPageScrollTo: () => {}
 };
 export default CmtList;

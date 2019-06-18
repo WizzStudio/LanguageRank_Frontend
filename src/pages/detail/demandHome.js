@@ -5,6 +5,7 @@ import myApi from "../../service/api";
 import PieChart from "../../components/echarts/PieChart";
 import BarChart from "../../components/echarts/BarChart";
 import KChart from "../../components/echarts/KChart";
+import cutStr from "../../utils/cutStr";
 import "./langDetail.scss";
 
 export default class DemandHome extends Component {
@@ -154,9 +155,9 @@ export default class DemandHome extends Component {
           <View className="wrap-title">热门岗位</View>
           <View>
             {posi.map((item, index) => (
-              <View key={index} className="demand-posi-wrap">
+              <View key={item.postSalary} className="demand-posi-wrap">
                 <View className="demand-posi-name">
-                  {item.companyName}|{item.languagePost}
+                  {item.companyName}|{cutStr(item.languagePost, 22)}
                 </View>
                 <View className="demand-posi-salary">{item.postSalary}</View>
               </View>

@@ -32,12 +32,12 @@ export default class MyInfo extends Component {
       score: 0
     };
   }
-  componentWillMount() {}
   componentDidMount() {
     this.confirmLogin();
     this.ajaxGetInfo();
   }
   componentDidUpdate(prevProps) {
+    console.log("进入", this.props, prevProps);
     if (prevProps.userInfo.userScore) {
       if (
         this.props.userInfo.userScore.totalScore !=

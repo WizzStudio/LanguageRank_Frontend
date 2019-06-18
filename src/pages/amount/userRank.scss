@@ -4,8 +4,15 @@
     .avatar-wrap {
       display: flex;
       justify-content: center;
-      align-self: center;
-      margin-bottom: -15%;
+      align-items: center;
+      margin-bottom: -25%;
+      flex-direction: column;
+      .title-clazzName {
+        margin-top: 20px;
+        font-size: 30px;
+        color: #fff;
+        font-family: STKaiti;
+      }
       .avatar {
         width: 140px;
         height: 140px;
@@ -19,6 +26,7 @@
       margin-bottom: 20px;
       color: #999;
     }
+
     .card-wrap {
       display: flex;
       justify-content: space-around;
@@ -26,6 +34,7 @@
       background-color: #4f5fc5;
       border: 1px solid #4f5fc5;
       border-radius: 20px;
+
       .per-item {
         display: flex;
         flex-direction: column;

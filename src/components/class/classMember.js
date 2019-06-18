@@ -40,26 +40,31 @@ class ClassMember extends Component {
       }
     }
   }
-  getClassMember = (pageIndex = 1) => {
+  getClassMember = async (pageIndex = 1) => {
     const { clazzId } = this.props;
     const data = {
       userId: myUserId,
       clazzId,
       pageIndex
     };
-    myApi("/getclazzmember", "POST", data).then(res => {
-      if (res.code === 0) {
-        this.setState({
-          members: res.data.members,
-          total: res.data.total,
-          pageSize: res.data.pageSize,
-          pageIndex: res.data.pageIndex
-        });
-      }
-    });
+    const res = await myApi("/getclazzmember", "POST", data);
+    if (res.code === 0) {
+      this.setState({
+        members: res.data.members,
+        total: res.data.total,
+        pageSize: res.data.pageSize,
+        pageIndex: res.data.pageIndex
+      });
+    }
+    return res;
   };
   changeMemberPage = params => {
-    this.getClassMember(params.current);
+    this.getClassMember(params.current).then(() => {
+      Taro.pageScrollTo({
+        scrollTop: 500,
+        duration: 0
+      });
+    });
   };
   render() {
     const { members, total, pageSize, pageIndex } = this.state;

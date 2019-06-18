@@ -76,10 +76,8 @@ export default class ClassHome extends Component {
     const { clazzId } = this.$router.params;
     if (this.props.classInfo.userClassId != prevProps.classInfo.userClassId) {
       this.checkIsAdded();
-      console.log("第一次进入", this.props, prevProps);
       this.getClassMessage(clazzId).then(res => {
         if (res.code === 0) {
-          let { isAdded } = this.state;
           this.setState({
             isPunched: res.data.isPunchCard ? 1 : 0,
             classMsgState: res.data
@@ -142,35 +140,43 @@ export default class ClassHome extends Component {
   };
   toUserRank = () => {
     const { clazzId } = this.state;
+    const classMsg = this.state.classMsgState;
     Taro.navigateTo({
-      url: `/pages/amount/userRank?clazzId=${clazzId}`
+      url: `/pages/amount/userRank?clazzId=${clazzId}&clazzName=${
+        classMsg.clazzName
+      }`
     });
   };
   punchToUserRank = e => {
     const { formId } = e.detail;
     const { clazzId } = this.state;
     const userId = Taro.getStorageSync("login").userId || "";
+    this.setState({
+      isPunched: 1
+    });
     const data = {
-      // userId: myUserId,
       userId,
       clazzId,
       formId
     };
-    myApi("/punchcard", "POST", data).then(res => {
-      if (res.code === 0) {
-        Taro.showToast({
-          title: "打卡成功"
+    myApi("/punchcard", "POST", data)
+      .then(res => {
+        if (res.code === 0) {
+          Taro.showToast({
+            title: "打卡成功"
+          });
+          this.toUserRank();
+        } else {
+          this.setState({
+            isPunched: 0
+          });
+        }
+      })
+      .catch(() => {
+        this.setState({
+          isPunched: 0
         });
-        this.setState(
-          {
-            isPunched: 1
-          },
-          () => {
-            this.toUserRank();
-          }
-        );
-      }
-    });
+      });
   };
   openRule = () => {
     this.setState({
@@ -251,6 +257,7 @@ export default class ClassHome extends Component {
       isShowCanvas: false
     });
   };
+
   render() {
     const tabList = [{ title: "讨论" }, { title: "成员" }, { title: "好友" }];
     const {
@@ -262,7 +269,6 @@ export default class ClassHome extends Component {
       isPunched
     } = this.state;
     const classMsg = this.state.classMsgState;
-    // let basicInfo = Taro.getStorageSync("basicInfo");
     return (
       <View>
         {isShowCanvas ? (
@@ -421,7 +427,8 @@ export default class ClassHome extends Component {
             <AtTabs
               current={currentTab}
               tabList={tabList}
-              onClick={this.tabClick.bind(this)}>
+              onClick={this.tabClick.bind(this)}
+              swipeable={false}>
               <AtTabsPane current={currentTab} index={0}>
                 <CmtList typeCmt="class" clazzId={clazzId} ref={this.refCmt} />
               </AtTabsPane>
@@ -430,8 +437,6 @@ export default class ClassHome extends Component {
                   isAdded={isAdded}
                   isPunched={isPunched}
                   clazzId={clazzId}
-                  type="class"
-                  canvas={isShowCanvas}
                 />
               </AtTabsPane>
               <AtTabsPane current={currentTab} index={2}>
